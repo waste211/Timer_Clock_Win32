@@ -10,14 +10,16 @@
 HINSTANCE hInst;                                // текущий экземпляр
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
 WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
-double B;
 HWND hwnd;
-HDC hdc;
-double dt;
+
+bool counter_day = true;
+
 COLORREF white = RGB(255, 255, 255);
+COLORREF black = RGB(0, 0, 0);
 COLORREF red = RGB(255, 0, 0);
-bool start_game;
-HBITMAP hbm;
+
+const int RADIUS_INNER = 151;
+const int RADIUS_OUTER = 161;
 
 
 // Отправить объявления функций, включенных в этот модуль кода:
@@ -27,8 +29,10 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Timer_default(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Timer_reverse(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Timer_systemdependent(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Stopwatch(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Clock_modern(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Clock_old(HWND, UINT, WPARAM, LPARAM);
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -160,13 +164,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_REVERSE_TIMER), hWnd, Timer_reverse);
                 break;
             case ID_TIMER_SYSTEM:
-                // DialogBox(hInst, MAKEINTRESOURCE(IDD_SYSTEM_TIMER), hWnd, Timer_system);
+                DialogBox(hInst, MAKEINTRESOURCE(IDD_SYSTEM_TIMER), hWnd, Timer_systemdependent);
                 break;
             case ID_TIMER_STOPWATCH:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_STOPWATCH), hWnd, Stopwatch);
                 break;
             case ID_CLOCK_MODERN:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_CLOCK_MODERN), hWnd, Clock_modern);
+                break;
+            case ID_CLOCK_OLD:
+                DialogBox(hInst, MAKEINTRESOURCE(IDD_CLOCK_OLD), hWnd, Clock_old);
                 break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
@@ -190,7 +197,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-// Обработчик сообщений для окна "О программе".
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
@@ -216,6 +222,8 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
     int input_minute = 0;
     int input_second = 0;
 
+    bool continue_timer = true;
+
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
@@ -238,28 +246,45 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             if (input_hour == 0) {
                 if (input_minute == 0) {
                     if (input_second == 0) {
-                        KillTimer(hDlg, 1);
                         MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                        continue_timer = false;
                     }
                 }
             }
+            if (input_minute > 60 || input_second > 59) {
+                MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                continue_timer = false;
+            }
 
-            SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, 0, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, 0, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_SECOND, 0, TRUE);
+            if (continue_timer == true) {
+                
+                SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, 0, TRUE);
+                SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, 0, TRUE);
+                SetDlgItemInt(hDlg, IDC_EDIT_SECOND, 0, TRUE);
+            }
+            else 
+                KillTimer(hDlg, 1);
+
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDC_STOP)
         {
             KillTimer(hDlg, 1);
+            SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, 0, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, 0, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_SECOND, 0, TRUE);
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDC_PAUSE)
         {
-            //KillTimer(hDlg, 1);
+            KillTimer(hDlg, 1);
             return (INT_PTR)TRUE;
         }
-
+        if (LOWORD(wParam) == IDC_CONTINUE)
+        {
+            SetTimer(hDlg, 1, 1000, NULL);
+        }
+            return (INT_PTR)TRUE;
         break;
     case WM_TIMER:
         if (LOWORD(wParam) == 1) {
@@ -271,54 +296,39 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             int edit_min = GetDlgItemInt(hDlg, IDC_EDIT_MINUTE, NULL, TRUE);
             int edit_sec = GetDlgItemInt(hDlg, IDC_EDIT_SECOND, NULL, TRUE);
 
-            edit_sec++;
-
             if (edit_hour == input_hour) {
                 if (edit_min == input_minute) {
                     if (edit_sec == input_second) {
                         KillTimer(hDlg, 1);
                         SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, edit_hour, TRUE);
                         SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, edit_min, TRUE);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec + 1, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec, TRUE);
                         MessageBox(GetActiveWindow(), (LPCWSTR)L"Timer ended", (LPCWSTR)L"TIMER", MB_ICONINFORMATION);
-                    }
-                    else {
-                        if (edit_sec == 60) {
-                            edit_min++;
-                            edit_sec = 0;
-                        }
-                    }
-                }
-                else {
-                    if (edit_sec == 60) {
-                        edit_min++;
-                        edit_sec = 0;
-                    }
-                    if (edit_min == 60) {
-                        edit_hour++;
-                        edit_min = 0;
-                        edit_sec = 0;
                     }
                 }
             }
             else {
-                if (edit_sec == 60) {
+                if (edit_sec == 59) {
                     edit_min += 1;
-                    edit_sec = 0;
+                    edit_sec = -1;
                 }
                 if (edit_min == 60) {
                     edit_hour++;
                     edit_min = 0;
-                    edit_sec = 0;
+                    edit_sec = -1;
                 }
             }
+
+            edit_sec++;
 
             SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, edit_hour, TRUE);
             SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, edit_min, TRUE);
             SetDlgItemInt(hDlg, IDC_EDIT_SECOND, edit_sec, TRUE);
             return (INT_PTR)TRUE;
         }
-
+        break;
+    case WM_DESTROY:
+        KillTimer(hDlg, 1);
         break;
     default:
         break;
@@ -328,9 +338,11 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 
 INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    int input_hour; 
+    int input_hour;
     int input_minute;
     int input_second;
+
+    bool continue_timer = true;
 
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
@@ -354,15 +366,23 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             if (input_hour == 0) {
                 if (input_minute == 0) {
                     if (input_second == 0) {
-                        KillTimer(hDlg, 2);
                         MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                        continue_timer = false;
                     }
                 }
             }
+            if (input_minute > 60 || input_second > 59) {
+                MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                continue_timer = false;
+            }
 
-            SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, input_hour, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, input_minute, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, input_second, TRUE);
+            if (continue_timer == true) {
+                SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, input_hour, TRUE);
+                SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, input_minute, TRUE);
+                SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, input_second, TRUE);
+            }
+            else 
+                KillTimer(hDlg, 2);
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDC_R_STOP)
@@ -389,7 +409,6 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             int edit_hour = GetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, NULL, TRUE);
             int edit_min = GetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, NULL, TRUE);
             int edit_sec = GetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, NULL, TRUE);
-            edit_sec--;
 
             if (edit_hour == 0) {
                 if (edit_min == 0) {
@@ -400,41 +419,189 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
                         SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec, TRUE);
                         MessageBox(GetActiveWindow(), (LPCWSTR)L"Timer ended", (LPCWSTR)L"TIMER", MB_ICONINFORMATION);
                     }
-                    else {
-                        if (edit_sec == 0) {
-                            edit_sec = 0;
-                        }
-                    }
-                }
-                else {
-                    if (edit_sec == 0) {
-                        edit_min--;
-                        edit_sec = 60;
-                    }
-                    if (edit_min == 0) {
-                        edit_sec = 60;
-                    }
                 }
             }
             else {
-                if (edit_hour != 0 && edit_min != 0) {
-                    if (edit_sec == 0) {
+                if (edit_sec == 0) {
+                    if (edit_min != 0) {
+                        edit_sec = 60;
                         edit_min--;
-                        edit_sec = 60;
-                    }
-                    if (edit_min == 0) {
+                    } 
+                    else {
                         edit_hour--;
-                        edit_min = 60;
                         edit_sec = 60;
+                        edit_min = 60;
                     }
                 }
             }
+
+            edit_sec--;
 
             SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, edit_hour, TRUE);
             SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, edit_min, TRUE);
             SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec, TRUE);
             return (INT_PTR)TRUE;
+            }
+    case WM_DESTROY:
+        KillTimer(hDlg, 2);
+        break;
+    }
+    return (INT_PTR)FALSE;
+}
+
+INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    int input_day = 0;
+    int input_hour = 0;
+    int input_minute = 0;
+    int input_second = 0;
+
+    SYSTEMTIME sys_time;
+    int sys_hour = 0;
+    int sys_minute = 0;
+    int sys_second = 0;
+
+    bool continue_timer = true;
+
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+        return (INT_PTR)TRUE;
+
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
         }
+        if (LOWORD(wParam) == IDC_S_START)
+        {
+            input_day = GetDlgItemInt(hDlg, IDC_EDIT_DAY_INPUT, NULL, TRUE);
+            input_hour = GetDlgItemInt(hDlg, IDC_EDIT_HOUR_INPUT, NULL, TRUE);
+            input_minute = GetDlgItemInt(hDlg, IDC_EDIT_MINUTE_INPUT, NULL, TRUE);
+            input_second = GetDlgItemInt(hDlg, IDC_EDIT_SECOND_INPUT, NULL, TRUE);
+
+            SetTimer(hDlg, 3, 100, NULL);
+
+            GetLocalTime(&sys_time);
+
+            sys_time.wHour = sys_time.wHour;
+            sys_minute = sys_time.wMinute;
+            sys_second = sys_time.wSecond;
+
+            if (input_hour > 23 || input_minute > 60 || input_second > 59) {
+                MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                continue_timer = false;
+            }
+            else {
+                if (input_day == 0) {
+                    if (input_hour == 0) {
+                        if (input_minute == 0) {
+                            if (input_second == 0) {
+                                MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                                continue_timer = false;
+                            }
+                        }
+                    }
+                    else {
+                        if (input_hour < sys_hour) {
+                            MessageBox(GetActiveWindow(), (LPCWSTR)L"Invalid input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                            continue_timer = false;
+                            break;
+                        }
+                        if (input_hour == sys_hour) {
+                            if (input_minute < sys_minute) {
+                                MessageBox(GetActiveWindow(), (LPCWSTR)L"Invalid input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                                continue_timer = false;
+                                break;
+                            }
+                            if (input_minute == sys_minute) {
+                                if (input_second < sys_second) {
+                                    MessageBox(GetActiveWindow(), (LPCWSTR)L"Invalid input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                                    continue_timer = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (continue_timer == true) {
+                SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, input_day, TRUE);
+                SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, sys_hour, TRUE);
+                SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, sys_minute, TRUE);
+                SetDlgItemInt(hDlg, IDC_EDIT_SECOND, sys_second, TRUE);
+            }
+            else
+                KillTimer(hDlg, 3);
+            return (INT_PTR)TRUE;
+        }
+        if (LOWORD(wParam) == IDC_S_RESET)
+        {
+            KillTimer(hDlg, 3);
+            SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, 0, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, 0, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_SECOND, 0, TRUE);
+            return (INT_PTR)TRUE;
+        }
+
+        break;
+    case WM_TIMER:
+        if (LOWORD(wParam) == 3) {
+            input_day = GetDlgItemInt(hDlg, IDC_EDIT_DAY_INPUT, NULL, TRUE);
+            input_hour = GetDlgItemInt(hDlg, IDC_EDIT_HOUR_INPUT, NULL, TRUE);
+            input_minute = GetDlgItemInt(hDlg, IDC_EDIT_MINUTE_INPUT, NULL, TRUE);
+            input_second = GetDlgItemInt(hDlg, IDC_EDIT_SECOND_INPUT, NULL, TRUE);
+            int edit_day = GetDlgItemInt(hDlg, IDC_EDIT_DAY, NULL, TRUE);
+
+            GetLocalTime(&sys_time);
+
+            sys_hour = sys_time.wHour;
+            sys_minute = sys_time.wMinute;
+            sys_second = sys_time.wSecond;
+
+            if (edit_day == 0) {
+                if (sys_hour == input_hour) {
+                    if (sys_minute == input_minute) {
+                        if (sys_second == input_second) {
+                            KillTimer(hDlg, 3);
+                            MessageBox(GetActiveWindow(), (LPCWSTR)L"Timer ended", (LPCWSTR)L"TIMER", MB_ICONINFORMATION);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (counter_day == true) {
+                if (sys_hour == 0) {
+                    if (sys_minute == 0) {
+                        if (sys_second == 0) {
+                            edit_day--;
+                            counter_day = false;
+                        }
+                        if (sys_second == 1) {
+                            counter_day = true;
+                        }
+                    }
+                }
+            }
+
+            SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, input_day, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, sys_hour, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, sys_minute, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_SECOND, sys_second, TRUE);
+
+            return (INT_PTR)TRUE;
+        }
+
+        break;
+    case WM_DESTROY:
+        KillTimer(hDlg, 3);
+        break;
+    default:
+        break;
     }
     return (INT_PTR)FALSE;
 }
@@ -456,16 +623,7 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         if (LOWORD(wParam) == IDC_SW_START)
         {
             SetTimer(hDlg, 4, 100, NULL);
-            /*
-            * 
-            wstring h = L"text";
-            h[3] = 0;
 
-            string number = to_string(0);
-            LPCWSTR Last = h.c_str();
-            SetDlgItemText(hDlg, IDC_EDIT_SW_HOUR, (LPCWSTR)Last);
-
-            */
             SetDlgItemInt(hDlg, IDC_EDIT_SW_HOUR, 0, TRUE);
             SetDlgItemInt(hDlg, IDC_EDIT_SW_MINUTE, 0, TRUE);
             SetDlgItemInt(hDlg, IDC_EDIT_SW_SECOND, 0, TRUE);
@@ -527,24 +685,27 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         }
 
         break;
+    case WM_DESTROY:
+        KillTimer(hDlg, 4);
+        break;
     default:
         break;
     }
     return (INT_PTR)FALSE;
 }
-// GetSystemTime(...)
 
 INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int hour, minute, second;
-    int day_of_week, day, mounth, year;
+    int day_of_week, day, month, year;
 
     SYSTEMTIME sys_time;
-    SetTimer(hDlg, 5, 100, NULL);
+
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
     case WM_INITDIALOG:
+        SetTimer(hDlg, 5, 300, NULL);
         return (INT_PTR)TRUE;
 
     case WM_COMMAND:
@@ -564,12 +725,12 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 
 
         day_of_week = sys_time.wDayOfWeek;
-        ConvertDayOfWeekToString(hDlg, day_of_week);
+        ConvertDayOfWeekToString(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, day_of_week);
 
         day = sys_time.wDay;
 
-        mounth = sys_time.wMonth;
-        ConvertMounthToString(hDlg, mounth);
+        month = sys_time.wMonth;
+        ConvertMonthToString(hDlg, IDC_EDIT_CLOCK_MONTH, month);
 
         year = sys_time.wYear;
 
@@ -581,108 +742,271 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_YEAR, sys_time.wYear, TRUE);
 
         break;
+    case WM_DESTROY:
+        KillTimer(hDlg, 5);
+        break;
     }
     return (INT_PTR)FALSE;
 }
 
-void ConvertDayOfWeekToString(HWND hDlg, int day_of_week) {
+INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    SYSTEMTIME sys_time;
+    GetLocalTime(&sys_time);
+
+    RECT winCord;
+    GetClientRect(hDlg, &winCord);
+    int left = winCord.left;
+    int right = winCord.right;
+    int up = winCord.top;
+    int bottom = winCord.bottom;
+
+    int centerX = (right - left) / 2;
+    int centerY = (bottom - up) / 2;
+
+
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+        SetTimer(hDlg, 6, 200, NULL);
+        return (INT_PTR)TRUE;
+
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    case WM_TIMER:
+        ConvertDayOfWeekToString(hDlg, IDC_EDIT_CLOCK_O_DAYOFWEEK, sys_time.wDayOfWeek);
+
+        SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_DAY, sys_time.wDay, TRUE);
+        SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_MONTH, sys_time.wMonth, TRUE);
+        SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_YEAR, sys_time.wYear, TRUE);
+        break;
+    case WM_PAINT:
+    {
+        PAINTSTRUCT ps;
+        HDC hdc_paint = BeginPaint(hDlg, &ps);
+
+        CreateStructureWatch(left, right, up, bottom, centerX, centerY, hdc_paint);
+        DrawHourLine(left, right, up, bottom, centerX, centerY, sys_time.wHour, hdc_paint);
+        DrawMinuteLine(left, right, up, bottom, centerX, centerY, sys_time.wMinute, hdc_paint);
+        DrawSecondLine(left, right, up, bottom, centerX, centerY, sys_time.wSecond, hdc_paint);
+        EndPaint(hDlg, &ps);
+    }
+        break;
+    case WM_DESTROY:
+        KillTimer(hDlg, 6);
+        break;
+    }
+    return (INT_PTR)FALSE;
+}
+
+// func logic
+void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week) {
     switch (day_of_week) {
     case 1:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, (LPCWSTR)L"Monday");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Monday");
         break;
     case 2:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, (LPCWSTR)L"Tuesday");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Tuesday");
         break;
     case 3:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, (LPCWSTR)L"Wednesday");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Wednesday");
         break;
     case 4:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, (LPCWSTR)L"Thursday");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Thursday");
         break;
     case 5:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, (LPCWSTR)L"Friday");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Friday");
         break;
     case 6:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, (LPCWSTR)L"Saturday");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Saturday");
         break;
     case 7:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, (LPCWSTR)L"Sunday");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Sunday");
         break;
     default:
         break;
     }
 }
 
-void ConvertMounthToString(HWND hDlg, int mounth) {
-    switch (mounth) {
+void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month) {
+    switch (month) {
     case 1:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"January");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"January");
         break;
     case 2:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"February");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"February");
         break;
     case 3:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"March");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"March");
         break;
     case 4:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"April");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"April");
         break;
     case 5:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"May");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"May");
         break;
     case 6:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"June");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"June");
         break;
     case 7:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"July");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"July");
         break;
     case 8:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"August");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"August");
         break;
     case 9:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"September");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"September");
         break;
     case 10:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"October");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"October");
         break;
     case 11:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"November");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"November");
         break;
     case 12:
-        SetDlgItemTextW(hDlg, IDC_EDIT_CLOCK_MOUNTH, (LPCWSTR)L"December");
+        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"December");
         break;
     default:
         break;
     }
 }
 
+// func for static/dynamic painting structures
+void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, int centerY, HDC hdc) {
+    COLORREF current = GetPixel(hdc, left, up);
+    C(centerX - RADIUS_OUTER, centerY - RADIUS_OUTER, centerX + RADIUS_OUTER, centerY + RADIUS_OUTER, 0, 0, 0, 0, 4, black, current, hdc);
 
-// FUNC DRAWING
+    int x = 0;
+    int y = 0;
+    int x_inner = 0;
+    int y_inner = 0;
 
-void L(int x1, int y1, int x2, int y2, COLORREF color)
+    double step = 6;
+    double gMat = 0;
+    double gPr = 6;
+    double f = 0;
+    int check_wighth = 30;
+    for (int i = 1; i <= 60; i++) {
+        gMat = 90 - gPr;
+        f = M_PI / 180 * gMat;
+
+        x = RADIUS_OUTER * cos(f) + centerX;
+        y = -RADIUS_OUTER * sin(f) + centerY;
+        x_inner = RADIUS_INNER * cos(f) + centerX;
+        y_inner = -RADIUS_INNER * sin(f) + centerY;
+
+
+        if (check_wighth == gPr) {
+            L(x_inner, y_inner, x, y, 4, black, hdc);
+            check_wighth += 30;
+        }
+        else
+            L(x_inner, y_inner, x, y, 2, black, hdc);
+
+        gPr += step;
+    }
+    // f - угол в радианах
+    // g - угол в градусах Mat - matematicheskij, pr - programnij
+
+}
+
+void DrawHourLine(int left, int right, int up, int bottom, int centerX, int centerY, int hour, HDC hdc) {
+    if (hour > 12)
+        hour = hour - 12;
+    
+    int x = 0;
+    int y = 0;
+
+    double step = 30;
+    double gMat = 0;
+    double gPr = 30;
+    double f = 0;
+    for (int i = 1; i <= 12; i++) {
+        if (i == hour) {
+            gMat = 90 - gPr;
+            f = M_PI / 180 * gMat;
+
+            x = (RADIUS_INNER - 36) * cos(f) + centerX;
+            y = (-RADIUS_INNER + 36) * sin(f) + centerY;
+            L(centerX, centerY, x, y, 2, black, hdc);
+        }
+        gPr += step;
+    }
+}
+
+void DrawMinuteLine(int left, int right, int up, int bottom, int centerX, int centerY, int minute, HDC hdc) {
+    int x = 0;
+    int y = 0;
+
+    double step = 6;
+    double gMat = 0;
+    double gPr = 6;
+    double f = 0;
+    for (int i = 1; i <= 60; i++) {
+        if (i == minute) {
+            gMat = 90 - gPr;
+            f = M_PI / 180 * gMat;
+
+            x = (RADIUS_INNER - 70) * cos(f) + centerX;
+            y = (-RADIUS_INNER + 70) * sin(f) + centerY;
+            L(centerX, centerY, x, y, 2, black, hdc);
+        }
+        gPr += step;
+    }
+}
+
+void DrawSecondLine(int left, int right, int up, int bottom, int centerX, int centerY, int second, HDC hdc) {
+    int x = 0;
+    int y = 0;
+
+    double step = 6;
+    double gMat = 0;
+    double gPr = 6;
+    double f = 0;
+    for (int i = 1; i <= 60; i++) {
+        if (i == second) {
+            gMat = 90 - gPr;
+            f = M_PI / 180 * gMat;
+
+            x = (RADIUS_INNER - 34) * cos(f) + centerX;
+            y = (-RADIUS_INNER + 34) * sin(f) + centerY;
+            L(centerX, centerY, x, y, 1, black, hdc);
+        }
+        gPr += step;
+    }
+}
+
+// func drawing
+void L(int x1, int y1, int x2, int y2, int width, COLORREF color, HDC hdc)
 {
     HPEN hPen;
-    hPen = CreatePen(PS_SOLID, 1, color);
+    hPen = CreatePen(PS_SOLID, width, color);
     SelectObject(hdc, hPen);
     MoveToEx(hdc, x1, y1, NULL);
     LineTo(hdc, x2, y2);
     DeleteObject(hPen);
 }
 
-void LTO(int x2, int y2, COLORREF color)
+void LTO(int x2, int y2, int width, COLORREF color, HDC hdc)
 {
     HPEN hPen;
-    hPen = CreatePen(PS_SOLID, 1, color);
+    hPen = CreatePen(PS_SOLID, width, color);
     SelectObject(hdc, hPen);
     LineTo(hdc, x2, y2);
     DeleteObject(hPen);
 }
 
-void R(int x1, int y1, int x2, int y2, COLORREF color)
+void R(int x1, int y1, int x2, int y2, int width, COLORREF color, HDC hdc)
 {
     HPEN hPen;
     HBRUSH hBrush;
-    hPen = CreatePen(PS_SOLID, 1, color);
+    hPen = CreatePen(PS_SOLID, width, color);
     SelectObject(hdc, hPen);
     hBrush = CreateSolidBrush(color);
     SelectObject(hdc, hBrush);
@@ -691,96 +1015,15 @@ void R(int x1, int y1, int x2, int y2, COLORREF color)
     DeleteObject(hBrush);
 }
 
-void C(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, COLORREF color)
+void C(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int width, COLORREF color_pen, COLORREF color_brush, HDC hdc)
 {
     HPEN hPen;
     HBRUSH hBrush;
-    hPen = CreatePen(PS_SOLID, 1, color);
+    hPen = CreatePen(PS_SOLID, width, color_pen);
     SelectObject(hdc, hPen);
-    hBrush = CreateSolidBrush(color);
+    hBrush = CreateSolidBrush(color_brush);
     SelectObject(hdc, hBrush);
     Chord(hdc, x1, y1, x2, y2, x3, y3, x4, y4);
     DeleteObject(hPen);
     DeleteObject(hBrush);
-}
-
-void createField()
-{
-    L(50, 250, 50, 450, red);
-    LTO(60, 450, red);
-    L(50, 250, 60, 250, red);
-
-    /*
-    L(950, 250, 950, 450, red);
-    LTO(940, 450, red);
-    L(950, 250, 940, 250, red);
-    */
-    R(0, 0, 1000, 50, red);
-    R(0, 700, 1000, 650, red);
-
-    L(490, 0, 490, 700, red);
-}
-
-
-void FaceElectron(HDC hdc, double x, double y, COLORREF ecolor)
-{
-    unsigned rand_value = 5;
-    int x1;
-    int y1;
-    int x0;
-    int y0;
-
-    int i;
-    i = 0;
-    while (i < 50)
-    {
-        x1 = -5 + rand() % 11;
-        y1 = -5 + rand() % 11;
-        x0 = (int)x + x1;
-        y0 = (int)y + y1;
-        int R;
-        int G;
-        int B;
-        SetPixel(hdc, x0, y0, RGB(R = 100 + rand() % 255, G = 100 + rand() % 255, B = 100 + rand() % 255));
-        i++;
-
-    }
-}
-
-void MagnetField(HDC hdc, double B)
-{
-    if (B > 0)
-    {
-        HPEN hPen;
-        hPen = CreatePen(PS_SOLID, 1, RGB(100, 100, 255));
-        SelectObject(hdc, hPen);
-        for (int i = 100; i < 950; i = i + 100)
-            for (int j = 100; j < 600; j = j + 100)
-            {
-                SetPixel(hdc, i, j, RGB(100, 100, 255));
-                Arc(hdc, i - (int)(B * 10), j - (int)(B * 10), i + (int)(B * 10), j + (int)(B * 10), i - (int)(B * 10), j - (int)(B * 10), i - (int)(B * 10), j - (int)(B * 10));
-            }
-        DeleteObject(hPen);
-
-    }
-    if (B < 0)
-    {
-        HPEN hPen;
-        hPen = CreatePen(PS_SOLID, 1, RGB(255, 100, 100));
-        SelectObject(hdc, hPen);
-        for (int i = 100; i < 950; i = i + 100)
-            for (int j = 100; j < 600; j = j + 100)
-            {
-                MoveToEx(hdc, i - (int)(B * 10), j - (int)(B * 10), NULL);
-                LineTo(hdc, i + (int)(B * 10), j + (int)(B * 10));
-                MoveToEx(hdc, i - (int)(B * 10), j + (int)(B * 10), NULL);
-                LineTo(hdc, i + (int)(B * 10), j - (int)(B * 10));
-
-                DeleteObject(hPen);
-                Arc(hdc, i - (int)(B * 10), j - (int)(B * 10), i + (int)(B * 10), j + (int)(B * 10), i - (int)(B * 10), j - (int)(B * 10), i - (int)(B * 10), j - (int)(B * 10));
-            }
-        DeleteObject(hPen);
-
-    }
-
 }

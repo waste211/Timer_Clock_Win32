@@ -18,6 +18,9 @@
 #define IDD_SYSTEM_TIMER                139
 #define IDD_STOPWATCH                   140
 #define IDD_CLOCK_MODERN                141
+#define IDD_DIALOG1                     143
+#define IDD_CLOCK_OLD                   143
+#define IDD_DIALOG2                     144
 #define IDC_START                       1002
 #define IDC_STOP                        1003
 #define IDC_RESET                       1004
@@ -41,21 +44,31 @@
 #define IDC_EDIT_HOUR_INPUT             1023
 #define IDC_EDIT_MINUTE_INPUT           1024
 #define IDC_EDIT_SECOND_INPUT           1025
+#define IDC_EDIT_DAY_INPUT              1026
 #define IDC_EDIT_SW_HOUR                1027
 #define IDC_EDIT_SW_MINUTE              1028
 #define IDC_EDIT_SW_SECOND              1029
 #define IDC_SW_START                    1030
+#define IDC_EDIT_DAY                    1030
 #define IDC_SW_STOP                     1031
 #define IDC_SW_PAUSE                    1032
 #define IDC_SW_CONTINUE                 1033
+#define IDC_EDIT_SW_MINUTE2             1034
 #define IDC_EDIT_SW_MSECOND             1036
 #define IDC_EDIT_CLOCK_HOUR             1037
 #define IDC_EDIT_CLOCK_MINUTE           1038
 #define IDC_EDIT_CLOCK_SECOND           1039
+#define IDC_S_START                     1042
 #define IDC_EDIT_CLOCK_DAY              1043
+#define IDC_S_RESET                     1043
 #define IDC_EDIT_CLOCK_MOUNTH           1044
+#define IDC_EDIT_CLOCK_MONTH            1044
 #define IDC_EDIT_CLOCK_YEAR             1045
+#define IDC_EDIT_CLOCK_O_DAY            1045
 #define IDC_EDIT_CLOCK_DAYOFWEEK        1046
+#define IDC_EDIT_CLOCK_O_MONTH          1046
+#define IDC_EDIT_CLOCK_O_YEAR           1047
+#define IDC_EDIT_CLOCK_O_DAYOFWEEK      1051
 #define ID_TIMER_HOURS                  32771
 #define ID_TIMER_MINUTES                32772
 #define ID_TIMER_SECONDS                32773
@@ -74,9 +87,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        143
+#define _APS_NEXT_RESOURCE_VALUE        146
 #define _APS_NEXT_COMMAND_VALUE         32782
-#define _APS_NEXT_CONTROL_VALUE         1042
+#define _APS_NEXT_CONTROL_VALUE         1046
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

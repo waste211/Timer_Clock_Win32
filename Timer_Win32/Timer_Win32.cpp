@@ -197,6 +197,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
+// Функция окна "О программе", ничего не изменялось
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
@@ -216,6 +217,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
+// Функция окна "Обычного таймера". Отсчет идет вперед (от 0 до заданного времени)
 INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int input_hour = 0;
@@ -336,6 +338,7 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
     return (INT_PTR)FALSE;
 }
 
+// Функция окна "Обратного таймера". Отсчет идет от времени, которое задал пользователь, до 0
 INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int input_hour;
@@ -449,6 +452,11 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
     return (INT_PTR)FALSE;
 }
 
+/*
+Функция окна "Системного таймера".Пользователь задает точное время в часах, секундах, минутах, программа
+ведет отсчет от текукщего времени до заданного пользователем. Есть возможность поставить отсчет более чем
+на один день, добавлением числа в ячейку "День"
+*/
 INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int input_day = 0;
@@ -606,6 +614,7 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
     return (INT_PTR)FALSE;
 }
 
+// Функция окна "Секундомер"
 INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
@@ -694,6 +703,7 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     return (INT_PTR)FALSE;
 }
 
+// Функция окна "Новые часы". Имеет цифровое представление времени, без циферблата
 INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int hour, minute, second;
@@ -749,6 +759,7 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
     return (INT_PTR)FALSE;
 }
 
+// Функция окна "Старые часы". Имеет представление времени с помощью циферблата
 INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     SYSTEMTIME sys_time;
@@ -806,6 +817,13 @@ INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 }
 
 // func logic
+/* 
+Функция для конвертирования дня недели из числового в строчное представление. Использование:
+Использование:
+    HWND hDlg             A handle to the dialog box that contains the control.
+    int nIDDlgItem        The identifier of the control whose title or text is to be retrieved.
+    int day_of_week       Принимает день недели в числовом виде, которій будет конвертироваться
+*/
 void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week) {
     switch (day_of_week) {
     case 1:
@@ -834,6 +852,13 @@ void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week) {
     }
 }
 
+/* 
+Функция для конвертирования месяца из числового в строчное представление. 
+Использование:
+    HWND hDlg             A handle to the dialog box that contains the control.
+    int nIDDlgItem        The identifier of the control whose title or text is to be retrieved.
+    int month             Принимает месяц в числовом виде, которій будет конвертироваться
+*/
 void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month) {
     switch (month) {
     case 1:
@@ -878,6 +903,10 @@ void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month) {
 }
 
 // func for static/dynamic painting structures
+/*
+Функция для рисования структуры ЧАСЫ.
+Используется Функцией диалогового окна Clock_old
+*/
 void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, int centerY, HDC hdc) {
     COLORREF current = GetPixel(hdc, left, up);
     C(centerX - RADIUS_OUTER, centerY - RADIUS_OUTER, centerX + RADIUS_OUTER, centerY + RADIUS_OUTER, 0, 0, 0, 0, 4, black, current, hdc);
@@ -916,6 +945,10 @@ void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, 
 
 }
 
+/*
+Функция для рисования часовой стрелки в структуре часы.
+Используется Функцией диалогового окна Clock_old
+*/
 void DrawHourLine(int left, int right, int up, int bottom, int centerX, int centerY, int hour, HDC hdc) {
     if (hour > 12)
         hour = hour - 12;
@@ -940,6 +973,10 @@ void DrawHourLine(int left, int right, int up, int bottom, int centerX, int cent
     }
 }
 
+/*
+Функция для рисования минутной стрелки в структуре часы.
+Используется Функцией диалогового окна Clock_old
+*/
 void DrawMinuteLine(int left, int right, int up, int bottom, int centerX, int centerY, int minute, HDC hdc) {
     int x = 0;
     int y = 0;
@@ -961,6 +998,10 @@ void DrawMinuteLine(int left, int right, int up, int bottom, int centerX, int ce
     }
 }
 
+/*
+Функция для рисования минутной стрелки в структуре часы.
+Используется Функцией диалогового окна Clock_old
+*/
 void DrawSecondLine(int left, int right, int up, int bottom, int centerX, int centerY, int second, HDC hdc) {
     int x = 0;
     int y = 0;
@@ -983,6 +1024,17 @@ void DrawSecondLine(int left, int right, int up, int bottom, int centerX, int ce
 }
 
 // func drawing
+/* 
+Функция для рисования линии от координат x1 и y1, до координат х2, y2
+Использование:
+int x1              Кордината х, линия рисуется от неё
+int y1              Кордината у, линия рисуется от неё
+int x2              Кордината х, линия рисуется до неё
+int y2              Кордината у, линия рисуется до неё
+int width           Толщина линии
+COLORREF color      Цвет линии
+HDC hdc             ---
+*/
 void L(int x1, int y1, int x2, int y2, int width, COLORREF color, HDC hdc)
 {
     HPEN hPen;
@@ -993,6 +1045,15 @@ void L(int x1, int y1, int x2, int y2, int width, COLORREF color, HDC hdc)
     DeleteObject(hPen);
 }
 
+/*
+Функция для рисования линии от текущих координат, до координат x2, y2
+Использование :
+int x2              Кордината х, линия рисуется до неё
+int y2              Кордината у, линия рисуется до неё
+int width           Толщина линии
+COLORREF color      Цвет линии
+HDC hdc             ---
+*/
 void LTO(int x2, int y2, int width, COLORREF color, HDC hdc)
 {
     HPEN hPen;
@@ -1002,6 +1063,17 @@ void LTO(int x2, int y2, int width, COLORREF color, HDC hdc)
     DeleteObject(hPen);
 }
 
+/*
+Функция для рисования линии от текущих координат, до координат x2, y2
+Использование :
+int x1              Кордината х, левый нижний угол прямоугольнка
+int y1              Кордината у, левый нижний угол прямоугольнка
+int x2              Кордината х, правый верхний угол прямоугольнка
+int y2              Кордината у, правый верхний угол прямоугольнка
+int width           Толщина линии
+COLORREF color      Цвет линии
+HDC hdc             ---
+*/
 void R(int x1, int y1, int x2, int y2, int width, COLORREF color, HDC hdc)
 {
     HPEN hPen;
@@ -1015,6 +1087,21 @@ void R(int x1, int y1, int x2, int y2, int width, COLORREF color, HDC hdc)
     DeleteObject(hBrush);
 }
 
+/*
+Функция для рисования линии от текущих координат, до координат x2, y2
+Использование :
+int x1              Кордината х, левый нижний угол прямоугольнка, описывающего круг
+int y1              Кордината у, левый нижний угол прямоугольнка, описывающего круг
+int x2              Кордината х, правый верхний угол прямоугольнка, описывающего круг
+int y2              Кордината у, правый верхний угол прямоугольнка, описывающего круг
+int х3              Кордината у, вырезанные фигуры ??? (не используется, шаблон)
+int y3              Кордината у, вырезанные фигуры ??? (не используется, шаблон)
+int х4              Кордината у, вырезанные фигуры ??? (не используется, шаблон)
+int у4              Кордината у, вырезанные фигуры ??? (не используется, шаблон)
+int width           Толщина линии
+COLORREF color      Цвет линии
+HDC hdc             ---
+*/
 void C(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int width, COLORREF color_pen, COLORREF color_brush, HDC hdc)
 {
     HPEN hPen;

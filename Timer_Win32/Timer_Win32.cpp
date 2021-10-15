@@ -780,7 +780,7 @@ INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     switch (message)
     {
     case WM_INITDIALOG:
-        SetTimer(hDlg, 6, 200, NULL);
+        SetTimer(hDlg, 6, 1000, NULL);
         return (INT_PTR)TRUE;
 
     case WM_COMMAND:
@@ -796,6 +796,8 @@ INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_DAY, sys_time.wDay, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_MONTH, sys_time.wMonth, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_YEAR, sys_time.wYear, TRUE);
+        InvalidateRect(hDlg, NULL, TRUE);
+        UpdateWindow(hDlg);
         break;
     case WM_PAINT:
     {
@@ -950,9 +952,11 @@ void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, 
 Используется Функцией диалогового окна Clock_old
 */
 void DrawHourLine(int left, int right, int up, int bottom, int centerX, int centerY, int hour, HDC hdc) {
-    if (hour > 12)
+    if (hour == 0)
+        hour = 12;
+    else if (hour > 12)
         hour = hour - 12;
-    
+
     int x = 0;
     int y = 0;
 
@@ -962,31 +966,6 @@ void DrawHourLine(int left, int right, int up, int bottom, int centerX, int cent
     double f = 0;
     for (int i = 1; i <= 12; i++) {
         if (i == hour) {
-            gMat = 90 - gPr;
-            f = M_PI / 180 * gMat;
-
-            x = (RADIUS_INNER - 36) * cos(f) + centerX;
-            y = (-RADIUS_INNER + 36) * sin(f) + centerY;
-            L(centerX, centerY, x, y, 2, black, hdc);
-        }
-        gPr += step;
-    }
-}
-
-/*
-Функция для рисования минутной стрелки в структуре часы.
-Используется Функцией диалогового окна Clock_old
-*/
-void DrawMinuteLine(int left, int right, int up, int bottom, int centerX, int centerY, int minute, HDC hdc) {
-    int x = 0;
-    int y = 0;
-
-    double step = 6;
-    double gMat = 0;
-    double gPr = 6;
-    double f = 0;
-    for (int i = 1; i <= 60; i++) {
-        if (i == minute) {
             gMat = 90 - gPr;
             f = M_PI / 180 * gMat;
 
@@ -1002,7 +981,38 @@ void DrawMinuteLine(int left, int right, int up, int bottom, int centerX, int ce
 Функция для рисования минутной стрелки в структуре часы.
 Используется Функцией диалогового окна Clock_old
 */
+void DrawMinuteLine(int left, int right, int up, int bottom, int centerX, int centerY, int minute, HDC hdc) {
+    if (minute == 0)
+        minute = 60;
+
+    int x = 0;
+    int y = 0;
+
+    double step = 6;
+    double gMat = 0;
+    double gPr = 6;
+    double f = 0;
+    for (int i = 1; i <= 60; i++) {
+        if (i == minute) {
+            gMat = 90 - gPr;
+            f = M_PI / 180 * gMat;
+
+            x = (RADIUS_INNER - 40) * cos(f) + centerX;
+            y = (-RADIUS_INNER + 40) * sin(f) + centerY;
+            L(centerX, centerY, x, y, 2, black, hdc);
+        }
+        gPr += step;
+    }
+}
+
+/*
+Функция для рисования минутной стрелки в структуре часы.
+Используется Функцией диалогового окна Clock_old
+*/
 void DrawSecondLine(int left, int right, int up, int bottom, int centerX, int centerY, int second, HDC hdc) {
+    if (second == 0)
+        second = 60;
+
     int x = 0;
     int y = 0;
 

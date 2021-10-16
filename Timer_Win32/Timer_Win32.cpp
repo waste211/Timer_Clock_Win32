@@ -4,24 +4,6 @@
 #include "framework.h"
 #include "Timer_Win32.h"
 
-#define MAX_LOADSTRING 100
-
-// Глобальные переменные:
-HINSTANCE hInst;                                // текущий экземпляр
-WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
-WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
-HWND hwnd;
-
-bool counter_day = true;
-
-COLORREF white = RGB(255, 255, 255);
-COLORREF black = RGB(0, 0, 0);
-COLORREF red = RGB(255, 0, 0);
-
-const int RADIUS_INNER = 151;
-const int RADIUS_OUTER = 161;
-
-
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -43,8 +25,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: Разместите код здесь.
+    // hp time
+    QueryPerformanceFrequency(&Frequency);
+    QueryPerformanceCounter(&StartingTime);
 
+    QueryPerformanceCounter(&EndingTime);
+    ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+    ElapsedMicroseconds.QuadPart *= 1000000;
+    ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+    msecond_counter = ElapsedMicroseconds.QuadPart;
+    //end hp time
+    
     // Инициализация глобальных строк
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_TIMERWIN32, szWindowClass, MAX_LOADSTRING);
@@ -657,7 +648,7 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         }
         if (LOWORD(wParam) == IDC_SW_CONTINUE)
         {
-            SetTimer(hDlg, 4, 100, NULL);
+            SetTimer(hDlg, 4, msecond_counter / 1000, NULL);
             return (INT_PTR)TRUE;
         }
 
@@ -670,7 +661,7 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
             int edit_msec = GetDlgItemInt(hDlg, IDC_EDIT_SW_MSECOND, NULL, TRUE);
 
             edit_msec++;
-            if (edit_msec == 10) {
+            if (edit_msec == 100) {
                 edit_sec += 1;
                 edit_msec = 0;
             }
@@ -727,27 +718,20 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
         break;
     case WM_TIMER:
         GetLocalTime(&sys_time);
-        
 
         hour = sys_time.wHour;
         minute = sys_time.wMinute;
         second = sys_time.wSecond;
-
-
         day_of_week = sys_time.wDayOfWeek;
         ConvertDayOfWeekToString(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, day_of_week);
-
         day = sys_time.wDay;
-
         month = sys_time.wMonth;
         ConvertMonthToString(hDlg, IDC_EDIT_CLOCK_MONTH, month);
-
         year = sys_time.wYear;
 
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_HOUR, hour, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_MINUTE, minute, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_SECOND, second, TRUE);
-
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_DAY, sys_time.wDay, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_YEAR, sys_time.wYear, TRUE);
 
@@ -775,14 +759,23 @@ INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     int centerX = (right - left) / 2;
     int centerY = (bottom - up) / 2;
 
+    RECT redraw_struct;
+    redraw_struct.left = centerX - 110;
+    redraw_struct.right = centerX + 110;
+    redraw_struct.top = centerY + 110;
+    redraw_struct.bottom = centerY - 110;
+
 
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
     case WM_INITDIALOG:
         SetTimer(hDlg, 6, 1000, NULL);
+        SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_DAY, sys_time.wDay, TRUE);
+        SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_MONTH, sys_time.wMonth, TRUE);
+        SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_YEAR, sys_time.wYear, TRUE);
         return (INT_PTR)TRUE;
-
+        break;
     case WM_COMMAND:
         if (LOWORD(wParam) == IDCANCEL)
         {
@@ -796,13 +789,15 @@ INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_DAY, sys_time.wDay, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_MONTH, sys_time.wMonth, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_YEAR, sys_time.wYear, TRUE);
-        InvalidateRect(hDlg, NULL, TRUE);
+        InvalidateRect(hDlg, &redraw_struct, TRUE);
         UpdateWindow(hDlg);
         break;
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
         HDC hdc_paint = BeginPaint(hDlg, &ps);
+
+        HBRUSH hBrush;
 
         CreateStructureWatch(left, right, up, bottom, centerX, centerY, hdc_paint);
         DrawHourLine(left, right, up, bottom, centerX, centerY, sys_time.wHour, hdc_paint);
@@ -910,8 +905,7 @@ void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month) {
 Используется Функцией диалогового окна Clock_old
 */
 void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, int centerY, HDC hdc) {
-    COLORREF current = GetPixel(hdc, left, up);
-    C(centerX - RADIUS_OUTER, centerY - RADIUS_OUTER, centerX + RADIUS_OUTER, centerY + RADIUS_OUTER, 0, 0, 0, 0, 4, black, current, hdc);
+    C(centerX - RADIUS_OUTER, centerY - RADIUS_OUTER, centerX + RADIUS_OUTER, centerY + RADIUS_OUTER, 0, 0, 0, 0, 4, black, current_dialog, hdc);
 
     int x = 0;
     int y = 0;
@@ -1025,8 +1019,8 @@ void DrawSecondLine(int left, int right, int up, int bottom, int centerX, int ce
             gMat = 90 - gPr;
             f = M_PI / 180 * gMat;
 
-            x = (RADIUS_INNER - 34) * cos(f) + centerX;
-            y = (-RADIUS_INNER + 34) * sin(f) + centerY;
+            x = (RADIUS_INNER - 44) * cos(f) + centerX;
+            y = (-RADIUS_INNER + 44) * sin(f) + centerY;
             L(centerX, centerY, x, y, 1, black, hdc);
         }
         gPr += step;

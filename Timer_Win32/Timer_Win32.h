@@ -1,6 +1,7 @@
 #pragma once
 
 #define _USE_MATH_DEFINES
+#define MAX_LOADSTRING 100
 
 #include "resource.h"
 #include <string>
@@ -8,6 +9,32 @@
 #include <cmath>
 
 using namespace std;
+
+// Глобальные переменные:
+HINSTANCE hInst;                                // текущий экземпляр
+WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
+WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
+HWND hwnd;
+
+bool counter_day = true;
+
+COLORREF white = RGB(255, 255, 255);
+COLORREF black = RGB(0, 0, 0);
+COLORREF red = RGB(255, 0, 0);
+COLORREF current_dialog = 15790320;
+
+const int RADIUS_INNER = 151;
+const int RADIUS_OUTER = 161;
+
+// high precision time measurement variables
+LARGE_INTEGER StartingTime;
+LARGE_INTEGER EndingTime;
+LARGE_INTEGER ElapsedMicroseconds;
+LARGE_INTEGER Frequency;
+
+int msecond_counter;
+
+
 
 // funct logic
 void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week);

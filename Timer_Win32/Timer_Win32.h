@@ -11,19 +11,9 @@
 using namespace std;
 
 // Глобальные переменные:
-// start
 HINSTANCE hInst;                                // текущий экземпляр
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
-WCHAR szWindowClass[MAX_LOADSTRING];            // Имя класса окна
-// Текст для локализации:
-    // Текст для MessageBox:
-WCHAR sNoInput[MAX_LOADSTRING];          
-WCHAR sInvalidInput[MAX_LOADSTRING];                       
-WCHAR sTitleError[MAX_LOADSTRING];                
-WCHAR sEndTimer[MAX_LOADSTRING];               
-WCHAR sTitleTimer[MAX_LOADSTRING];               
-    // Текст для окон, используется при создании, статичен:
-
+WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
 HWND hwnd;
 
 bool counter_day = true;
@@ -43,8 +33,6 @@ LARGE_INTEGER ElapsedMicroseconds;
 LARGE_INTEGER Frequency;
 
 int msecond_counter;
-
-
 
 // funct logic
 void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week);

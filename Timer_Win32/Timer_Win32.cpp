@@ -299,7 +299,7 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
                     }
                 }
             }
-            if (input_minute > 60 || input_second > 59) {
+            else if (input_minute > 60 || input_second > 59) {
                 MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                 continue_timer = false;
             }

@@ -21,6 +21,17 @@
 #define IDD_DIALOG1                     143
 #define IDD_CLOCK_OLD                   143
 #define IDD_DIALOG2                     144
+#define IDS_NO_INPUT_EN                 147
+#define IDS_NO_INPUT_RU                 148
+#define IDD_CHANGE_LANGUAGE             148
+#define IDS_TITLE_ERROR_EN              149
+#define IDS_TITLE_ERROR_RU              150
+#define IDS_END_TIMER_EN                151
+#define IDS_END_TIMER_RU                152
+#define IDS_TITLE_TIMER_EN              153
+#define IDS_TITLE_TIMER_RU              154
+#define IDS_INVALID_INPUT_EN            155
+#define IDS_INVALID_INPUT_RU            156
 #define IDC_START                       1002
 #define IDC_STOP                        1003
 #define IDC_RESET                       1004
@@ -67,7 +78,9 @@
 #define IDC_EDIT_CLOCK_O_DAY            1045
 #define IDC_EDIT_CLOCK_DAYOFWEEK        1046
 #define IDC_EDIT_CLOCK_O_MONTH          1046
+#define IDC_CHOICE_EN                   1046
 #define IDC_EDIT_CLOCK_O_YEAR           1047
+#define IDC_CHOICE_RU                   1047
 #define IDC_EDIT_CLOCK_O_DAYOFWEEK      1051
 #define ID_TIMER_HOURS                  32771
 #define ID_TIMER_MINUTES                32772
@@ -80,6 +93,8 @@
 #define ID_TIMER_DEFAULT                32779
 #define ID_CLOCK_MODERN                 32780
 #define ID_CLOCK_OLD                    32781
+#define ID_LANGUAGE_CHOOSELANGUAGE      32782
+#define ID_LANGUAGE                     32783
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -87,9 +102,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        146
-#define _APS_NEXT_COMMAND_VALUE         32782
-#define _APS_NEXT_CONTROL_VALUE         1046
+#define _APS_NEXT_RESOURCE_VALUE        149
+#define _APS_NEXT_COMMAND_VALUE         32784
+#define _APS_NEXT_CONTROL_VALUE         1047
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

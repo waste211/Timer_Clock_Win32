@@ -11,9 +11,19 @@
 using namespace std;
 
 // Глобальные переменные:
+// start
 HINSTANCE hInst;                                // текущий экземпляр
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
-WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
+WCHAR szWindowClass[MAX_LOADSTRING];            // Имя класса окна
+// Текст для локализации:
+    // Текст для MessageBox:
+WCHAR sNoInput[MAX_LOADSTRING];
+WCHAR sInvalidInput[MAX_LOADSTRING];
+WCHAR sTitleError[MAX_LOADSTRING];
+WCHAR sEndTimer[MAX_LOADSTRING];
+WCHAR sTitleTimer[MAX_LOADSTRING];
+// Текст для окон, используется при создании, статичен:
+
 HWND hwnd;
 
 bool counter_day = true;

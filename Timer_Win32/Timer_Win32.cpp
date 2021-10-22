@@ -8,6 +8,7 @@
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Language_choosing(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Timer_default(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Timer_reverse(HWND, UINT, WPARAM, LPARAM);
@@ -15,6 +16,7 @@ INT_PTR CALLBACK    Timer_systemdependent(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Stopwatch(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Clock_modern(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Clock_old(HWND, UINT, WPARAM, LPARAM);
+
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -113,6 +115,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
       return FALSE;
    }
+   if (hWnd)
+   {
+       DialogBox(hInst, MAKEINTRESOURCE(IDD_CHANGE_LANGUAGE), hWnd, Language_choosing);
+   }
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -186,6 +192,55 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
+}
+
+// Функция окна "Смена языка"
+INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    HINSTANCE hInstance{};
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+        return (INT_PTR)TRUE;
+
+    case WM_COMMAND:
+        switch (wParam)
+        {
+        case IDCANCEL:
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+            break;
+        case IDC_CHOICE_EN:
+            LoadStringW(hInstance, IDS_NO_INPUT_EN, sNoInput, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_INVALID_INPUT_EN, sInvalidInput, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_ERROR_EN, sTitleError, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_END_TIMER_EN, sEndTimer, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_EN, sTitleTimer, MAX_LOADSTRING);
+            MessageBox(hDlg, (LPCWSTR)L"Language succesfully changed! Thanks for using our application!", (LPCWSTR)L"Timer application", MB_ICONINFORMATION);
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+            break;
+        case IDC_CHOICE_RU:
+            LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDC_TIMERWIN32, szWindowClass, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_NO_INPUT_RU, sNoInput, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_INVALID_INPUT_RU, sInvalidInput, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_ERROR_RU, sTitleError, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_END_TIMER_RU, sEndTimer, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_RU, sTitleTimer, MAX_LOADSTRING);
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+            break;
+        default:
+            break;
+        }
+
+        break;
+    case BN_CLICKED:
+        break;
+    }
+    return (INT_PTR)FALSE;
 }
 
 // Функция окна "О программе", ничего не изменялось

@@ -294,13 +294,13 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             if (input_hour == 0) {
                 if (input_minute == 0) {
                     if (input_second == 0) {
-                        MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                        MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                         continue_timer = false;
                     }
                 }
             }
             if (input_minute > 60 || input_second > 59) {
-                MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                 continue_timer = false;
             }
 
@@ -351,7 +351,7 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
                         SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, edit_hour, TRUE);
                         SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, edit_min, TRUE);
                         SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec, TRUE);
-                        MessageBox(GetActiveWindow(), (LPCWSTR)L"Timer ended", (LPCWSTR)L"TIMER", MB_ICONINFORMATION);
+                        MessageBox(GetActiveWindow(), sEndTimer, sTitleTimer, MB_ICONINFORMATION);
                     }
                 }
             }
@@ -415,13 +415,13 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             if (input_hour == 0) {
                 if (input_minute == 0) {
                     if (input_second == 0) {
-                        MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                        MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                         continue_timer = false;
                     }
                 }
             }
             if (input_minute > 60 || input_second > 59) {
-                MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                 continue_timer = false;
             }
 
@@ -466,7 +466,7 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
                         SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, edit_hour, TRUE);
                         SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, edit_min, TRUE);
                         SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec, TRUE);
-                        MessageBox(GetActiveWindow(), (LPCWSTR)L"Timer ended", (LPCWSTR)L"TIMER", MB_ICONINFORMATION);
+                        MessageBox(GetActiveWindow(), sEndTimer, sTitleTimer, MB_ICONINFORMATION);
                     }
                 }
             }
@@ -545,7 +545,7 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
             sys_second = sys_time.wSecond;
 
             if (input_hour > 23 || input_minute > 60 || input_second > 59) {
-                MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                 continue_timer = false;
             }
             else {
@@ -553,26 +553,26 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
                     if (input_hour == 0) {
                         if (input_minute == 0) {
                             if (input_second == 0) {
-                                MessageBox(GetActiveWindow(), (LPCWSTR)L"No input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                                MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                                 continue_timer = false;
                             }
                         }
                     }
                     else {
                         if (input_hour < sys_hour) {
-                            MessageBox(GetActiveWindow(), (LPCWSTR)L"Invalid input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                            MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                             continue_timer = false;
                             break;
                         }
                         if (input_hour == sys_hour) {
                             if (input_minute < sys_minute) {
-                                MessageBox(GetActiveWindow(), (LPCWSTR)L"Invalid input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                                MessageBox(GetActiveWindow(), sInvalidInput, sTitleError, MB_ICONERROR);
                                 continue_timer = false;
                                 break;
                             }
                             if (input_minute == sys_minute) {
                                 if (input_second < sys_second) {
-                                    MessageBox(GetActiveWindow(), (LPCWSTR)L"Invalid input", (LPCWSTR)L"ERROR", MB_ICONERROR);
+                                    MessageBox(GetActiveWindow(), sInvalidInput, sTitleError, MB_ICONERROR);
                                     continue_timer = false;
                                     break;
                                 }
@@ -621,7 +621,7 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
                     if (sys_minute == input_minute) {
                         if (sys_second == input_second) {
                             KillTimer(hDlg, 3);
-                            MessageBox(GetActiveWindow(), (LPCWSTR)L"Timer ended", (LPCWSTR)L"TIMER", MB_ICONINFORMATION);
+                            MessageBox(GetActiveWindow(), sEndTimer, sTitleTimer, MB_ICONINFORMATION);
                             break;
                         }
                     }

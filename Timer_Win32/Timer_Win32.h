@@ -26,6 +26,8 @@ WCHAR sTitleTimer[MAX_LOADSTRING];
 
 HWND hwnd;
 
+bool language_ru = false;
+bool language_en = true;
 bool counter_day = true;
 
 COLORREF white = RGB(255, 255, 255);

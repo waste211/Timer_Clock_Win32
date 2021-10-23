@@ -7,10 +7,14 @@
 #define IDS_APP_TITLE                   103
 #define IDD_ABOUTBOX                    103
 #define IDM_ABOUT                       104
+#define IDS_TIMER_D_TITLE_EN            104
 #define IDM_EXIT                        105
 #define IDI_TIMERWIN32                  107
 #define IDI_SMALL                       108
 #define IDC_TIMERWIN32                  109
+#define IDS_TIMER_D_TITLE_RU            110
+#define IDS_TIMER_R_TITLE_EN            111
+#define IDS_TIMER_R_TITLE_RU            112
 #define IDR_MAINFRAME                   128
 #define IDD_START                       136
 #define IDD_DEFAULT_TIMER               136
@@ -95,6 +99,7 @@
 #define ID_CLOCK_OLD                    32781
 #define ID_LANGUAGE_CHOOSELANGUAGE      32782
 #define ID_LANGUAGE                     32783
+#define ID_LANGUAGE_CHOOSELANGUAGE32784 32784
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -103,8 +108,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        149
-#define _APS_NEXT_COMMAND_VALUE         32784
+#define _APS_NEXT_COMMAND_VALUE         32785
 #define _APS_NEXT_CONTROL_VALUE         1047
-#define _APS_NEXT_SYMED_VALUE           110
+#define _APS_NEXT_SYMED_VALUE           111
 #endif
 #endif

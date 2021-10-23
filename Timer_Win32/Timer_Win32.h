@@ -23,6 +23,7 @@ WCHAR sTitleError[MAX_LOADSTRING];
 WCHAR sEndTimer[MAX_LOADSTRING];
 WCHAR sTitleTimer[MAX_LOADSTRING];
 // “екст дл€ окон, используетс€ при создании, статичен:
+WCHAR sOutput[MAX_LOADSTRING];
 
 HWND hwnd;
 

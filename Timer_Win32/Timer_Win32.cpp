@@ -42,11 +42,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_TIMERWIN32, szWindowClass, MAX_LOADSTRING);
 
+    // MesageBox strings
     LoadStringW(hInstance, IDS_NO_INPUT_EN, sNoInput, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_INVALID_INPUT_EN, sInvalidInput, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_TITLE_ERROR_EN, sTitleError, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_END_TIMER_EN, sEndTimer, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_TITLE_TIMER_EN, sTitleTimer, MAX_LOADSTRING);
+
+    // Window titles strings ??? - where to paste, need a class?
+    LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
+    // Static text strings
 
     MyRegisterClass(hInstance);
 
@@ -230,7 +235,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_TITLE_TIMER_EN, sTitleTimer, MAX_LOADSTRING);
 
             // Window titles strings ??? - where to paste, need a class?
-
+            LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
             // Static text strings
 
             //end
@@ -239,13 +244,19 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             return (INT_PTR)TRUE;
             break;
         case IDC_CHOICE_RU:
-            LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-            LoadStringW(hInstance, IDC_TIMERWIN32, szWindowClass, MAX_LOADSTRING);
+            // start
+            // MesageBox strings
             LoadStringW(hInstance, IDS_NO_INPUT_RU, sNoInput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_INVALID_INPUT_RU, sInvalidInput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_TITLE_ERROR_RU, sTitleError, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_END_TIMER_RU, sEndTimer, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_TITLE_TIMER_RU, sTitleTimer, MAX_LOADSTRING);
+
+            // Window titles strings ??? - where to paste, need a class?
+            LoadStringW(hInstance, IDS_OUTPUT_RU, sOutput, MAX_LOADSTRING);
+            // Static text strings
+
+            //end
             MessageBox(hDlg, (LPCWSTR)L"Язык успешно изменен! Спасибо, что пользуетесь нашим приложением!", (LPCWSTR)L"Приложение \"Таймер\"", MB_ICONINFORMATION);
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
@@ -685,6 +696,7 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     switch (message)
     {
     case WM_INITDIALOG:
+        SetDlgItemTextW(hDlg, IDC_OUTPUT, sOutput);
         return (INT_PTR)TRUE;
 
     case WM_COMMAND:

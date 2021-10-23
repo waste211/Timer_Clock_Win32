@@ -24,6 +24,11 @@ WCHAR sEndTimer[MAX_LOADSTRING];
 WCHAR sTitleTimer[MAX_LOADSTRING];
 // “екст дл€ окон, используетс€ при создании, статичен:
 WCHAR sOutput[MAX_LOADSTRING];
+WCHAR sInput[MAX_LOADSTRING];
+WCHAR sDay[MAX_LOADSTRING];
+WCHAR sHour[MAX_LOADSTRING];
+WCHAR sMinute[MAX_LOADSTRING];
+WCHAR sSecond[MAX_LOADSTRING];
 
 HWND hwnd;
 

@@ -19,6 +19,15 @@
 #define IDS_TIMER_D_TITLE_RU            110
 #define IDS_TIMER_R_TITLE_EN            111
 #define IDS_TIMER_R_TITLE_RU            112
+#define IDS_DAY_EN                      113
+#define IDS_HOUR_EN                     114
+#define IDS_MINUTE_EN                   115
+#define IDS_SECOND_EN                   116
+#define IDS_DAY_RU                      117
+#define IDS_HOUR_RU                     118
+#define IDS_MINUTE_RU                   119
+#define IDS_SEOND_RU                    120
+#define IDS_SECOND_RU                   120
 #define IDR_MAINFRAME                   128
 #define IDD_START                       136
 #define IDD_DEFAULT_TIMER               136

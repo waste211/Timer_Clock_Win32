@@ -35,8 +35,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_TITLE_TIMER_EN, sTitleTimer, MAX_LOADSTRING);
 
     // Window titles strings ??? - where to paste, need a class?
-    LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
     // Static text strings
+    LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_INPUT_EN, sInput, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_DAY_EN, sDay, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_HOUR_EN, sHour, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MINUTE_EN, sMinute, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SECOND_EN, sSecond, MAX_LOADSTRING);
 
     MyRegisterClass(hInstance);
 
@@ -211,6 +216,8 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             return (INT_PTR)TRUE;
             break;
         case IDC_CHOICE_EN:
+            language_en = true;
+            language_ru = false;
             // start
             // MesageBox strings
             LoadStringW(hInstance, IDS_NO_INPUT_EN, sNoInput, MAX_LOADSTRING);
@@ -220,8 +227,14 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_TITLE_TIMER_EN, sTitleTimer, MAX_LOADSTRING);
 
             // Window titles strings ??? - where to paste, need a class?
-            LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
+            
             // Static text strings
+            LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_INPUT_EN, sInput, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DAY_EN, sDay, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_HOUR_EN, sHour, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MINUTE_EN, sMinute, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SECOND_EN, sSecond, MAX_LOADSTRING);
 
             //end
             MessageBox(hDlg, (LPCWSTR)L"Language succesfully changed! Thanks for using our application!", (LPCWSTR)L"Application \"Timer\"", MB_ICONINFORMATION);
@@ -229,6 +242,8 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             return (INT_PTR)TRUE;
             break;
         case IDC_CHOICE_RU:
+            language_en = false;
+            language_ru = true;
             // start
             // MesageBox strings
             LoadStringW(hInstance, IDS_NO_INPUT_RU, sNoInput, MAX_LOADSTRING);
@@ -238,8 +253,14 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_TITLE_TIMER_RU, sTitleTimer, MAX_LOADSTRING);
 
             // Window titles strings ??? - where to paste, need a class?
-            LoadStringW(hInstance, IDS_OUTPUT_RU, sOutput, MAX_LOADSTRING);
+            
             // Static text strings
+            LoadStringW(hInstance, IDS_OUTPUT_RU, sOutput, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_INPUT_RU, sInput, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DAY_RU, sDay, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_HOUR_RU, sHour, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MINUTE_RU, sMinute, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SECOND_RU, sSecond, MAX_LOADSTRING);
 
             //end
             MessageBox(hDlg, (LPCWSTR)L"Язык успешно изменен! Спасибо, что пользуетесь нашим приложением!", (LPCWSTR)L"Приложение \"Таймер\"", MB_ICONINFORMATION);

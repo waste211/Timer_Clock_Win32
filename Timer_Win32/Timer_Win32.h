@@ -22,12 +22,31 @@ WCHAR sInvalidInput[MAX_LOADSTRING];
 WCHAR sTitleError[MAX_LOADSTRING];
 WCHAR sEndTimer[MAX_LOADSTRING];
 WCHAR sTitleTimer[MAX_LOADSTRING];
+WCHAR sChangeLang[MAX_LOADSTRING];
+WCHAR sChangeLangTitle[MAX_LOADSTRING];
 // Текст для окон, используется при создании, статичен:
+// Static
+WCHAR sOutput[MAX_LOADSTRING];
+WCHAR sInput[MAX_LOADSTRING];
+WCHAR sDayOfWeek[MAX_LOADSTRING];
+WCHAR sMonth[MAX_LOADSTRING];
+WCHAR sYear[MAX_LOADSTRING];
+WCHAR sDay[MAX_LOADSTRING];
+WCHAR sHour[MAX_LOADSTRING];
+WCHAR sMinute[MAX_LOADSTRING];
+WCHAR sSecond[MAX_LOADSTRING];
+WCHAR sChangeLangText[MAX_LOADSTRING];
+// Btn
+WCHAR sStart[MAX_LOADSTRING];
+WCHAR sStop[MAX_LOADSTRING];
+WCHAR sPause[MAX_LOADSTRING];
+WCHAR sContinue[MAX_LOADSTRING];
+WCHAR sReset[MAX_LOADSTRING];
 
 HWND hwnd;
 
-bool language_ru = false;
 bool language_en = true;
+bool language_ru = false;
 bool counter_day = true;
 
 COLORREF white = RGB(255, 255, 255);
@@ -46,9 +65,22 @@ LARGE_INTEGER Frequency;
 
 int msecond_counter;
 
+// Отправить объявления функций, включенных в этот модуль кода:
+ATOM                MyRegisterClass(HINSTANCE hInstance);
+BOOL                InitInstance(HINSTANCE, int);
+LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Language_choosing(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Timer_default(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Timer_reverse(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Timer_systemdependent(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Stopwatch(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Clock_modern(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Clock_old(HWND, UINT, WPARAM, LPARAM);
+
 // funct logic
-void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week);
-void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month);
+void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week, bool language_en, bool language_ru);
+void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en, bool language_ru);
 
 // func for static/dynamic painting structures
 void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, int centerY, HDC hdc);

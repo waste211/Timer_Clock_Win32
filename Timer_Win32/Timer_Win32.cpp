@@ -704,6 +704,7 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     switch (message)
     {
     case WM_INITDIALOG:
+        // test
         SetDlgItemTextW(hDlg, IDC_OUTPUT, sOutput);
         return (INT_PTR)TRUE;
 

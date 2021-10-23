@@ -218,6 +218,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
         case IDC_CHOICE_EN:
             language_en = true;
             language_ru = false;
+
             // start
             // MesageBox strings
             LoadStringW(hInstance, IDS_NO_INPUT_EN, sNoInput, MAX_LOADSTRING);
@@ -235,8 +236,8 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_HOUR_EN, sHour, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MINUTE_EN, sMinute, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SECOND_EN, sSecond, MAX_LOADSTRING);
-
             //end
+
             MessageBox(hDlg, (LPCWSTR)L"Language succesfully changed! Thanks for using our application!", (LPCWSTR)L"Application \"Timer\"", MB_ICONINFORMATION);
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
@@ -244,6 +245,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
         case IDC_CHOICE_RU:
             language_en = false;
             language_ru = true;
+
             // start
             // MesageBox strings
             LoadStringW(hInstance, IDS_NO_INPUT_RU, sNoInput, MAX_LOADSTRING);
@@ -261,8 +263,8 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_HOUR_RU, sHour, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MINUTE_RU, sMinute, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SECOND_RU, sSecond, MAX_LOADSTRING);
-
             //end
+
             MessageBox(hDlg, (LPCWSTR)L"Язык успешно изменен! Спасибо, что пользуетесь нашим приложением!", (LPCWSTR)L"Приложение \"Таймер\"", MB_ICONINFORMATION);
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
@@ -814,10 +816,10 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
         minute = sys_time.wMinute;
         second = sys_time.wSecond;
         day_of_week = sys_time.wDayOfWeek;
-        ConvertDayOfWeekToString(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, day_of_week);
+        ConvertDayOfWeekToString(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, day_of_week, language_en, language_ru);
         day = sys_time.wDay;
         month = sys_time.wMonth;
-        ConvertMonthToString(hDlg, IDC_EDIT_CLOCK_MONTH, month);
+        ConvertMonthToString(hDlg, IDC_EDIT_CLOCK_MONTH, month, language_en, language_ru);
         year = sys_time.wYear;
 
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_HOUR, hour, TRUE);
@@ -875,7 +877,7 @@ INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         }
         break;
     case WM_TIMER:
-        ConvertDayOfWeekToString(hDlg, IDC_EDIT_CLOCK_O_DAYOFWEEK, sys_time.wDayOfWeek);
+        ConvertDayOfWeekToString(hDlg, IDC_EDIT_CLOCK_O_DAYOFWEEK, sys_time.wDayOfWeek, language_en, language_ru);
 
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_DAY, sys_time.wDay, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_MONTH, sys_time.wMonth, TRUE);
@@ -911,32 +913,65 @@ INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     HWND hDlg             A handle to the dialog box that contains the control.
     int nIDDlgItem        The identifier of the control whose title or text is to be retrieved.
     int day_of_week       Принимает день недели в числовом виде, которій будет конвертироваться
+    bool language_en      Определяет, какой язык используется в программе
+    bool language_ru      Определяет, какой язык используется в программе 
 */
-void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week) {
-    switch (day_of_week) {
-    case 1:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Monday");
-        break;
-    case 2:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Tuesday");
-        break;
-    case 3:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Wednesday");
-        break;
-    case 4:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Thursday");
-        break;
-    case 5:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Friday");
-        break;
-    case 6:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Saturday");
-        break;
-    case 7:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Sunday");
-        break;
-    default:
-        break;
+void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week, bool language_en, bool language_ru) {
+    
+    if (language_en == true) {
+        switch (day_of_week) {
+        case 1:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Monday");
+            break;
+        case 2:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Tuesday");
+            break;
+        case 3:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Wednesday");
+            break;
+        case 4:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Thursday");
+            break;
+        case 5:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Friday");
+            break;
+        case 6:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Saturday");
+            break;
+        case 7:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Sunday");
+            break;
+        
+        default:
+            break;
+        }
+    }
+    else if (language_ru == true) {
+        switch (day_of_week) {
+        case 1:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Понедельник");
+            break;
+        case 2:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Вторник");
+            break;
+        case 3:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Среда");
+            break;
+        case 4:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Четверг");
+            break;
+        case 5:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Пятница");
+            break;
+        case 6:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Суббота");
+            break;
+        case 7:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Восресенье");
+            break;
+        default:
+            break;
+        }
     }
 }
 
@@ -946,47 +981,93 @@ void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week) {
     HWND hDlg             A handle to the dialog box that contains the control.
     int nIDDlgItem        The identifier of the control whose title or text is to be retrieved.
     int month             Принимает месяц в числовом виде, которій будет конвертироваться
+    bool language_en      Определяет, какой язык используется в программе
+    bool language_ru      Определяет, какой язык используется в программе
 */
-void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month) {
-    switch (month) {
-    case 1:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"January");
-        break;
-    case 2:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"February");
-        break;
-    case 3:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"March");
-        break;
-    case 4:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"April");
-        break;
-    case 5:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"May");
-        break;
-    case 6:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"June");
-        break;
-    case 7:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"July");
-        break;
-    case 8:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"August");
-        break;
-    case 9:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"September");
-        break;
-    case 10:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"October");
-        break;
-    case 11:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"November");
-        break;
-    case 12:
-        SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"December");
-        break;
-    default:
-        break;
+void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en, bool language_ru) {
+    if (language_en == true) {
+        switch (month) {
+        case 1:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"January");
+            break;
+        case 2:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"February");
+            break;
+        case 3:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"March");
+            break;
+        case 4:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"April");
+            break;
+        case 5:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"May");
+            break;
+        case 6:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"June");
+            break;
+        case 7:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"July");
+            break;
+        case 8:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"August");
+            break;
+        case 9:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"September");
+            break;
+        case 10:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"October");
+            break;
+        case 11:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"November");
+            break;
+        case 12:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"December");
+            break;
+        default:
+            break;
+        }
+    }
+    else if (language_ru == true) {
+        switch (month) {
+        case 1:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Январь");
+            break;
+        case 2:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Февраль");
+            break;
+        case 3:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Март");
+            break;
+        case 4:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Апрель");
+            break;
+        case 5:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Май");
+            break;
+        case 6:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Июнь");
+            break;
+        case 7:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Июль");
+            break;
+        case 8:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Август");
+            break;
+        case 9:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Сентяьрь");
+            break;
+        case 10:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Октябрь");
+            break;
+        case 11:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Ноябрь");
+            break;
+        case 12:
+            SetDlgItemTextW(hDlg, nIDDlgItem, (LPCWSTR)L"Декабрь");
+            break;
+        default:
+            break;
+        }
     }
 }
 

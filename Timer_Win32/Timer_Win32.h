@@ -66,8 +66,8 @@ INT_PTR CALLBACK    Clock_modern(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Clock_old(HWND, UINT, WPARAM, LPARAM);
 
 // funct logic
-void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week);
-void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month);
+void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week, bool language_en, bool language_ru);
+void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en, bool language_ru);
 
 // func for static/dynamic painting structures
 void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, int centerY, HDC hdc);

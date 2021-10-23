@@ -40,6 +40,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // Static text strings
     LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_INPUT_EN, sInput, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_DAY_OF_WEEK_EN, sDayOfWeek, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MONTH_EN, sMonth, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_YEAR_EN, sYear, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_DAY_EN, sDay, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_HOUR_EN, sHour, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_MINUTE_EN, sMinute, MAX_LOADSTRING);
@@ -50,6 +53,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_STOP_EN, sStop, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
 
     MyRegisterClass(hInstance);
 
@@ -246,6 +250,9 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             // Static text strings
             LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_INPUT_EN, sInput, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DAY_OF_WEEK_EN, sDayOfWeek, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MONTH_EN, sMonth, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_YEAR_EN, sYear, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_DAY_EN, sDay, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_HOUR_EN, sHour, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MINUTE_EN, sMinute, MAX_LOADSTRING);
@@ -256,6 +263,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_STOP_EN, sStop, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
 
             //end
             // Раскомментировать, чтобы появился MessageBox о смене языка
@@ -281,6 +289,9 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             // Static text strings
             LoadStringW(hInstance, IDS_OUTPUT_RU, sOutput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_INPUT_RU, sInput, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DAY_OF_WEEK_RU, sDayOfWeek, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MONTH_RU, sMonth, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_YEAR_RU, sYear, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_DAY_RU, sDay, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_HOUR_RU, sHour, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MINUTE_RU, sMinute, MAX_LOADSTRING);
@@ -291,6 +302,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_STOP_RU, sStop, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_PAUSE_RU, sPause, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CONTINUE_RU, sContinue, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_RESET_RU, sReset, MAX_LOADSTRING);
 
             //end
             // Раскомментировать, чтобы появился MessageBox о смене языка
@@ -366,7 +378,6 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
         SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sContinue);
         return (INT_PTR)TRUE;
     }
-
     case WM_COMMAND:
         if (LOWORD(wParam) == IDCANCEL)
         {
@@ -383,12 +394,14 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             if (input_hour == 0) {
                 if (input_minute == 0) {
                     if (input_second == 0) {
+                        KillTimer(hDlg, 1);
                         MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                         continue_timer = false;
                     }
                 }
             }
             else if (input_minute > 60 || input_second > 59) {
+                KillTimer(hDlg, 1);
                 MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                 continue_timer = false;
             }
@@ -399,8 +412,6 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
                 SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, 0, TRUE);
                 SetDlgItemInt(hDlg, IDC_EDIT_SECOND, 0, TRUE);
             }
-            else 
-                KillTimer(hDlg, 1);
 
             return (INT_PTR)TRUE;
         }
@@ -486,8 +497,30 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
     switch (message)
     {
     case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
+    {
+        HWND text{};
+        text = GetDlgItem(hDlg, IDC_TEXT_INPUT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sInput);
+        text = GetDlgItem(hDlg, IDC_TEXT_OUTPUT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sOutput);
+        text = GetDlgItem(hDlg, IDC_TEXT_HOUR);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sHour);
+        text = GetDlgItem(hDlg, IDC_TEXT_MINUTE);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sMinute);
+        text = GetDlgItem(hDlg, IDC_TEXT_SECOND);
+        SendMessageW(text, WM_SETTEXT, 0, (LPARAM)sSecond);
 
+        HWND btn{};
+        btn = GetDlgItem(hDlg, IDC_START);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sStart);
+        btn = GetDlgItem(hDlg, IDC_STOP);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sStop);
+        btn = GetDlgItem(hDlg, IDC_PAUSE);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sPause);
+        btn = GetDlgItem(hDlg, IDC_CONTINUE);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sContinue);
+        return (INT_PTR)TRUE;
+    }
     case WM_COMMAND:
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
         {
@@ -504,12 +537,14 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             if (input_hour == 0) {
                 if (input_minute == 0) {
                     if (input_second == 0) {
+                        KillTimer(hDlg, 2);
                         MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                         continue_timer = false;
                     }
                 }
             }
             if (input_minute > 60 || input_second > 59) {
+                KillTimer(hDlg, 2);
                 MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                 continue_timer = false;
             }
@@ -519,8 +554,7 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
                 SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, input_minute, TRUE);
                 SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, input_second, TRUE);
             }
-            else 
-                KillTimer(hDlg, 2);
+            
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDC_R_STOP)
@@ -610,8 +644,28 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
     switch (message)
     {
     case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
+    {
+        HWND text{};
+        text = GetDlgItem(hDlg, IDC_TEXT_INPUT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sInput);
+        text = GetDlgItem(hDlg, IDC_TEXT_OUTPUT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sOutput);
+        text = GetDlgItem(hDlg, IDC_TEXT_DAY);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sDay);
+        text = GetDlgItem(hDlg, IDC_TEXT_HOUR);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sHour);
+        text = GetDlgItem(hDlg, IDC_TEXT_MINUTE);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sMinute);
+        text = GetDlgItem(hDlg, IDC_TEXT_SECOND);
+        SendMessageW(text, WM_SETTEXT, 0, (LPARAM)sSecond);
 
+        HWND btn{};
+        btn = GetDlgItem(hDlg, IDC_S_START);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sStart);
+        btn = GetDlgItem(hDlg, IDC_S_RESET);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sReset);
+        return (INT_PTR)TRUE;
+    }
     case WM_COMMAND:
         if (LOWORD(wParam) == IDCANCEL)
         {
@@ -634,6 +688,7 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
             sys_second = sys_time.wSecond;
 
             if (input_hour > 23 || input_minute > 60 || input_second > 59) {
+                KillTimer(hDlg, 3);
                 MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                 continue_timer = false;
             }
@@ -642,6 +697,7 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
                     if (input_hour == 0) {
                         if (input_minute == 0) {
                             if (input_second == 0) {
+                                KillTimer(hDlg, 3);
                                 MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                                 continue_timer = false;
                             }
@@ -649,18 +705,21 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
                     }
                     else {
                         if (input_hour < sys_hour) {
+                            KillTimer(hDlg, 3);
                             MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                             continue_timer = false;
                             break;
                         }
                         if (input_hour == sys_hour) {
                             if (input_minute < sys_minute) {
+                                KillTimer(hDlg, 3);
                                 MessageBox(GetActiveWindow(), sInvalidInput, sTitleError, MB_ICONERROR);
                                 continue_timer = false;
                                 break;
                             }
                             if (input_minute == sys_minute) {
                                 if (input_second < sys_second) {
+                                    KillTimer(hDlg, 3);
                                     MessageBox(GetActiveWindow(), sInvalidInput, sTitleError, MB_ICONERROR);
                                     continue_timer = false;
                                     break;
@@ -677,8 +736,7 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
                 SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, sys_minute, TRUE);
                 SetDlgItemInt(hDlg, IDC_EDIT_SECOND, sys_second, TRUE);
             }
-            else
-                KillTimer(hDlg, 3);
+
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDC_S_RESET)
@@ -756,10 +814,22 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     switch (message)
     {
     case WM_INITDIALOG:
-        // test
-        SetDlgItemTextW(hDlg, IDC_OUTPUT, sOutput);
-        return (INT_PTR)TRUE;
+    {
+        HWND text{};
+        text = GetDlgItem(hDlg, IDC_TEXT_OUTPUT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sOutput);
 
+        HWND btn{};
+        btn = GetDlgItem(hDlg, IDC_SW_START);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sStart);
+        btn = GetDlgItem(hDlg, IDC_SW_STOP);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sStop);
+        btn = GetDlgItem(hDlg, IDC_SW_PAUSE);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sPause);
+        btn = GetDlgItem(hDlg, IDC_SW_CONTINUE);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sContinue);
+        return (INT_PTR)TRUE;
+    }
     case WM_COMMAND:
         if (LOWORD(wParam) == IDCANCEL)
         {
@@ -794,7 +864,7 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         }
         if (LOWORD(wParam) == IDC_SW_CONTINUE)
         {
-            SetTimer(hDlg, 4, msecond_counter / 1000, NULL);
+            SetTimer(hDlg, 4, 100, NULL);
             return (INT_PTR)TRUE;
         }
 
@@ -852,9 +922,26 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
     switch (message)
     {
     case WM_INITDIALOG:
+    {
         SetTimer(hDlg, 5, 300, NULL);
-        return (INT_PTR)TRUE;
 
+        HWND text{};
+        text = GetDlgItem(hDlg, IDC_TEXT_DAY_OF_WEEK);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sDayOfWeek);
+        text = GetDlgItem(hDlg, IDC_TEXT_MONTH);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sMonth);
+        text = GetDlgItem(hDlg, IDC_TEXT_YEAR);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sYear);
+        text = GetDlgItem(hDlg, IDC_TEXT_DAY);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sDay);
+        text = GetDlgItem(hDlg, IDC_TEXT_HOUR);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sHour);
+        text = GetDlgItem(hDlg, IDC_TEXT_MINUTE);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sMinute);
+        text = GetDlgItem(hDlg, IDC_TEXT_SECOND);
+        SendMessageW(text, WM_SETTEXT, 0, (LPARAM)sSecond);
+        return (INT_PTR)TRUE;
+    }
     case WM_COMMAND:
         if (LOWORD(wParam) == IDCANCEL)
         {
@@ -917,6 +1004,7 @@ INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     {
     case WM_INITDIALOG:
         SetTimer(hDlg, 6, 1000, NULL);
+        ConvertDayOfWeekToString(hDlg, IDC_EDIT_CLOCK_O_DAYOFWEEK, sys_time.wDayOfWeek, language_en, language_ru);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_DAY, sys_time.wDay, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_MONTH, sys_time.wMonth, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_YEAR, sys_time.wYear, TRUE);

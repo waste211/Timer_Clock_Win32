@@ -28,6 +28,9 @@ WCHAR sChangeLangTitle[MAX_LOADSTRING];
 // Static
 WCHAR sOutput[MAX_LOADSTRING];
 WCHAR sInput[MAX_LOADSTRING];
+WCHAR sDayOfWeek[MAX_LOADSTRING];
+WCHAR sMonth[MAX_LOADSTRING];
+WCHAR sYear[MAX_LOADSTRING];
 WCHAR sDay[MAX_LOADSTRING];
 WCHAR sHour[MAX_LOADSTRING];
 WCHAR sMinute[MAX_LOADSTRING];
@@ -38,11 +41,12 @@ WCHAR sStart[MAX_LOADSTRING];
 WCHAR sStop[MAX_LOADSTRING];
 WCHAR sPause[MAX_LOADSTRING];
 WCHAR sContinue[MAX_LOADSTRING];
+WCHAR sReset[MAX_LOADSTRING];
 
 HWND hwnd;
 
-bool language_ru = false;
 bool language_en = true;
+bool language_ru = false;
 bool counter_day = true;
 
 COLORREF white = RGB(255, 255, 255);

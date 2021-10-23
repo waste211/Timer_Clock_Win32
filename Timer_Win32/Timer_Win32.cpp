@@ -4,21 +4,6 @@
 #include "framework.h"
 #include "Timer_Win32.h"
 
-// Отправить объявления функций, включенных в этот модуль кода:
-ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    Language_choosing(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    Timer_default(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    Timer_reverse(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    Timer_systemdependent(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    Stopwatch(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    Clock_modern(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    Clock_old(HWND, UINT, WPARAM, LPARAM);
-
-
-
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,

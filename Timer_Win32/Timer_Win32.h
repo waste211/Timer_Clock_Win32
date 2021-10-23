@@ -47,6 +47,19 @@ LARGE_INTEGER Frequency;
 
 int msecond_counter;
 
+// Отправить объявления функций, включенных в этот модуль кода:
+ATOM                MyRegisterClass(HINSTANCE hInstance);
+BOOL                InitInstance(HINSTANCE, int);
+LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Language_choosing(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Timer_default(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Timer_reverse(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Timer_systemdependent(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Stopwatch(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Clock_modern(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Clock_old(HWND, UINT, WPARAM, LPARAM);
+
 // funct logic
 void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week);
 void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month);

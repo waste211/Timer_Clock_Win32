@@ -12,7 +12,9 @@
 #define IDS_OUTPUT_EN                   105
 #define IDS_OUTPUT_RU                   106
 #define IDI_TIMERWIN32                  107
+#define IDS_INPUT_EN                    107
 #define IDI_SMALL                       108
+#define IDS_INPUT_RU                    108
 #define IDC_TIMERWIN32                  109
 #define IDS_TIMER_D_TITLE_RU            110
 #define IDS_TIMER_R_TITLE_EN            111

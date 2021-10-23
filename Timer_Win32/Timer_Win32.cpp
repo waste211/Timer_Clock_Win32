@@ -33,6 +33,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_TITLE_ERROR_EN, sTitleError, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_END_TIMER_EN, sEndTimer, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_TITLE_TIMER_EN, sTitleTimer, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_CHANGELANG_EN, sChangeLang, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_CHANGELANG_TITLE_EN, sChangeLangTitle, MAX_LOADSTRING);
 
     // Window titles strings ??? - where to paste, need a class?
     // Static text strings
@@ -42,6 +44,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_HOUR_EN, sHour, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_MINUTE_EN, sMinute, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_SECOND_EN, sSecond, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_CHANGELANG_TEXT_EN, sChangeLangText, MAX_LOADSTRING);
+    // Btn text strings
+    LoadStringW(hInstance, IDS_START_EN, sStart, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_STOP_EN, sStop, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
 
     MyRegisterClass(hInstance);
 
@@ -206,7 +214,12 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
     switch (message)
     {
     case WM_INITDIALOG:
+    {
+        HWND text{};
+        text = GetDlgItem(hDlg, IDC_STATIC);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sChangeLangText);
         return (INT_PTR)TRUE;
+    }
 
     case WM_COMMAND:
         switch (wParam)
@@ -226,7 +239,8 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_TITLE_ERROR_EN, sTitleError, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_END_TIMER_EN, sEndTimer, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_TITLE_TIMER_EN, sTitleTimer, MAX_LOADSTRING);
-
+            LoadStringW(hInstance, IDS_CHANGELANG_EN, sChangeLang, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_CHANGELANG_TITLE_EN, sChangeLangTitle, MAX_LOADSTRING);
             // Window titles strings ??? - where to paste, need a class?
             
             // Static text strings
@@ -236,9 +250,16 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_HOUR_EN, sHour, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MINUTE_EN, sMinute, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SECOND_EN, sSecond, MAX_LOADSTRING);
-            //end
+            LoadStringW(hInstance, IDS_CHANGELANG_TEXT_EN, sChangeLangText, MAX_LOADSTRING);
+            // Btn text strings
+            LoadStringW(hInstance, IDS_START_EN, sStart, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_STOP_EN, sStop, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
 
-            MessageBox(hDlg, (LPCWSTR)L"Language succesfully changed! Thanks for using our application!", (LPCWSTR)L"Application \"Timer\"", MB_ICONINFORMATION);
+            //end
+            // Раскомментировать, чтобы появился MessageBox о смене языка
+            // MessageBox(hDlg, (LPCWSTR)L"Language succesfully changed! Thanks for using our application!", (LPCWSTR)L"Application \"Timer\"", MB_ICONINFORMATION);
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
             break;
@@ -253,7 +274,8 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_TITLE_ERROR_RU, sTitleError, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_END_TIMER_RU, sEndTimer, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_TITLE_TIMER_RU, sTitleTimer, MAX_LOADSTRING);
-
+            LoadStringW(hInstance, IDS_CHANGELANG_RU, sChangeLang, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_CHANGELANG_TITLE_RU, sChangeLangTitle, MAX_LOADSTRING);
             // Window titles strings ??? - where to paste, need a class?
             
             // Static text strings
@@ -263,9 +285,16 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_HOUR_RU, sHour, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MINUTE_RU, sMinute, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SECOND_RU, sSecond, MAX_LOADSTRING);
-            //end
+            LoadStringW(hInstance, IDS_CHANGELANG_TEXT_RU, sChangeLangText, MAX_LOADSTRING);
+            // Btn text strings
+            LoadStringW(hInstance, IDS_START_RU, sStart, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_STOP_RU, sStop, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_PAUSE_RU, sPause, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_CONTINUE_RU, sContinue, MAX_LOADSTRING);
 
-            MessageBox(hDlg, (LPCWSTR)L"Язык успешно изменен! Спасибо, что пользуетесь нашим приложением!", (LPCWSTR)L"Приложение \"Таймер\"", MB_ICONINFORMATION);
+            //end
+            // Раскомментировать, чтобы появился MessageBox о смене языка
+            // MessageBox(hDlg, (LPCWSTR)L"Язык успешно изменен! Спасибо, что пользуетесь нашим приложением!", (LPCWSTR)L"Приложение \"Таймер\"", MB_ICONINFORMATION);
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
             break;
@@ -313,7 +342,30 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
     switch (message)
     {
     case WM_INITDIALOG:
+    {
+        HWND text{};
+        text = GetDlgItem(hDlg, IDC_TEXT_INPUT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sInput);
+        text = GetDlgItem(hDlg, IDC_TEXT_OUTPUT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sOutput);
+        text = GetDlgItem(hDlg, IDC_TEXT_HOUR);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sHour);
+        text = GetDlgItem(hDlg, IDC_TEXT_MINUTE);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sMinute);
+        text = GetDlgItem(hDlg, IDC_TEXT_SECOND);
+        SendMessageW(text, WM_SETTEXT, 0, (LPARAM)sSecond);
+
+        HWND btn{};
+        btn = GetDlgItem(hDlg, IDC_START);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sStart);
+        btn = GetDlgItem(hDlg, IDC_STOP);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sStop);
+        btn = GetDlgItem(hDlg, IDC_PAUSE);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sPause);
+        btn = GetDlgItem(hDlg, IDC_CONTINUE);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sContinue);
         return (INT_PTR)TRUE;
+    }
 
     case WM_COMMAND:
         if (LOWORD(wParam) == IDCANCEL)

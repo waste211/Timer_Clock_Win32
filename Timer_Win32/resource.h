@@ -26,9 +26,23 @@
 #define IDS_DAY_RU                      117
 #define IDS_HOUR_RU                     118
 #define IDS_MINUTE_RU                   119
-#define IDS_SEOND_RU                    120
 #define IDS_SECOND_RU                   120
+#define IDS_START_EN                    121
+#define IDS_START_RU                    122
+#define IDS_STOP_EN                     123
+#define IDS_PAUSE_EN                    124
+#define IDS_CONTINUE_EN                 125
+#define IDS_STOP_RU                     126
+#define IDS_PAUSE_RU                    127
 #define IDR_MAINFRAME                   128
+#define IDS_CONTINUE_RU                 128
+#define IDS_CHANGELANG_EN               129
+#define IDS_CHANGELANG_TITLE_EN         130
+#define IDS_CHANGELANG_RU               131
+#define IDS_MESSAGE_CHANGELANG_TITLE_RU 132
+#define IDS_CHANGELANG_TITLE_RU         132
+#define IDS_CHANGELANG_TEXT_EN          133
+#define IDS_CHANGELANG_TEXT_RU          134
 #define IDD_START                       136
 #define IDD_DEFAULT_TIMER               136
 #define IDD_REVERSE_TIMER               137
@@ -99,7 +113,10 @@
 #define IDC_EDIT_CLOCK_O_YEAR           1047
 #define IDC_CHOICE_RU                   1047
 #define IDC_OUTPUT                      1048
+#define IDC_TEXT_HOUR                   1049
+#define IDC_TEXT_MINUTE                 1050
 #define IDC_EDIT_CLOCK_O_DAYOFWEEK      1051
+#define IDC_TEXT_SECOND                 1051
 #define ID_TIMER_HOURS                  32771
 #define ID_TIMER_MINUTES                32772
 #define ID_TIMER_SECONDS                32773
@@ -123,7 +140,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        149
 #define _APS_NEXT_COMMAND_VALUE         32785
-#define _APS_NEXT_CONTROL_VALUE         1049
+#define _APS_NEXT_CONTROL_VALUE         1052
 #define _APS_NEXT_SYMED_VALUE           111
 #endif
 #endif

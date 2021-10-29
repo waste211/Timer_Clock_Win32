@@ -95,6 +95,8 @@ INT_PTR CALLBACK    Clock_modern(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Clock_old(HWND, UINT, WPARAM, LPARAM);
 
 // funct logic
+void main(HINSTANCE hInstance, int nCmdShow);
+
 void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week, bool language_en, bool language_ru);
 void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en, bool language_ru);
 

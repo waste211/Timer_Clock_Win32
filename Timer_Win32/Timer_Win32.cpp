@@ -132,6 +132,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
        return FALSE;
    }
+   else
+       main(hInstance, nCmdShow);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -139,7 +141,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-//
+void main(HINSTANCE hInstance, int nCmdShow) {
+
+}
+
 //  ФУНКЦИЯ: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
 //  ЦЕЛЬ: Обрабатывает сообщения в главном окне.
@@ -233,6 +238,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             return (INT_PTR)TRUE;
             break;
         case IDC_CHOICE_EN:
+        {
             language_en = true;
             language_ru = false;
 
@@ -246,7 +252,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_CHANGELANG_EN, sChangeLang, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CHANGELANG_TITLE_EN, sChangeLangTitle, MAX_LOADSTRING);
             // Window titles strings ??? - where to paste, need a class?
-            
+
             // Static text strings
             LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_INPUT_EN, sInput, MAX_LOADSTRING);
@@ -269,9 +275,11 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             // Раскомментировать, чтобы появился MessageBox о смене языка
             // MessageBox(hDlg, (LPCWSTR)L"Language succesfully changed! Thanks for using our application!", (LPCWSTR)L"Application \"Timer\"", MB_ICONINFORMATION);
             EndDialog(hDlg, LOWORD(wParam));
+        }
             return (INT_PTR)TRUE;
             break;
         case IDC_CHOICE_RU:
+        {
             language_en = false;
             language_ru = true;
 
@@ -285,7 +293,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_CHANGELANG_RU, sChangeLang, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CHANGELANG_TITLE_RU, sChangeLangTitle, MAX_LOADSTRING);
             // Window titles strings ??? - where to paste, need a class?
-            
+
             // Static text strings
             LoadStringW(hInstance, IDS_OUTPUT_RU, sOutput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_INPUT_RU, sInput, MAX_LOADSTRING);
@@ -305,12 +313,23 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_RESET_RU, sReset, MAX_LOADSTRING);
             // menu strings
             
+            /*
+            HMENU hMenu = GetMenu(hDlg);
+            MENUITEMINFO mII;
+            mII.cbSize = sizeof(mII);
+            GetMenuItemInfo(hMenu, ID_LANGUAGE, FALSE, &mII);
+            mII.fMask = MIIM_STRING;
+            mII.dwTypeData = sContinue;
+            SetMenuItemInfo(hMenu, ID_LANGUAGE, FALSE, &mII);
+            */
             // submenu strings
+
             // end
             // Раскомментировать, чтобы появился MessageBox о смене языка
             // MessageBox(hDlg, (LPCWSTR)L"Язык успешно изменен! Спасибо, что пользуетесь нашим приложением!", (LPCWSTR)L"Приложение \"Таймер\"", MB_ICONINFORMATION);
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
+        }
             break;
         default:
             break;

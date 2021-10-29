@@ -940,6 +940,25 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sMinute);
         text = GetDlgItem(hDlg, IDC_TEXT_SECOND);
         SendMessageW(text, WM_SETTEXT, 0, (LPARAM)sSecond);
+
+        GetLocalTime(&sys_time);
+
+        hour = sys_time.wHour;
+        minute = sys_time.wMinute;
+        second = sys_time.wSecond;
+        day_of_week = sys_time.wDayOfWeek;
+        ConvertDayOfWeekToString(hDlg, IDC_EDIT_CLOCK_DAYOFWEEK, day_of_week, language_en, language_ru);
+        day = sys_time.wDay;
+        month = sys_time.wMonth;
+        ConvertMonthToString(hDlg, IDC_EDIT_CLOCK_MONTH, month, language_en, language_ru);
+        year = sys_time.wYear;
+
+        SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_HOUR, hour, TRUE);
+        SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_MINUTE, minute, TRUE);
+        SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_SECOND, second, TRUE);
+        SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_DAY, sys_time.wDay, TRUE);
+        SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_YEAR, sys_time.wYear, TRUE);
+
         return (INT_PTR)TRUE;
     }
     case WM_COMMAND:

@@ -303,8 +303,10 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_PAUSE_RU, sPause, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CONTINUE_RU, sContinue, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_RESET_RU, sReset, MAX_LOADSTRING);
-
-            //end
+            // menu strings
+            
+            // submenu strings
+            // end
             // Раскомментировать, чтобы появился MessageBox о смене языка
             // MessageBox(hDlg, (LPCWSTR)L"Язык успешно изменен! Спасибо, что пользуетесь нашим приложением!", (LPCWSTR)L"Приложение \"Таймер\"", MB_ICONINFORMATION);
             EndDialog(hDlg, LOWORD(wParam));

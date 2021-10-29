@@ -42,6 +42,22 @@ WCHAR sStop[MAX_LOADSTRING];
 WCHAR sPause[MAX_LOADSTRING];
 WCHAR sContinue[MAX_LOADSTRING];
 WCHAR sReset[MAX_LOADSTRING];
+// main menu strings
+WCHAR sMenuFile[MAX_LOADSTRING];
+WCHAR sMenuHelp[MAX_LOADSTRING];
+WCHAR sMenuLanguage[MAX_LOADSTRING];
+WCHAR sMenuTimer[MAX_LOADSTRING];
+WCHAR sMenuClock[MAX_LOADSTRING];
+// submenu strings
+WCHAR sSubmenuExit[MAX_LOADSTRING];
+WCHAR sSubmenuAbout[MAX_LOADSTRING];
+WCHAR sSubmenuLanguage[MAX_LOADSTRING];
+WCHAR sSubmenuTimerDefault[MAX_LOADSTRING];
+WCHAR sSubmenuTimerReverse[MAX_LOADSTRING];
+WCHAR sSubmenuTimerSD[MAX_LOADSTRING];
+WCHAR sSubmenuStopwatch[MAX_LOADSTRING];
+WCHAR sSubmenuClockModern[MAX_LOADSTRING];
+WCHAR sSubmenuClockOld[MAX_LOADSTRING];
 
 HWND hwnd;
 

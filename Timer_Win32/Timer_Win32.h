@@ -61,6 +61,7 @@ WCHAR sSubmenuClockOld[MAX_LOADSTRING];
 
 HWND hwnd;
 
+bool mainReturn;
 bool language_en = true;
 bool language_ru = false;
 bool counter_day = true;
@@ -78,8 +79,12 @@ LARGE_INTEGER StartingTime;
 LARGE_INTEGER EndingTime;
 LARGE_INTEGER ElapsedMicroseconds;
 LARGE_INTEGER Frequency;
-
 int msecond_counter;
+
+// »спользуетс€ дл€ получени€ размеров окна. »зменени€ провер€ютс€ с каждым обновлением окна
+RECT winCord;
+// »спользуетс€ дл€ получени€ системного времени. »зменени€ провер€ютс€ с каждым обновлением окна
+SYSTEMTIME sys_time;
 
 // ќтправить объ€влени€ функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -95,7 +100,7 @@ INT_PTR CALLBACK    Clock_modern(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Clock_old(HWND, UINT, WPARAM, LPARAM);
 
 // funct logic
-void main(HINSTANCE hInstance, int nCmdShow);
+bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HINSTANCE hInstance);
 
 void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week, bool language_en, bool language_ru);
 void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en, bool language_ru);

@@ -132,8 +132,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
        return FALSE;
    }
-   else
-       main(hInstance, nCmdShow);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -141,8 +139,53 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-void main(HINSTANCE hInstance, int nCmdShow) {
+/* Функция main(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)*/
+bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HINSTANCE hInstance) {
+    GetClientRect(hWnd, &winCord);
+    int left = winCord.left;
+    int right = winCord.right;
+    int up = winCord.top;
+    int bottom = winCord.bottom;
 
+    switch (message)
+    {
+    case WM_CREATE:
+    {
+        HWND hEdit1 = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, 40, 30, hWnd, NULL, hInstance, NULL);
+        HWND hEdit2 = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left + 45, up, 40, 30, hWnd, NULL, hInstance, NULL);
+        HWND hEdit3 = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left + 90, up, 40, 30, hWnd, NULL, hInstance, NULL);
+        /*HWND hButton1 = CreateWindow(
+            L"BUTTON",  // Predefined class; Unicode assumed 
+            L"OK",      // Button text 
+            WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
+            left,         // x position 
+            up + 60,         // y position 
+            100,        // Button width
+            100,        // Button height
+            hWnd,     // Parent window
+            ,       // No menu.
+            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
+            NULL);      // Pointer not needed.*/
+    }
+    case WM_COMMAND:
+    {
+        int wmId = LOWORD(lParam);
+        // Разобрать выбор в меню:
+        switch (wmId)
+        {
+        case BN_CLICKED:
+
+            break;
+        default:
+            break;
+        }
+    }
+        break;
+    default:
+        return true;
+    }
+
+    return true;
 }
 
 //  ФУНКЦИЯ: WndProc(HWND, UINT, WPARAM, LPARAM)
@@ -156,6 +199,8 @@ void main(HINSTANCE hInstance, int nCmdShow) {
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    HINSTANCE hInstance{};
+    mainReturn = processMainWindow(hWnd, message, wParam, lParam, hInstance);
     switch (message)
     {
     case WM_COMMAND:
@@ -270,7 +315,12 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
-
+            // menu strings
+            LoadStringW(hInstance, IDS_MENU_FILE_EN, sMenuFile, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_HELP_EN, sMenuHelp, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_LANGUAGE_EN, sMenuLanguage, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_TIMER_EN, sMenuTimer, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
             //end
             // Раскомментировать, чтобы появился MessageBox о смене языка
             // MessageBox(hDlg, (LPCWSTR)L"Language succesfully changed! Thanks for using our application!", (LPCWSTR)L"Application \"Timer\"", MB_ICONINFORMATION);
@@ -313,7 +363,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_RESET_RU, sReset, MAX_LOADSTRING);
             // menu strings
             
-            /*
+            
             HMENU hMenu = GetMenu(hDlg);
             MENUITEMINFO mII;
             mII.cbSize = sizeof(mII);
@@ -321,7 +371,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             mII.fMask = MIIM_STRING;
             mII.dwTypeData = sContinue;
             SetMenuItemInfo(hMenu, ID_LANGUAGE, FALSE, &mII);
-            */
+           
             // submenu strings
 
             // end
@@ -654,7 +704,6 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
     int input_minute = 0;
     int input_second = 0;
 
-    SYSTEMTIME sys_time;
     int sys_hour = 0;
     int sys_minute = 0;
     int sys_second = 0;
@@ -937,8 +986,6 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
     int hour, minute, second;
     int day_of_week, day, month, year;
 
-    SYSTEMTIME sys_time;
-
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
@@ -1019,7 +1066,6 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 // Функция окна "Старые часы". Имеет представление времени с помощью циферблата
 INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    SYSTEMTIME sys_time;
     GetLocalTime(&sys_time);
 
     RECT winCord;

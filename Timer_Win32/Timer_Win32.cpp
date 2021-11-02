@@ -146,15 +146,19 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
     int right = winCord.right;
     int up = winCord.top;
     int bottom = winCord.bottom;
+    HWND hButton1{};
+    HWND hEdit1{};
+    HWND hEdit2{};
+    HWND hEdit3{};
 
     switch (message)
     {
     case WM_CREATE:
     {
-        HWND hEdit1 = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, 40, 30, hWnd, NULL, hInstance, NULL);
-        HWND hEdit2 = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left + 45, up, 40, 30, hWnd, NULL, hInstance, NULL);
-        HWND hEdit3 = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left + 90, up, 40, 30, hWnd, NULL, hInstance, NULL);
-        /*HWND hButton1 = CreateWindow(
+        hEdit1 = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, 40, 30, hWnd, NULL, hInstance, NULL);
+        hEdit2 = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left + 45, up, 40, 30, hWnd, NULL, hInstance, NULL);
+        hEdit3 = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left + 90, up, 40, 30, hWnd, NULL, hInstance, NULL);
+        hButton1 = CreateWindow(
             L"BUTTON",  // Predefined class; Unicode assumed 
             L"OK",      // Button text 
             WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
@@ -163,21 +167,15 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
             100,        // Button width
             100,        // Button height
             hWnd,     // Parent window
-            ,       // No menu.
+            NULL,       // No menu.
             (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
-            NULL);      // Pointer not needed.*/
+            NULL);      // Pointer not needed.
+
     }
     case WM_COMMAND:
     {
-        int wmId = LOWORD(lParam);
-        // Разобрать выбор в меню:
-        switch (wmId)
-        {
-        case BN_CLICKED:
-
-            break;
-        default:
-            break;
+        if (lParam == hButton1) {
+            MessageBox(hWnd, sContinue, sStart, NULL);
         }
     }
         break;
@@ -320,7 +318,16 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_MENU_HELP_EN, sMenuHelp, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_LANGUAGE_EN, sMenuLanguage, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_TIMER_EN, sMenuTimer, MAX_LOADSTRING);
-            LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_CLOCK_EN, sMenuClock, MAX_LOADSTRING);
+            // submenu strings
+            LoadStringW(hInstance, IDS_SUBMENU_EXIT_EN, sSubmenuExit, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_ABOUT_EN, sSubmenuAbout, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_LANGUAGE_EN, sSubmenuLanguage, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_DEFAULT_EN, sSubmenuTimerDefault, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_REVERSE_EN, sSubmenuTimerReverse, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_STOPWATCH_EN, sSubmenuStopwatch, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_CLOCK_OLD_EN, sSubmenuClockOld, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_CLOCK_MODERN_EN, sSubmenuClockModern, MAX_LOADSTRING);
             //end
             // Раскомментировать, чтобы появился MessageBox о смене языка
             // MessageBox(hDlg, (LPCWSTR)L"Language succesfully changed! Thanks for using our application!", (LPCWSTR)L"Application \"Timer\"", MB_ICONINFORMATION);
@@ -362,24 +369,46 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_CONTINUE_RU, sContinue, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_RESET_RU, sReset, MAX_LOADSTRING);
             // menu strings
-            
-            
+            LoadStringW(hInstance, IDS_MENU_FILE_RU, sMenuFile, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_HELP_RU, sMenuHelp, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_LANGUAGE_RU, sMenuLanguage, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_TIMER_RU, sMenuTimer, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_CLOCK_RU, sMenuClock, MAX_LOADSTRING);
+            // submenu strings
+            LoadStringW(hInstance, IDS_SUBMENU_EXIT_RU, sSubmenuExit, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_ABOUT_RU, sSubmenuAbout, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_LANGUAGE_RU, sSubmenuLanguage, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_DEFAULT_RU, sSubmenuTimerDefault, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_REVERSE_RU, sSubmenuTimerReverse, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_STOPWATCH_RU, sSubmenuStopwatch, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_CLOCK_OLD_RU, sSubmenuClockOld, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_CLOCK_MODERN_RU, sSubmenuClockModern, MAX_LOADSTRING);
+
+            /*
+            long int size = 0;
             HMENU hMenu = GetMenu(hDlg);
             MENUITEMINFO mII;
             mII.cbSize = sizeof(mII);
-            GetMenuItemInfo(hMenu, ID_LANGUAGE, FALSE, &mII);
+            mII.fMask = MIIM_TYPE;
+            mII.dwTypeData = NULL;  
+            GetMenuItemInfoW(hMenu, ID_LANGUAGE, FALSE, &mII);
+            mII.cch = 100;
+            size = mII.cch + 1;
+            LPWSTR buff = new WCHAR[size];
+            mII.dwTypeData = buff;
+            mII.cch++;
+            GetMenuItemInfoW(hMenu, ID_LANGUAGE, FALSE, &mII);
+            mII.cch = 100;
             mII.fMask = MIIM_STRING;
-            mII.dwTypeData = sContinue;
-            SetMenuItemInfo(hMenu, ID_LANGUAGE, FALSE, &mII);
-           
-            // submenu strings
-
+            wcscpy_s(buff, size, sSubmenuExit);
+            SetMenuItemInfoW(hMenu, ID_LANGUAGE, FALSE, &mII);
+            */
             // end
             // Раскомментировать, чтобы появился MessageBox о смене языка
             // MessageBox(hDlg, (LPCWSTR)L"Язык успешно изменен! Спасибо, что пользуетесь нашим приложением!", (LPCWSTR)L"Приложение \"Таймер\"", MB_ICONINFORMATION);
             EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
         }
+            return (INT_PTR)TRUE;
             break;
         default:
             break;

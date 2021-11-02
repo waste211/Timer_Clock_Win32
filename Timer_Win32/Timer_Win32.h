@@ -10,6 +10,10 @@
 
 using namespace std;
 
+struct StringPlan {
+
+};
+
 // √лобальные переменные:
 // start
 HINSTANCE hInst;                                // текущий экземпл€р

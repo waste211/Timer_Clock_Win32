@@ -10,10 +10,6 @@
 
 using namespace std;
 
-struct StringPlan {
-
-};
-
 // √лобальные переменные:
 // start
 HINSTANCE hInst;                                // текущий экземпл€р
@@ -78,6 +74,14 @@ COLORREF current_dialog = 15790320;
 const int RADIUS_INNER = 151;
 const int RADIUS_OUTER = 161;
 
+const int structWidghtNum = 18;
+const int structWidghtDesc = 1000;
+const int structWidghtDayOfWeek = 40;
+const int structWidghtTimeHour = 25;
+const int structWidghtTimeMin = 25;
+const int stuctColon = 2;
+const int structHeight = 25;
+
 // high precision time measurement variables
 LARGE_INTEGER StartingTime;
 LARGE_INTEGER EndingTime;
@@ -89,6 +93,14 @@ int msecond_counter;
 RECT winCord;
 // »спользуетс€ дл€ получени€ системного времени. »зменени€ провер€ютс€ с каждым обновлением окна
 SYSTEMTIME sys_time;
+
+// structures
+struct planStructures {
+    int posX;
+    int posY;
+    void createStructure(HWND hWnd, HINSTANCE hInstance, int up);
+    void helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance, int up);
+};
 
 // ќтправить объ€влени€ функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);

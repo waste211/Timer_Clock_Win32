@@ -137,11 +137,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Сохранить маркер экземпляра в глобальной переменной
 
-   HWND hWnd{};
    /* uncomment, in case you will want to ask user for changing language when the program runs */
    // DialogBox(hInst, MAKEINTRESOURCE(IDD_CHANGE_LANGUAGE), hWnd, Language_choosing);
-   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -161,37 +159,29 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
     int right = winCord.right;
     int up = winCord.top;
     int bottom = winCord.bottom;
-    HWND hButton1{};
-    HWND hEdit1{};
-    HWND hEdit2{};
-    HWND hEdit3{};
+    up += 40;
+
 
     switch (message)
     {
     case WM_CREATE:
     {
-        hEdit1 = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, 40, 30, hWnd, NULL, hInstance, NULL);
-        hEdit2 = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left + 45, up, 40, 30, hWnd, NULL, hInstance, NULL);
-        hEdit3 = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left + 90, up, 40, 30, hWnd, NULL, hInstance, NULL);
-        hButton1 = CreateWindow(
-            L"BUTTON",  // Predefined class; Unicode assumed 
-            L"OK",      // Button text 
-            WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
-            left,         // x position 
-            up + 60,         // y position 
-            100,        // Button width
-            100,        // Button height
-            hWnd,     // Parent window
-            NULL,       // No menu.
-            (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
-            NULL);      // Pointer not needed.
-
+        planStructures element;
+        element.planStructures::createStructure(hWnd, hInstance, up);
+        break;
     }
     case WM_COMMAND:
     {
-        /*if (lParam == hButton1) {
-            MessageBox(hWnd, sContinue, sStart, NULL);
-        }*/
+        int wmId = LOWORD(wParam);
+        switch (wmId)
+        {
+        case ID_EVENTS_ADD:
+            break;
+        case ID_EVENTS_DELETE:
+            break;
+        default:
+            break;
+        }
     }
         break;
     default:
@@ -402,7 +392,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             HMENU hmenu = GetMenu(hDlg);
             LPMENUITEMINFO LPmii = new MENUITEMINFO;
             LPmii->cbSize = sizeof(*LPmii);
-            GetMenuItemInfo(hmenu, IDM_ABOUT, FALSE, LPmii);
+            GetMenuItemInfo(hmenu, IDM_ABOUT, TRUE, LPmii);\
             UINT size_of_string;
             size_of_string = 1000;
             LPWSTR ItemText = new wchar_t[size_of_string];
@@ -410,7 +400,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LPmii->fMask = MIIM_STRING;
             LPmii->dwTypeData = ItemText;
             LPmii->cch = size_of_string;
-            SetMenuItemInfo(hmenu, IDM_ABOUT, FALSE, LPmii);
+            SetMenuItemInfo(hmenu, IDM_ABOUT, TRUE, LPmii);
             DrawMenuBar(hDlg);
 
             // end
@@ -1407,6 +1397,38 @@ void DrawHourLine(int left, int right, int up, int bottom, int centerX, int cent
         }
         gPr += step;
     }
+}
+
+void planStructures::createStructure(HWND hWnd, HINSTANCE hInstance, int up) {
+    HFONT hf = CreateFont(-16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_ROMAN, TEXT("Times New Roman"));
+    int left = 5;
+
+    HWND hEditNum{};
+    HWND hEditDesc{};
+    HWND hEditDayOfWeek{};
+    HWND hEditTimeHour{};
+    HWND hEditTimeMin{};
+
+    hEditNum = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE | WS_DLGFRAME, left, up, structWidghtNum, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtNum + 20;
+    hEditDesc = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtDesc + 30;
+    hEditDayOfWeek = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtDayOfWeek + 30;
+    hEditTimeHour = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 2;
+    hEditTimeMin = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+
+    SendMessageW(hEditNum, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(hEditNum, WM_SETTEXT, NULL, (LPARAM)"1");
+    SendMessageW(hEditDesc, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(hEditDayOfWeek, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(hEditTimeHour, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(hEditTimeMin, WM_SETFONT, (WPARAM)hf, 0);
+}
+
+void planStructures::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance, int up) {
+
 }
 
 /*

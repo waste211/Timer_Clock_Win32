@@ -54,6 +54,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
+    // menu strings
+    LoadStringW(hInstance, IDS_MENU_FILE_EN, sMenuFile, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MENU_HELP_EN, sMenuHelp, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MENU_LANGUAGE_EN, sMenuLanguage, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MENU_TIMER_EN, sMenuTimer, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MENU_CLOCK_EN, sMenuClock, MAX_LOADSTRING);
+    // submenu strings
+    LoadStringW(hInstance, IDS_SUBMENU_EXIT_EN, sSubmenuExit, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_ABOUT_EN, sSubmenuAbout, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_LANGUAGE_EN, sSubmenuLanguage, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_TIMER_DEFAULT_EN, sSubmenuTimerDefault, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_TIMER_REVERSE_EN, sSubmenuTimerReverse, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_STOPWATCH_EN, sSubmenuStopwatch, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_CLOCK_OLD_EN, sSubmenuClockOld, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_CLOCK_MODERN_EN, sSubmenuClockModern, MAX_LOADSTRING);
 
     MyRegisterClass(hInstance);
 
@@ -174,9 +189,9 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
     }
     case WM_COMMAND:
     {
-        if (lParam == hButton1) {
+        /*if (lParam == hButton1) {
             MessageBox(hWnd, sContinue, sStart, NULL);
-        }
+        }*/
     }
         break;
     default:
@@ -384,25 +399,20 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_SUBMENU_CLOCK_OLD_RU, sSubmenuClockOld, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_CLOCK_MODERN_RU, sSubmenuClockModern, MAX_LOADSTRING);
 
-            /*
-            long int size = 0;
-            HMENU hMenu = GetMenu(hDlg);
-            MENUITEMINFO mII;
-            mII.cbSize = sizeof(mII);
-            mII.fMask = MIIM_TYPE;
-            mII.dwTypeData = NULL;  
-            GetMenuItemInfoW(hMenu, ID_LANGUAGE, FALSE, &mII);
-            mII.cch = 100;
-            size = mII.cch + 1;
-            LPWSTR buff = new WCHAR[size];
-            mII.dwTypeData = buff;
-            mII.cch++;
-            GetMenuItemInfoW(hMenu, ID_LANGUAGE, FALSE, &mII);
-            mII.cch = 100;
-            mII.fMask = MIIM_STRING;
-            wcscpy_s(buff, size, sSubmenuExit);
-            SetMenuItemInfoW(hMenu, ID_LANGUAGE, FALSE, &mII);
-            */
+            HMENU hmenu = GetMenu(hDlg);
+            LPMENUITEMINFO LPmii = new MENUITEMINFO;
+            LPmii->cbSize = sizeof(*LPmii);
+            GetMenuItemInfo(hmenu, IDM_ABOUT, FALSE, LPmii);
+            UINT size_of_string;
+            size_of_string = 1000;
+            LPWSTR ItemText = new wchar_t[size_of_string];
+            wcscpy_s(ItemText, size_of_string, sSubmenuAbout);
+            LPmii->fMask = MIIM_STRING;
+            LPmii->dwTypeData = ItemText;
+            LPmii->cch = size_of_string;
+            SetMenuItemInfo(hmenu, IDM_ABOUT, FALSE, LPmii);
+            DrawMenuBar(hDlg);
+
             // end
             // Раскомментировать, чтобы появился MessageBox о смене языка
             // MessageBox(hDlg, (LPCWSTR)L"Язык успешно изменен! Спасибо, что пользуетесь нашим приложением!", (LPCWSTR)L"Приложение \"Таймер\"", MB_ICONINFORMATION);

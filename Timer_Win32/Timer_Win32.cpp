@@ -168,6 +168,16 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
         int wmId = LOWORD(wParam);
         switch (wmId)
         {
+        case ID_EVENTS_SAVE:
+        {
+            saveCurrentEventsInFile();
+            break;
+        }
+        case ID_EVENTS_LOAD:
+        {
+            loadCurrentEventsFromFile();
+            break;
+        }
         case ID_EVENTS_ADD:
         {
             events[lastEvent].posY = lastUp;
@@ -1341,6 +1351,48 @@ wchar_t *int_to_string(int num) {
     wchar_t* resultNumber = strListNumber;
 
     return resultNumber;
+}
+
+/*
+Функция для записи текущих ивентов в файл(которые создал пользователь)
+Функция не принимает значений, использует глобальные переменные
+*/
+void saveCurrentEventsInFile() {
+    FILE* file;
+    errno_t err;
+    err = fopen_s(&file, "currentLayoutEvents.bin", "wb");
+    if (file == NULL)
+    {
+        MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
+    }
+    else {
+        int size = sizeof(events);
+        fwrite(&size, sizeof(int), 1, file);
+        /*fwrite();
+        for (int i = 0; i < ; i++)
+        {
+            int s1 = strlen(books[i].name);
+            fwrite(&s1, sizeof(int), 1, file);
+            fwrite(books[i].name, sizeof(char), s1, file);
+            int s2 = strlen(books[i].author);
+            fwrite(&s2, sizeof(int), 1, file);
+            fwrite(books[i].author, sizeof(char), s2, file);
+            int s3 = strlen(books[i].genre);
+            fwrite(&s3, sizeof(int), 1, file);
+            fwrite(books[i].genre, sizeof(char), s3, file);
+            fwrite(&books[i].dateOfIssue, sizeof(Date), 1, file);
+        }
+        */
+       fclose(file);
+    }
+}
+
+/*
+Функция для записи текущих ивентов в массив структур "events" (чтобы впоследствии передать в окно пользователю)
+Функция не принимает значений, использует глобальные переменные
+*/
+void loadCurrentEventsFromFile() {
+
 }
 
 // func for static/dynamic painting structures

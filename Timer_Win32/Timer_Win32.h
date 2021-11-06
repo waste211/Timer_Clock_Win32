@@ -2,6 +2,7 @@
 
 #define _USE_MATH_DEFINES
 #define MAX_LOADSTRING 100
+#define _CRT_SECURE_NO_WARNINGS
 
 #include "resource.h"
 #include <string>
@@ -95,15 +96,14 @@ SYSTEMTIME sys_time;
 
 // structures
 struct planStruct {
+    int posY{};
     HWND hEditNum{};
     HWND hEditDesc{};
     HWND hEditDays{};
     HWND hEditTimeHour{};
     HWND hEditTimeMin{};
-    int posY;
     void createStructure(HWND hWnd, HINSTANCE hInstance, int up, int lastEvent);
     void helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance);
-    // void addNewEvent();
 };
 int lastUp = 60;
 int lastEvent = 0;
@@ -128,13 +128,15 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
 
 void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week, bool language_en, bool language_ru);
 void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en, bool language_ru);
+wchar_t* int_to_string(int num);
+void saveCurrentEventsInFile();
+void loadCurrentEventsFromFile();
 
 // func for static/dynamic painting structures
 void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, int centerY, HDC hdc);
 void DrawHourLine(int left, int right, int up, int bottom, int centerX, int centerY, int hour, HDC hdc);
 void DrawMinuteLine(int left, int right, int up, int bottom, int centerX, int centerY, int minute, HDC hdc);
 void DrawSecondLine(int left, int right, int up, int bottom, int centerX, int centerY, int second,HDC hdc);
-wchar_t *int_to_string(int num);
 
 // func graphics
 void L(int x1, int y1, int x2, int y2, int width, COLORREF color, HDC hdc);

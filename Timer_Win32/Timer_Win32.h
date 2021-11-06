@@ -95,15 +95,14 @@ SYSTEMTIME sys_time;
 
 // structures
 struct planStruct {
-    int posX;
     int posY;
     void createStructure(HWND hWnd, HINSTANCE hInstance, int up, int listNumber);
     void helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance);
-    void addNewEvent();
+    // void addNewEvent();
 };
+int lastEvent;
 // arrays
 planStruct events[100];
-
 
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);

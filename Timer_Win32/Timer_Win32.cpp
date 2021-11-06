@@ -141,6 +141,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    // DialogBox(hInst, MAKEINTRESOURCE(IDD_CHANGE_LANGUAGE), hWnd, Language_choosing);
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
+   lastEvent = 0;
+
    if (!hWnd)
    {
        return FALSE;
@@ -177,8 +179,8 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
         {
         case ID_EVENTS_ADD:
         {
-            int i = sizeof(events);
-            events[i].planStruct::addNewEvent();
+            events[lastEvent].planStruct::createStructure(hWnd, hInstance, up, lastEvent + 1);
+            lastEvent += 1;
             break;
         }
         case ID_EVENTS_DELETE:
@@ -1345,11 +1347,6 @@ wchar_t *int_to_string(int num) {
     return resultNumber;
 }
 
-// func working with structure "planStructure", array "events"
-void planStruct::addNewEvent() {
-    // nothing
-}
-
 // func for static/dynamic painting structures
 /*
 Функция для рисования структуры ЧАСЫ.
@@ -1459,6 +1456,8 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int lis
     SendMessageW(hEditDayOfWeek, WM_SETFONT, (WPARAM)hf, 0);
     SendMessageW(hEditTimeHour, WM_SETFONT, (WPARAM)hf, 0);
     SendMessageW(hEditTimeMin, WM_SETFONT, (WPARAM)hf, 0);
+
+    DialogBox(hInstance, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 }
 
 /*

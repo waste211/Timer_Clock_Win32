@@ -76,7 +76,7 @@ const int RADIUS_OUTER = 161;
 
 const int structWidghtNum = 30;
 const int structWidghtDesc = 1000;
-const int structWidghtDayOfWeek = 40;
+const int structWidghtDayOfWeek = 80;
 const int structWidghtTimeHour = 40;
 const int structWidghtTimeMin = 40;
 const int structHeight = 25;
@@ -95,12 +95,18 @@ SYSTEMTIME sys_time;
 
 // structures
 struct planStruct {
+    HWND hEditNum{};
+    HWND hEditDesc{};
+    HWND hEditDays{};
+    HWND hEditTimeHour{};
+    HWND hEditTimeMin{};
     int posY;
-    void createStructure(HWND hWnd, HINSTANCE hInstance, int up, int listNumber);
+    void createStructure(HWND hWnd, HINSTANCE hInstance, int up, int lastEvent);
     void helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance);
     // void addNewEvent();
 };
-int lastEvent;
+int lastUp = 60;
+int lastEvent = 0;
 // arrays
 planStruct events[100];
 

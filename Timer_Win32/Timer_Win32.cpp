@@ -141,8 +141,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    // DialogBox(hInst, MAKEINTRESOURCE(IDD_CHANGE_LANGUAGE), hWnd, Language_choosing);
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
-   lastEvent = 0;
-
    if (!hWnd)
    {
        return FALSE;
@@ -157,12 +155,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 /* Функция main(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)*/
 bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HINSTANCE hInstance) {
     planStruct temp;
-    GetClientRect(hWnd, &winCord);
-    int left = winCord.left;
-    int right = winCord.right;
-    int up = winCord.top;
-    int bottom = winCord.bottom;
-    up += 40;
 
     switch (message)
     {
@@ -178,12 +170,17 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
         {
         case ID_EVENTS_ADD:
         {
-            events[lastEvent].planStruct::createStructure(hWnd, hInstance, up, lastEvent + 1);
+            events[lastEvent].posY = lastUp;
+            events[lastEvent].planStruct::createStructure(hWnd, hInstance, events[lastEvent].posY, lastEvent);
+            lastUp += structHeight + 10;
             lastEvent += 1;
             break;
         }
         case ID_EVENTS_DELETE:
+        {
+
             break;
+        }
         default:
             break;
         }
@@ -1398,7 +1395,7 @@ void planStruct::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance) {
 
     HWND hTextNum{};
     HWND hTextDesc{};
-    HWND hTextDayOfWeek{};
+    HWND hTextDays{};
     HWND hTextTimeHour{};
     HWND hTextTimeMin{};
 
@@ -1406,7 +1403,7 @@ void planStruct::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance) {
     left += structWidghtNum + 20;
     hTextDesc = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtDesc + 30;
-    hTextDayOfWeek = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
+    hTextDays = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtDayOfWeek + 30;
     hTextTimeHour = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtTimeHour + 2;
@@ -1416,8 +1413,8 @@ void planStruct::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance) {
     SetWindowTextA(hTextNum, "№");
     SendMessageW(hTextDesc, WM_SETFONT, (WPARAM)hf, 0);
     SetWindowTextA(hTextDesc, "Event describtion");
-    SendMessageW(hTextDayOfWeek, WM_SETFONT, (WPARAM)hf, 0);
-    SetWindowTextA(hTextDayOfWeek, "Day Of Week");
+    SendMessageW(hTextDays, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextDays, "Days");
     SendMessageW(hTextTimeHour, WM_SETFONT, (WPARAM)hf, 0);
     SetWindowTextA(hTextTimeHour, "Hour");
     SendMessageW(hTextTimeMin, WM_SETFONT, (WPARAM)hf, 0);
@@ -1427,36 +1424,28 @@ void planStruct::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance) {
 /*
 Функция для создания структуры из edit и static, которые будут заполняться пользователем.
 */
-void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int listNumber) {
+void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int lastEvent) {
     HFONT hf = CreateFont(-16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_ROMAN, TEXT("Times New Roman"));
     int left = 5;
 
-    HWND hEditNum{};
-    HWND hEditDesc{};
-    HWND hEditDayOfWeek{};
-    HWND hEditTimeHour{};
-    HWND hEditTimeMin{};
-
-    hEditNum = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE | TA_RIGHT, left, up, structWidghtNum, structHeight, hWnd, NULL, hInstance, NULL);
+    events[lastEvent].hEditNum = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE | TA_RIGHT, left, up, structWidghtNum, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtNum + 20;
-    hEditDesc = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
+    events[lastEvent].hEditDesc = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtDesc + 30;
-    hEditDayOfWeek = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
+    events[lastEvent].hEditDays = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtDayOfWeek + 30;
-    hEditTimeHour = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
+    events[lastEvent].hEditTimeHour = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtTimeHour + 2;
-    hEditTimeMin = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+    events[lastEvent].hEditTimeMin = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
 
-    wchar_t* strListNumber = int_to_string(listNumber);
+    wchar_t* strListNumber = int_to_string(lastEvent + 1);
 
-    SendMessageW(hEditNum, WM_SETFONT, (WPARAM)hf, 0);
-    SendMessageW(hEditNum, WM_SETTEXT, NULL, (LPARAM)strListNumber);
-    SendMessageW(hEditDesc, WM_SETFONT, (WPARAM)hf, 0);
-    SendMessageW(hEditDayOfWeek, WM_SETFONT, (WPARAM)hf, 0);
-    SendMessageW(hEditTimeHour, WM_SETFONT, (WPARAM)hf, 0);
-    SendMessageW(hEditTimeMin, WM_SETFONT, (WPARAM)hf, 0);
-
-    DialogBox(hInstance, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+    SendMessageW(events[lastEvent].hEditNum, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(events[lastEvent].hEditNum, WM_SETTEXT, NULL, (LPARAM)strListNumber);
+    SendMessageW(events[lastEvent].hEditDesc, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(events[lastEvent].hEditDays, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(events[lastEvent].hEditTimeHour, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(events[lastEvent].hEditTimeMin, WM_SETFONT, (WPARAM)hf, 0);
 }
 
 /*

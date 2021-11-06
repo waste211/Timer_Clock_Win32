@@ -67,6 +67,7 @@
 #define IDS_NO_INPUT_RU                 148
 #define IDD_CHANGE_LANGUAGE             148
 #define IDS_TITLE_ERROR_EN              149
+#define IDD_ADD_EVENT                   149
 #define IDS_TITLE_ERROR_RU              150
 #define IDS_END_TIMER_EN                151
 #define IDS_END_TIMER_RU                152
@@ -158,6 +159,12 @@
 #define IDC_TEXT_MONTH                  1055
 #define IDC_TEXT_YEAR                   1056
 #define IDC_SECOND                      1059
+#define ID_BTN_ADD                      1060
+#define IDC_EDIT_DESC                   1061
+#define IDC_EDIT_DAYS                   1062
+#define IDC_EDIT_HOURS                  1063
+#define IDC_EDIT_MINUTES                1064
+#define IDC_EDIT_DESC2                  1065
 #define ID_TIMER_HOURS                  32771
 #define ID_TIMER_MINUTES                32772
 #define ID_TIMER_SECONDS                32773
@@ -188,9 +195,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        149
+#define _APS_NEXT_RESOURCE_VALUE        150
 #define _APS_NEXT_COMMAND_VALUE         32794
-#define _APS_NEXT_CONTROL_VALUE         1060
+#define _APS_NEXT_CONTROL_VALUE         1064
 #define _APS_NEXT_SYMED_VALUE           111
 #endif
 #endif

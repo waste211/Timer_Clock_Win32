@@ -97,6 +97,10 @@ SYSTEMTIME sys_time;
 // structures
 struct planStruct {
     int posY{};
+    WCHAR strDescribtion[100000];
+    int daysShortcut;
+    int hour;
+    int minute;
     HWND hEditNum{};
     HWND hEditDesc{};
     HWND hEditDays{};
@@ -104,7 +108,11 @@ struct planStruct {
     HWND hEditTimeMin{};
     void createStructure(HWND hWnd, HINSTANCE hInstance, int up, int lastEvent);
     void helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance);
+    void deleteStructure(HWND hwnd, HINSTANCE hinstance);
 };
+// variables for planStruct
+bool fillAndDrawStructure = true;
+const int beginUp = 60;
 int lastUp = 60;
 int lastEvent = 0;
 // arrays
@@ -116,6 +124,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Language_choosing(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Add_event(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Timer_default(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Timer_reverse(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Timer_systemdependent(HWND, UINT, WPARAM, LPARAM);

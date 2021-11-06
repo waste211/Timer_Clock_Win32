@@ -175,26 +175,37 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
         }
         case ID_EVENTS_LOAD:
         {
+            int temp = lastEvent;
             loadCurrentEventsFromFile();
+            SetWindowTextA(events[lastEvent].hEditDesc, (LPCSTR)"LETS GO");
+            // for (int i = 0; i < )
             break;
         }
         case ID_EVENTS_ADD:
         {
             events[lastEvent].posY = lastUp;
-            events[lastEvent].planStruct::createStructure(hWnd, hInstance, events[lastEvent].posY, lastEvent);
-            lastUp += structHeight + 10;
-            lastEvent += 1;
+            DialogBox(hInst, MAKEINTRESOURCE(IDD_ADD_EVENT), hWnd, Add_event);
+            if (fillAndDrawStructure == true) {
+                events[lastEvent].planStruct::createStructure(hWnd, hInstance, events[lastEvent].posY, lastEvent);
+                lastUp += structHeight + 10;
+                lastEvent += 1;
+            }
+            fillAndDrawStructure = true;
             break;
         }
         case ID_EVENTS_DELETE:
         {
-
+            lastEvent -= 1;
+            lastUp += structHeight + 10;
+            events[lastEvent].planStruct::deleteStructure(hWnd, hInstance);
             break;
         }
         default:
             break;
         }
     }
+    case WM_CLEAR:
+
         break;
     default:
         return true;
@@ -226,8 +237,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                // to make a movable and sel-extended window
-                CreateDialog(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
             case IDM_EXIT:
                 DestroyWindow(hWnd);
@@ -404,7 +413,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             HMENU hmenu = GetMenu(hDlg);
             LPMENUITEMINFO LPmii = new MENUITEMINFO;
             LPmii->cbSize = sizeof(*LPmii);
-            GetMenuItemInfo(hmenu, IDM_ABOUT, TRUE, LPmii);\
+            GetMenuItemInfo(hmenu, IDM_ABOUT, TRUE, LPmii);
             UINT size_of_string;
             size_of_string = 1000;
             LPWSTR ItemText = new wchar_t[size_of_string];
@@ -448,6 +457,41 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
         }
+        break;
+    }
+    return (INT_PTR)FALSE;
+}
+
+// Функция окна "Добавление события";
+INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+
+        return (INT_PTR)TRUE;
+    }
+    case WM_COMMAND:
+    {
+        if (LOWORD(wParam) == IDCANCEL)
+        {
+            fillAndDrawStructure = false;
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        if (LOWORD(wParam) == ID_BTN_ADD)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        return (INT_PTR)TRUE;
+        break;
+    }
+    case WM_DESTROY:
+        KillTimer(hDlg, 1);
+        break;
+    default:
         break;
     }
     return (INT_PTR)FALSE;
@@ -1363,11 +1407,10 @@ void saveCurrentEventsInFile() {
     err = fopen_s(&file, "currentLayoutEvents.bin", "wb");
     if (file == NULL)
     {
-        MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
+        MessageBox(GetActiveWindow(), L"Save file does not exist", L"ERROR", MB_ICONERROR);
     }
     else {
-        int size = sizeof(events);
-        fwrite(&size, sizeof(int), 1, file);
+        fwrite(&lastEvent, sizeof(int), 1, file);
         /*fwrite();
         for (int i = 0; i < ; i++)
         {
@@ -1392,7 +1435,40 @@ void saveCurrentEventsInFile() {
 Функция не принимает значений, использует глобальные переменные
 */
 void loadCurrentEventsFromFile() {
+    FILE* file;
+    errno_t err;
+    err = fopen_s(&file, "currentLayoutEvents.bin", "rb");
+    if (file == NULL)
+    {
+        MessageBox(GetActiveWindow(), L"Save file does not exist", L"ERROR", MB_ICONERROR);
+    }
+    else {
+        fread(&lastEvent, sizeof(int), 1, file);
+        /*fread(&size, 4, 1, file);
+        
+        int temp = 0;
+        books = new Book[size];
+        for (int i = 0; i < size; i++)
+        {
+            fread(&temp, 4, 1, file);
+            books[i].name = new char[temp + 1];
+            fread(books[i].name, 1, temp, file);
+            books[i].name[temp] = '\0';
 
+            fread(&temp, 4, 1, file);
+            books[i].genre = new char[temp + 1];
+            fread(books[i].genre, 1, temp, file);
+            books[i].genre[temp] = '\0';
+
+            fread(&temp, 4, 1, file);
+            books[i].author = new char[temp + 1];
+            fread(books[i].author, 1, temp, file);
+            books[i].author[temp] = '\0';
+
+            fread(&books[i].dateOfIssue, sizeof(Date), 1, file);
+        }*/
+        fclose(file);
+    }
 }
 
 // func for static/dynamic painting structures
@@ -1453,13 +1529,13 @@ void planStruct::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance) {
 
     hTextNum = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtNum, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtNum + 20;
-    hTextDesc = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
+    hTextDesc = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_CHILD | WS_VISIBLE, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtDesc + 30;
-    hTextDays = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
+    hTextDays = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtDayOfWeek + 30;
-    hTextTimeHour = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
+    hTextTimeHour = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtTimeHour + 2;
-    hTextTimeMin = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+    hTextTimeMin = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
 
     SendMessageW(hTextNum, WM_SETFONT, (WPARAM)hf, 0);
     SetWindowTextA(hTextNum, "№");
@@ -1490,7 +1566,7 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int las
     left += structWidghtTimeHour + 2;
     events[lastEvent].hEditTimeMin = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
 
-    wchar_t* strListNumber = int_to_string(lastEvent + 1);
+    wchar_t* strListNumber = int_to_string(lastEvent);
 
     SendMessageW(events[lastEvent].hEditNum, WM_SETFONT, (WPARAM)hf, 0);
     SendMessageW(events[lastEvent].hEditNum, WM_SETTEXT, NULL, (LPARAM)strListNumber);
@@ -1499,6 +1575,18 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int las
     SendMessageW(events[lastEvent].hEditTimeHour, WM_SETFONT, (WPARAM)hf, 0);
     SendMessageW(events[lastEvent].hEditTimeMin, WM_SETFONT, (WPARAM)hf, 0);
 }
+
+/*
+Функция для удаления структуры из edit и static.
+*/
+void planStruct::deleteStructure(HWND hWnd, HINSTANCE hInstance) {
+    DestroyWindow(events[lastEvent].hEditNum);
+    DestroyWindow(events[lastEvent].hEditDesc);
+    DestroyWindow(events[lastEvent].hEditDays);
+    DestroyWindow(events[lastEvent].hEditTimeHour);
+    DestroyWindow(events[lastEvent].hEditTimeMin);
+}
+
 
 /*
 Функция для рисования часовой стрелки в структуре часы.

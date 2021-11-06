@@ -157,7 +157,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 /* Функция main(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)*/
 bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HINSTANCE hInstance) {
     planStruct temp;
-
     GetClientRect(hWnd, &winCord);
     int left = winCord.left;
     int right = winCord.right;

@@ -100,6 +100,16 @@
 #define IDS_SUBMENU_CLOCK_MODERN_RU     178
 #define IDS_SUBMENU_CLOCK_OLD_EN        179
 #define IDS_SUBMENU_CLOCK_OLD_RU        180
+#define IDS_SUBMENU_EVENT_SAVE_EN       181
+#define IDS_SUBMENU_EVENT_SAVE_RU       182
+#define IDS_SUBMENU_EVENT_LOAD_EN       183
+#define IDS_SUBMENU_EVENT_LOAD_RU       184
+#define IDS_SUBMENU_EVENT_ADD_EN        185
+#define IDS_SUBMENU_EVENT_ADD_RU        186
+#define IDS_SUBMENU_EVENT_DELETE_EN     187
+#define IDS_SUBMENU_EVENT_DELETE_RU     188
+#define IDS_MENU_EVENT_EN               189
+#define IDS_MENU_EVENT_RU               190
 #define IDC_START                       1002
 #define IDC_STOP                        1003
 #define IDC_RESET                       1004
@@ -164,7 +174,6 @@
 #define IDC_EDIT_DAYS                   1062
 #define IDC_EDIT_HOURS                  1063
 #define IDC_EDIT_MINUTES                1064
-#define IDC_EDIT_DESC2                  1065
 #define ID_TIMER_HOURS                  32771
 #define ID_TIMER_MINUTES                32772
 #define ID_TIMER_SECONDS                32773
@@ -188,6 +197,7 @@
 #define ID_EVENTS_SAVE                  32791
 #define ID_EVENTS_LOADEVENTSFROMSAVE    32792
 #define ID_EVENTS_LOAD                  32793
+#define ID_HELP_CHOOSELANGUAGE          32794
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -196,7 +206,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        150
-#define _APS_NEXT_COMMAND_VALUE         32794
+#define _APS_NEXT_COMMAND_VALUE         32795
 #define _APS_NEXT_CONTROL_VALUE         1064
 #define _APS_NEXT_SYMED_VALUE           111
 #endif

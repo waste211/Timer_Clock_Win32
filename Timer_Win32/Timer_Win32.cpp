@@ -38,6 +38,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // Window titles strings ??? - where to paste, need a class?
     // Static text strings
+    LoadStringW(hInstance, IDS_NO_INPUT_EN, sNoInput, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_INVALID_INPUT_EN, sInvalidInput, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_ERROR_EN, sTitleError, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_END_TIMER_EN, sEndTimer, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_TIMER_EN, sTitleTimer, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_CHANGELANG_EN, sChangeLang, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_CHANGELANG_TITLE_EN, sChangeLangTitle, MAX_LOADSTRING);
+    // Window titles strings ??? - where to paste, need a class?
+
+    // Static text strings
     LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_INPUT_EN, sInput, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_DAY_OF_WEEK_EN, sDayOfWeek, MAX_LOADSTRING);
@@ -54,9 +64,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
+
     // menu strings
     LoadStringW(hInstance, IDS_MENU_FILE_EN, sMenuFile, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_MENU_HELP_EN, sMenuHelp, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MENU_EVENT_EN, sMenuEvent, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_MENU_LANGUAGE_EN, sMenuLanguage, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_MENU_TIMER_EN, sMenuTimer, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_MENU_CLOCK_EN, sMenuClock, MAX_LOADSTRING);
@@ -64,8 +76,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_SUBMENU_EXIT_EN, sSubmenuExit, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_SUBMENU_ABOUT_EN, sSubmenuAbout, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_SUBMENU_LANGUAGE_EN, sSubmenuLanguage, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_EVENT_SAVE_EN, sSubmenuEventSave, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_EVENT_LOAD_EN, sSubmenuEventLoad, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_EVENT_ADD_EN, sSubmenuEventAdd, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_EVENT_DELETE_EN, sSubmenuEventDelete, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_SUBMENU_TIMER_DEFAULT_EN, sSubmenuTimerDefault, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_SUBMENU_TIMER_REVERSE_EN, sSubmenuTimerReverse, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_TIMER_SD_EN, sSubmenuTimerSD, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_SUBMENU_STOPWATCH_EN, sSubmenuStopwatch, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_SUBMENU_CLOCK_OLD_EN, sSubmenuClockOld, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_SUBMENU_CLOCK_MODERN_EN, sSubmenuClockModern, MAX_LOADSTRING);
@@ -140,7 +157,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    /* uncomment, in case you will want to ask user for changing language when the program runs */
    // DialogBox(hInst, MAKEINTRESOURCE(IDD_CHANGE_LANGUAGE), hWnd, Language_choosing);
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-
+   changeMenuElement(hWnd);
    if (!hWnd)
    {
        return FALSE;
@@ -242,8 +259,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 DestroyWindow(hWnd);
                 break;
             case ID_LANGUAGE:
+            {
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_CHANGE_LANGUAGE), hWnd, Language_choosing);
+                changeMenuElement(hWnd);
                 break;
+            }
             case ID_TIMER_DEFAULT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_DEFAULT_TIMER), hWnd, Timer_default);
                 break;
@@ -339,9 +359,11 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
+
             // menu strings
             LoadStringW(hInstance, IDS_MENU_FILE_EN, sMenuFile, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_HELP_EN, sMenuHelp, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_EVENT_EN, sMenuEvent, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_LANGUAGE_EN, sMenuLanguage, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_TIMER_EN, sMenuTimer, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_CLOCK_EN, sMenuClock, MAX_LOADSTRING);
@@ -349,8 +371,13 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_SUBMENU_EXIT_EN, sSubmenuExit, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_ABOUT_EN, sSubmenuAbout, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_LANGUAGE_EN, sSubmenuLanguage, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_SAVE_EN, sSubmenuEventSave, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_LOAD_EN, sSubmenuEventLoad, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_ADD_EN, sSubmenuEventAdd, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_DELETE_EN, sSubmenuEventDelete, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_TIMER_DEFAULT_EN, sSubmenuTimerDefault, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_TIMER_REVERSE_EN, sSubmenuTimerReverse, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_SD_EN, sSubmenuTimerSD, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_STOPWATCH_EN, sSubmenuStopwatch, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_CLOCK_OLD_EN, sSubmenuClockOld, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_CLOCK_MODERN_EN, sSubmenuClockModern, MAX_LOADSTRING);
@@ -394,9 +421,11 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_PAUSE_RU, sPause, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CONTINUE_RU, sContinue, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_RESET_RU, sReset, MAX_LOADSTRING);
+
             // menu strings
             LoadStringW(hInstance, IDS_MENU_FILE_RU, sMenuFile, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_HELP_RU, sMenuHelp, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_EVENT_RU, sMenuEvent, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_LANGUAGE_RU, sMenuLanguage, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_TIMER_RU, sMenuTimer, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_CLOCK_RU, sMenuClock, MAX_LOADSTRING);
@@ -404,25 +433,16 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_SUBMENU_EXIT_RU, sSubmenuExit, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_ABOUT_RU, sSubmenuAbout, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_LANGUAGE_RU, sSubmenuLanguage, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_SAVE_RU, sSubmenuEventSave, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_LOAD_RU, sSubmenuEventLoad, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_ADD_RU, sSubmenuEventAdd, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_DELETE_RU, sSubmenuEventDelete, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_TIMER_DEFAULT_RU, sSubmenuTimerDefault, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_TIMER_REVERSE_RU, sSubmenuTimerReverse, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_SD_RU, sSubmenuTimerSD, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_STOPWATCH_RU, sSubmenuStopwatch, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_CLOCK_OLD_RU, sSubmenuClockOld, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SUBMENU_CLOCK_MODERN_RU, sSubmenuClockModern, MAX_LOADSTRING);
-
-            HMENU hmenu = GetMenu(hDlg);
-            LPMENUITEMINFO LPmii = new MENUITEMINFO;
-            LPmii->cbSize = sizeof(*LPmii);
-            GetMenuItemInfo(hmenu, IDM_ABOUT, TRUE, LPmii);
-            UINT size_of_string;
-            size_of_string = 1000;
-            LPWSTR ItemText = new wchar_t[size_of_string];
-            wcscpy_s(ItemText, size_of_string, sSubmenuAbout);
-            LPmii->fMask = MIIM_STRING;
-            LPmii->dwTypeData = ItemText;
-            LPmii->cch = size_of_string;
-            SetMenuItemInfo(hmenu, IDM_ABOUT, TRUE, LPmii);
-            DrawMenuBar(hDlg);
 
             // end
             // Раскомментировать, чтобы появился MessageBox о смене языка
@@ -1395,6 +1415,162 @@ wchar_t *int_to_string(int num) {
     wchar_t* resultNumber = strListNumber;
 
     return resultNumber;
+}
+
+void changeMenuElement(HWND hWnd) {
+    HMENU hmenu = GetMenu(hWnd);
+    LPMENUITEMINFO LPmii = new MENUITEMINFO;
+    UINT size_of_string = 10000;
+    LPWSTR ItemText;
+    // CHANGING MAIN MENU:
+    // menu "File"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, 0, TRUE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sMenuFile);
+    LPmii->fMask = MIIM_STRING;
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, 0, TRUE, LPmii);
+    // menu "Help"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, 1, TRUE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sMenuHelp);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, 1, TRUE, LPmii);
+    // menu "Language"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, 2, TRUE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sMenuEvent);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, 2, TRUE, LPmii);
+    // menu "Timer"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, 3, TRUE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sMenuTimer);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, 3, TRUE, LPmii);
+    // menu "Clock"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, 4, TRUE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sMenuClock);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, 4, TRUE, LPmii);
+
+    // CHANGING SUBMENUES
+    // sumbenu "Edit"
+    // LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, IDM_EXIT, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuExit);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, IDM_EXIT, FALSE, LPmii);
+    // submenu "About"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, IDM_ABOUT, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuAbout);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, IDM_ABOUT, FALSE, LPmii);
+    // submenu "Choose Language"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_LANGUAGE, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuLanguage);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_LANGUAGE, FALSE, LPmii);
+    // submenu "Save current events"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_EVENTS_SAVE, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuEventSave);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_EVENTS_SAVE, FALSE, LPmii);
+    // submenu "Load events from save"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_EVENTS_LOAD, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuEventLoad);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_EVENTS_LOAD, FALSE, LPmii);
+    // submenu "Add new event" 
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_EVENTS_ADD, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuEventAdd);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_EVENTS_ADD, FALSE, LPmii);
+    // submenu "Delete event"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_EVENTS_DELETE, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuEventDelete);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_EVENTS_DELETE, FALSE, LPmii);
+    // submenu "Default timer"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_TIMER_DEFAULT, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuTimerDefault);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_TIMER_DEFAULT, FALSE, LPmii);
+    // submenu "Reverse timer"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_TIMER_REVERSETIMER, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuTimerReverse);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_TIMER_REVERSETIMER, FALSE, LPmii);
+    // submenu "System-dependent timer"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_TIMER_SYSTEM, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuTimerSD);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_TIMER_SYSTEM, FALSE, LPmii);
+    // submenu "Stopwatch timer"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_TIMER_STOPWATCH, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuStopwatch);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_TIMER_STOPWATCH, FALSE, LPmii);
+    // submenu "Clock modern"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_CLOCK_MODERN, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuClockModern);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_CLOCK_MODERN, FALSE, LPmii);
+    // submenu "Clock old"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_CLOCK_OLD, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuClockOld);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_CLOCK_OLD, FALSE, LPmii);
+    DrawMenuBar(hWnd);
 }
 
 /*

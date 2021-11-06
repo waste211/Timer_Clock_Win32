@@ -46,6 +46,7 @@ WCHAR sReset[MAX_LOADSTRING];
 // main menu strings
 WCHAR sMenuFile[MAX_LOADSTRING];
 WCHAR sMenuHelp[MAX_LOADSTRING];
+WCHAR sMenuEvent[MAX_LOADSTRING];
 WCHAR sMenuLanguage[MAX_LOADSTRING];
 WCHAR sMenuTimer[MAX_LOADSTRING];
 WCHAR sMenuClock[MAX_LOADSTRING];
@@ -53,6 +54,10 @@ WCHAR sMenuClock[MAX_LOADSTRING];
 WCHAR sSubmenuExit[MAX_LOADSTRING];
 WCHAR sSubmenuAbout[MAX_LOADSTRING];
 WCHAR sSubmenuLanguage[MAX_LOADSTRING];
+WCHAR sSubmenuEventSave[MAX_LOADSTRING];
+WCHAR sSubmenuEventLoad[MAX_LOADSTRING];
+WCHAR sSubmenuEventAdd[MAX_LOADSTRING];
+WCHAR sSubmenuEventDelete[MAX_LOADSTRING];
 WCHAR sSubmenuTimerDefault[MAX_LOADSTRING];
 WCHAR sSubmenuTimerReverse[MAX_LOADSTRING];
 WCHAR sSubmenuTimerSD[MAX_LOADSTRING];
@@ -138,6 +143,7 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
 void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week, bool language_en, bool language_ru);
 void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en, bool language_ru);
 wchar_t* int_to_string(int num);
+void changeMenuElement(HWND hWnd);
 void saveCurrentEventsInFile();
 void loadCurrentEventsFromFile();
 

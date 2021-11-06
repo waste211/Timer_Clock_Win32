@@ -172,6 +172,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 /* Функция main(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)*/
 bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HINSTANCE hInstance) {
     planStruct temp;
+    int prevLastEvent;
 
     switch (message)
     {
@@ -187,15 +188,22 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
         {
         case ID_EVENTS_SAVE:
         {
+            lastEvent -= 1;
             saveCurrentEventsInFile();
             break;
         }
         case ID_EVENTS_LOAD:
         {
-            int temp = lastEvent;
+            prevLastEvent = lastEvent - 1;
             loadCurrentEventsFromFile();
-            SetWindowTextA(events[lastEvent].hEditDesc, (LPCSTR)"LETS GO");
-            // for (int i = 0; i < )
+            if (prevLastEvent > lastEvent) {
+                for (int i = prevLastEvent; i >= lastEvent; i--) {
+                    events[i].planStruct::deleteStructure(hWnd, hInstance, i);
+                }
+            }
+            for (int i = 0; i < lastEvent; i++) {
+
+            }
             break;
         }
         case ID_EVENTS_ADD:
@@ -213,8 +221,8 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
         case ID_EVENTS_DELETE:
         {
             lastEvent -= 1;
-            lastUp += structHeight + 10;
-            events[lastEvent].planStruct::deleteStructure(hWnd, hInstance);
+            lastUp = lastUp - structHeight - 10;
+            events[lastEvent].planStruct::deleteStructure(hWnd, hInstance, lastEvent);
             break;
         }
         default:
@@ -1697,14 +1705,11 @@ void planStruct::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance) {
     int left = 5;
     HFONT hf = CreateFont(-16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_ROMAN, TEXT("Times New Roman"));
 
-    HWND hTextNum{};
     HWND hTextDesc{};
     HWND hTextDays{};
     HWND hTextTimeHour{};
     HWND hTextTimeMin{};
 
-    hTextNum = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtNum, structHeight, hWnd, NULL, hInstance, NULL);
-    left += structWidghtNum + 20;
     hTextDesc = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_CHILD | WS_VISIBLE, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtDesc + 30;
     hTextDays = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
@@ -1713,8 +1718,6 @@ void planStruct::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance) {
     left += structWidghtTimeHour + 2;
     hTextTimeMin = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
 
-    SendMessageW(hTextNum, WM_SETFONT, (WPARAM)hf, 0);
-    SetWindowTextA(hTextNum, "№");
     SendMessageW(hTextDesc, WM_SETFONT, (WPARAM)hf, 0);
     SetWindowTextA(hTextDesc, "Event describtion");
     SendMessageW(hTextDays, WM_SETFONT, (WPARAM)hf, 0);
@@ -1732,8 +1735,6 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int las
     HFONT hf = CreateFont(-16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_ROMAN, TEXT("Times New Roman"));
     int left = 5;
 
-    events[lastEvent].hEditNum = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE | TA_RIGHT, left, up, structWidghtNum, structHeight, hWnd, NULL, hInstance, NULL);
-    left += structWidghtNum + 20;
     events[lastEvent].hEditDesc = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtDesc + 30;
     events[lastEvent].hEditDays = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
@@ -1744,8 +1745,6 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int las
 
     wchar_t* strListNumber = int_to_string(lastEvent);
 
-    SendMessageW(events[lastEvent].hEditNum, WM_SETFONT, (WPARAM)hf, 0);
-    SendMessageW(events[lastEvent].hEditNum, WM_SETTEXT, NULL, (LPARAM)strListNumber);
     SendMessageW(events[lastEvent].hEditDesc, WM_SETFONT, (WPARAM)hf, 0);
     SendMessageW(events[lastEvent].hEditDays, WM_SETFONT, (WPARAM)hf, 0);
     SendMessageW(events[lastEvent].hEditTimeHour, WM_SETFONT, (WPARAM)hf, 0);
@@ -1755,12 +1754,11 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int las
 /*
 Функция для удаления структуры из edit и static.
 */
-void planStruct::deleteStructure(HWND hWnd, HINSTANCE hInstance) {
-    DestroyWindow(events[lastEvent].hEditNum);
-    DestroyWindow(events[lastEvent].hEditDesc);
-    DestroyWindow(events[lastEvent].hEditDays);
-    DestroyWindow(events[lastEvent].hEditTimeHour);
-    DestroyWindow(events[lastEvent].hEditTimeMin);
+void planStruct::deleteStructure(HWND hWnd, HINSTANCE hInstance, int element) {
+    DestroyWindow(events[element].hEditDesc);
+    DestroyWindow(events[element].hEditDays);
+    DestroyWindow(events[element].hEditTimeHour);
+    DestroyWindow(events[element].hEditTimeMin);
 }
 
 

@@ -104,16 +104,17 @@ struct planStruct {
     int posY{};
     WCHAR strDescribtion[100000];
     int daysShortcut;
-    int hour;
-    int minute;
-    HWND hEditNum{};
+    int hourBegin;
+    int minuteBegin;
+    int hourEnd;
+    int minuteEnd;
     HWND hEditDesc{};
     HWND hEditDays{};
     HWND hEditTimeHour{};
     HWND hEditTimeMin{};
     void createStructure(HWND hWnd, HINSTANCE hInstance, int up, int lastEvent);
     void helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance);
-    void deleteStructure(HWND hwnd, HINSTANCE hinstance);
+    void deleteStructure(HWND hwnd, HINSTANCE hinstance, int element);
 };
 // variables for planStruct
 bool fillAndDrawStructure = true;

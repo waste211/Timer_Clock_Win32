@@ -74,12 +74,11 @@ COLORREF current_dialog = 15790320;
 const int RADIUS_INNER = 151;
 const int RADIUS_OUTER = 161;
 
-const int structWidghtNum = 18;
+const int structWidghtNum = 30;
 const int structWidghtDesc = 1000;
 const int structWidghtDayOfWeek = 40;
-const int structWidghtTimeHour = 25;
-const int structWidghtTimeMin = 25;
-const int stuctColon = 2;
+const int structWidghtTimeHour = 40;
+const int structWidghtTimeMin = 40;
 const int structHeight = 25;
 
 // high precision time measurement variables
@@ -95,12 +94,16 @@ RECT winCord;
 SYSTEMTIME sys_time;
 
 // structures
-struct planStructures {
+struct planStruct {
     int posX;
     int posY;
-    void createStructure(HWND hWnd, HINSTANCE hInstance, int up);
-    void helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance, int up);
+    void createStructure(HWND hWnd, HINSTANCE hInstance, int up, int listNumber);
+    void helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance);
+    void addNewEvent();
 };
+// arrays
+planStruct events[100];
+
 
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -126,6 +129,7 @@ void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, 
 void DrawHourLine(int left, int right, int up, int bottom, int centerX, int centerY, int hour, HDC hdc);
 void DrawMinuteLine(int left, int right, int up, int bottom, int centerX, int centerY, int minute, HDC hdc);
 void DrawSecondLine(int left, int right, int up, int bottom, int centerX, int centerY, int second,HDC hdc);
+wchar_t *int_to_string(int num);
 
 // func graphics
 void L(int x1, int y1, int x2, int y2, int width, COLORREF color, HDC hdc);

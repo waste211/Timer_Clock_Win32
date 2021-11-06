@@ -154,6 +154,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 /* Функция main(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)*/
 bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HINSTANCE hInstance) {
+    planStruct temp;
+
     GetClientRect(hWnd, &winCord);
     int left = winCord.left;
     int right = winCord.right;
@@ -161,13 +163,11 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
     int bottom = winCord.bottom;
     up += 40;
 
-
     switch (message)
     {
     case WM_CREATE:
     {
-        planStructures element;
-        element.planStructures::createStructure(hWnd, hInstance, up);
+        temp.planStruct::helpUserInfoStructure(hWnd, hInstance);
         break;
     }
     case WM_COMMAND:
@@ -176,7 +176,11 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
         switch (wmId)
         {
         case ID_EVENTS_ADD:
+        {
+            int i = sizeof(events);
+            events[i].planStruct::addNewEvent();
             break;
+        }
         case ID_EVENTS_DELETE:
             break;
         default:
@@ -1327,6 +1331,25 @@ void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en
     }
 }
 
+/*
+Функция для конвертирования числа в стоку wchar_t. Возвращает указатель на строку. Использование:
+Использование:
+    int num                 Число, которое необходимо конвертировать
+*/
+wchar_t *int_to_string(int num) {
+    wchar_t strListNumber[256];
+    swprintf_s(strListNumber, L"%d", num);
+    wprintf(L"%s\n", strListNumber);
+    wchar_t* resultNumber = strListNumber;
+
+    return resultNumber;
+}
+
+// func working with structure "planStructure", array "events"
+void planStruct::addNewEvent() {
+    // nothing
+}
+
 // func for static/dynamic painting structures
 /*
 Функция для рисования структуры ЧАСЫ.
@@ -1370,6 +1393,75 @@ void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, 
 }
 
 /*
+Функция для создания структуры из edit и static, которые будут использоваться в качетсве подсказки пользователю.
+*/
+void planStruct::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance) {
+    int up = 5;
+    int left = 5;
+    HFONT hf = CreateFont(-16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_ROMAN, TEXT("Times New Roman"));
+
+    HWND hTextNum{};
+    HWND hTextDesc{};
+    HWND hTextDayOfWeek{};
+    HWND hTextTimeHour{};
+    HWND hTextTimeMin{};
+
+    hTextNum = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtNum, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtNum + 20;
+    hTextDesc = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtDesc + 30;
+    hTextDayOfWeek = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtDayOfWeek + 30;
+    hTextTimeHour = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 2;
+    hTextTimeMin = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+
+    SendMessageW(hTextNum, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextNum, "№");
+    SendMessageW(hTextDesc, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextDesc, "Event describtion");
+    SendMessageW(hTextDayOfWeek, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextDayOfWeek, "Day Of Week");
+    SendMessageW(hTextTimeHour, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextTimeHour, "Hour");
+    SendMessageW(hTextTimeMin, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextTimeMin, "Min");
+}
+
+/*
+Функция для создания структуры из edit и static, которые будут заполняться пользователем.
+*/
+void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int listNumber) {
+    HFONT hf = CreateFont(-16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_ROMAN, TEXT("Times New Roman"));
+    int left = 5;
+
+    HWND hEditNum{};
+    HWND hEditDesc{};
+    HWND hEditDayOfWeek{};
+    HWND hEditTimeHour{};
+    HWND hEditTimeMin{};
+
+    hEditNum = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE | TA_RIGHT, left, up, structWidghtNum, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtNum + 20;
+    hEditDesc = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtDesc + 30;
+    hEditDayOfWeek = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtDayOfWeek + 30;
+    hEditTimeHour = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 2;
+    hEditTimeMin = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+
+    wchar_t* strListNumber = int_to_string(listNumber);
+
+    SendMessageW(hEditNum, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(hEditNum, WM_SETTEXT, NULL, (LPARAM)strListNumber);
+    SendMessageW(hEditDesc, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(hEditDayOfWeek, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(hEditTimeHour, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessageW(hEditTimeMin, WM_SETFONT, (WPARAM)hf, 0);
+}
+
+/*
 Функция для рисования часовой стрелки в структуре часы.
 Используется Функцией диалогового окна Clock_old
 */
@@ -1397,38 +1489,6 @@ void DrawHourLine(int left, int right, int up, int bottom, int centerX, int cent
         }
         gPr += step;
     }
-}
-
-void planStructures::createStructure(HWND hWnd, HINSTANCE hInstance, int up) {
-    HFONT hf = CreateFont(-16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_ROMAN, TEXT("Times New Roman"));
-    int left = 5;
-
-    HWND hEditNum{};
-    HWND hEditDesc{};
-    HWND hEditDayOfWeek{};
-    HWND hEditTimeHour{};
-    HWND hEditTimeMin{};
-
-    hEditNum = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE | WS_DLGFRAME, left, up, structWidghtNum, structHeight, hWnd, NULL, hInstance, NULL);
-    left += structWidghtNum + 20;
-    hEditDesc = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
-    left += structWidghtDesc + 30;
-    hEditDayOfWeek = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
-    left += structWidghtDayOfWeek + 30;
-    hEditTimeHour = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
-    left += structWidghtTimeHour + 2;
-    hEditTimeMin = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
-
-    SendMessageW(hEditNum, WM_SETFONT, (WPARAM)hf, 0);
-    SendMessageW(hEditNum, WM_SETTEXT, NULL, (LPARAM)"1");
-    SendMessageW(hEditDesc, WM_SETFONT, (WPARAM)hf, 0);
-    SendMessageW(hEditDayOfWeek, WM_SETFONT, (WPARAM)hf, 0);
-    SendMessageW(hEditTimeHour, WM_SETFONT, (WPARAM)hf, 0);
-    SendMessageW(hEditTimeMin, WM_SETFONT, (WPARAM)hf, 0);
-}
-
-void planStructures::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance, int up) {
-
 }
 
 /*

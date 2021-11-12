@@ -179,6 +179,12 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
     case WM_CREATE:
     {
         temp.planStruct::helpUserInfoStructure(hWnd, hInstance);
+        loadCurrentEventsFromFile();
+        for (int i = 0; i <= lastEvent; i++) {
+            events[i].posY = lastUp;
+            events[i].planStruct::createStructure(hWnd, hInstance, events[i].posY, i);
+            lastUp += structHeight + 10;
+        }
         break;
     }
     case WM_COMMAND:
@@ -188,41 +194,45 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
         {
         case ID_EVENTS_SAVE:
         {
-            lastEvent -= 1;
             saveCurrentEventsInFile();
             break;
         }
         case ID_EVENTS_LOAD:
         {
-            prevLastEvent = lastEvent - 1;
             loadCurrentEventsFromFile();
-            if (prevLastEvent > lastEvent) {
-                for (int i = prevLastEvent; i >= lastEvent; i--) {
+            lastUp = 60;
+            for (int i = 0; i <= lastEvent; i++) {
+                if (events[i].hEditDays) {
                     events[i].planStruct::deleteStructure(hWnd, hInstance, i);
-                }
-            }
-            for (int i = 0; i < lastEvent; i++) {
+                    events[i].planStruct::createStructure(hWnd, hInstance, lastUp, i);
 
+                    lastUp += structHeight + 10;
+                }
             }
             break;
         }
         case ID_EVENTS_ADD:
         {
-            events[lastEvent].posY = lastUp;
+            lastEvent += 1;
             DialogBox(hInst, MAKEINTRESOURCE(IDD_ADD_EVENT), hWnd, Add_event);
             if (fillAndDrawStructure == true) {
+                events[lastEvent].posY = lastUp;
                 events[lastEvent].planStruct::createStructure(hWnd, hInstance, events[lastEvent].posY, lastEvent);
                 lastUp += structHeight + 10;
-                lastEvent += 1;
             }
             fillAndDrawStructure = true;
             break;
         }
         case ID_EVENTS_DELETE:
         {
-            lastEvent -= 1;
-            lastUp = lastUp - structHeight - 10;
-            events[lastEvent].planStruct::deleteStructure(hWnd, hInstance, lastEvent);
+            if (lastEvent >= 0) {
+                lastUp = lastUp - structHeight - 10;
+                events[lastEvent].planStruct::deleteStructure(hWnd, hInstance, lastEvent);
+                lastEvent -= 1;
+            }
+            else {
+                MessageBox(GetActiveWindow(), L"Nothing to delte", L"ERROR", MB_ICONERROR);
+            }
             break;
         }
         default:
@@ -510,7 +520,14 @@ INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         }
         if (LOWORD(wParam) == ID_BTN_ADD)
         {
+            GetDlgItemTextA(hDlg, IDC_EDIT_DESC, LPSTR(events[lastEvent].strDescribtion), 100000);
+            events[lastEvent].days = GetDlgItemInt(hDlg, IDC_EDIT_DAYS, NULL, FALSE);
+            events[lastEvent].hourBegin = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_BEGIN, NULL, FALSE);
+            events[lastEvent].minuteBegin = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_BEGIN, NULL, FALSE);
+            events[lastEvent].hourEnd = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_END, NULL, FALSE);
+            events[lastEvent].minuteEnd = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_END, NULL, FALSE);
             EndDialog(hDlg, LOWORD(wParam));
+            fillAndDrawStructure = true;
             return (INT_PTR)TRUE;
         }
         return (INT_PTR)TRUE;
@@ -1412,7 +1429,7 @@ void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en
 }
 
 /*
-Функция для конвертирования числа в стоку wchar_t. Возвращает указатель на строку. Использование:
+Функция для конвертирования числа в стоку wchar_t. Возвращает указатель на строку.
 Использование:
     int num                 Число, которое необходимо конвертировать
 */
@@ -1423,6 +1440,19 @@ wchar_t *int_to_string(int num) {
     wchar_t* resultNumber = strListNumber;
 
     return resultNumber;
+}
+
+/*
+Функция для конвертирования WCHAR* в строку const char*. Возвращает указатель на строку. 
+Использование:
+    WCHAR* string                 Строка, которую необходимо конвертировать
+*/
+// !!! ISN'T CURRENTLY IN USE !!!
+const char* WCHAR_to_char(WCHAR* string) {
+    _bstr_t bstrStr(string);
+    const char* resultStr = bstrStr;
+
+    return resultStr;
 }
 
 void changeMenuElement(HWND hWnd) {
@@ -1595,21 +1625,16 @@ void saveCurrentEventsInFile() {
     }
     else {
         fwrite(&lastEvent, sizeof(int), 1, file);
-        /*fwrite();
-        for (int i = 0; i < ; i++)
-        {
-            int s1 = strlen(books[i].name);
-            fwrite(&s1, sizeof(int), 1, file);
-            fwrite(books[i].name, sizeof(char), s1, file);
-            int s2 = strlen(books[i].author);
-            fwrite(&s2, sizeof(int), 1, file);
-            fwrite(books[i].author, sizeof(char), s2, file);
-            int s3 = strlen(books[i].genre);
-            fwrite(&s3, sizeof(int), 1, file);
-            fwrite(books[i].genre, sizeof(char), s3, file);
-            fwrite(&books[i].dateOfIssue, sizeof(Date), 1, file);
+        for (int i = 0; i <= lastEvent; i++) {
+            int size1 = wcslen(events[i].strDescribtion);
+            fwrite(&size1, sizeof(int), 1, file);
+            fwrite(events[i].strDescribtion, sizeof(char), size1, file);
+            fwrite(&events[i].days, sizeof(events[i].days), 1, file);
+            fwrite(&events[i].hourBegin, sizeof(events[i].hourBegin), 1, file);
+            fwrite(&events[i].minuteBegin, sizeof(events[i].minuteBegin), 1, file);
+            fwrite(&events[i].hourEnd, sizeof(events[i].hourEnd), 1, file);
+            fwrite(&events[i].minuteEnd, sizeof(events[i].minuteEnd), 1, file);
         }
-        */
        fclose(file);
     }
 }
@@ -1707,25 +1732,35 @@ void planStruct::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance) {
 
     HWND hTextDesc{};
     HWND hTextDays{};
-    HWND hTextTimeHour{};
-    HWND hTextTimeMin{};
+    HWND hTextTimeHourBegin{};
+    HWND hTextTimeMinBegin{};
+    HWND hTextTimeHourEnd{};
+    HWND hTextTimeMinEnd{};
 
     hTextDesc = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_CHILD | WS_VISIBLE, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtDesc + 30;
     hTextDays = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtDayOfWeek + 30;
-    hTextTimeHour = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
+    hTextTimeHourBegin = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, helpHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtTimeHour + 2;
-    hTextTimeMin = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+    hTextTimeMinBegin = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, helpHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 15;
+    hTextTimeHourEnd = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, helpHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 2;
+    hTextTimeMinEnd = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, helpHeight, hWnd, NULL, hInstance, NULL);
 
     SendMessageW(hTextDesc, WM_SETFONT, (WPARAM)hf, 0);
     SetWindowTextA(hTextDesc, "Event describtion");
     SendMessageW(hTextDays, WM_SETFONT, (WPARAM)hf, 0);
     SetWindowTextA(hTextDays, "Days");
-    SendMessageW(hTextTimeHour, WM_SETFONT, (WPARAM)hf, 0);
-    SetWindowTextA(hTextTimeHour, "Hour");
-    SendMessageW(hTextTimeMin, WM_SETFONT, (WPARAM)hf, 0);
-    SetWindowTextA(hTextTimeMin, "Min");
+    SendMessageW(hTextTimeHourBegin, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextTimeHourBegin, "Start hour");
+    SendMessageW(hTextTimeMinBegin, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextTimeMinBegin, "Start min");
+    SendMessageW(hTextTimeHourEnd, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextTimeHourEnd, "End hour");
+    SendMessageW(hTextTimeMinEnd, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextTimeMinEnd, "End min");
 }
 
 /*
@@ -1739,16 +1774,32 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int las
     left += structWidghtDesc + 30;
     events[lastEvent].hEditDays = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtDayOfWeek + 30;
-    events[lastEvent].hEditTimeHour = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
+    events[lastEvent].hEditTimeHourBegin = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
     left += structWidghtTimeHour + 2;
-    events[lastEvent].hEditTimeMin = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+    events[lastEvent].hEditTimeMinBegin = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 15;
+    events[lastEvent].hEditTimeHourEnd = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 2;
+    events[lastEvent].hEditTimeMinEnd = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
 
-    wchar_t* strListNumber = int_to_string(lastEvent);
+    wchar_t* days = int_to_string(events[lastEvent].days);
+    wchar_t* hourBegin = int_to_string(events[lastEvent].hourBegin);
+    wchar_t* minuteBegin = int_to_string(events[lastEvent].minuteBegin);
+    wchar_t* hourEnd = int_to_string(events[lastEvent].hourEnd);
+    wchar_t* minuteEnd = int_to_string(events[lastEvent].minuteEnd);
 
     SendMessageW(events[lastEvent].hEditDesc, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(events[lastEvent].hEditDesc, LPSTR(events[lastEvent].strDescribtion));
     SendMessageW(events[lastEvent].hEditDays, WM_SETFONT, (WPARAM)hf, 0);
-    SendMessageW(events[lastEvent].hEditTimeHour, WM_SETFONT, (WPARAM)hf, 0);
-    SendMessageW(events[lastEvent].hEditTimeMin, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(events[lastEvent].hEditDays, LPSTR(days));
+    SendMessageW(events[lastEvent].hEditTimeHourBegin, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(events[lastEvent].hEditTimeHourBegin, LPSTR(hourBegin));
+    SendMessageW(events[lastEvent].hEditTimeMinBegin, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(events[lastEvent].hEditTimeMinBegin, LPSTR(minuteBegin));
+    SendMessageW(events[lastEvent].hEditTimeHourEnd, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(events[lastEvent].hEditTimeHourEnd, LPSTR(hourEnd));
+    SendMessageW(events[lastEvent].hEditTimeMinEnd, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(events[lastEvent].hEditTimeMinEnd, LPSTR(minuteEnd));
 }
 
 /*
@@ -1757,8 +1808,10 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int las
 void planStruct::deleteStructure(HWND hWnd, HINSTANCE hInstance, int element) {
     DestroyWindow(events[element].hEditDesc);
     DestroyWindow(events[element].hEditDays);
-    DestroyWindow(events[element].hEditTimeHour);
-    DestroyWindow(events[element].hEditTimeMin);
+    DestroyWindow(events[element].hEditTimeHourBegin);
+    DestroyWindow(events[element].hEditTimeMinBegin);
+    DestroyWindow(events[element].hEditTimeHourEnd);
+    DestroyWindow(events[element].hEditTimeMinEnd);
 }
 
 

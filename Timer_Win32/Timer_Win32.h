@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <comdef.h>
 
 using namespace std;
 
@@ -85,6 +86,7 @@ const int structWidghtDesc = 1000;
 const int structWidghtDayOfWeek = 80;
 const int structWidghtTimeHour = 40;
 const int structWidghtTimeMin = 40;
+const int helpHeight = 40;
 const int structHeight = 25;
 
 // high precision time measurement variables
@@ -101,17 +103,19 @@ SYSTEMTIME sys_time;
 
 // structures
 struct planStruct {
-    int posY{};
+    int posY;
     WCHAR strDescribtion[100000];
-    int daysShortcut;
+    int days;
     int hourBegin;
     int minuteBegin;
     int hourEnd;
     int minuteEnd;
     HWND hEditDesc{};
     HWND hEditDays{};
-    HWND hEditTimeHour{};
-    HWND hEditTimeMin{};
+    HWND hEditTimeHourBegin{};
+    HWND hEditTimeMinBegin{};
+    HWND hEditTimeHourEnd{};
+    HWND hEditTimeMinEnd{};
     void createStructure(HWND hWnd, HINSTANCE hInstance, int up, int lastEvent);
     void helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance);
     void deleteStructure(HWND hwnd, HINSTANCE hinstance, int element);
@@ -143,7 +147,9 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
 
 void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week, bool language_en, bool language_ru);
 void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en, bool language_ru);
+
 wchar_t* int_to_string(int num);
+const char* WCHAR_to_char(WCHAR* string);
 void changeMenuElement(HWND hWnd);
 void saveCurrentEventsInFile();
 void loadCurrentEventsFromFile();

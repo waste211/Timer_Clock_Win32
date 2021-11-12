@@ -172,8 +172,11 @@
 #define ID_BTN_ADD                      1060
 #define IDC_EDIT_DESC                   1061
 #define IDC_EDIT_DAYS                   1062
-#define IDC_EDIT_HOURS                  1063
-#define IDC_EDIT_MINUTES                1064
+#define IDC_EDIT_HOURS_BEGIN            1063
+#define IDC_EDIT_MINUTES_BEGIN          1064
+#define IDC_EDIT_HOURS_END              1065
+#define IDC_EDIT_MINUTES2               1066
+#define IDC_EDIT_MINUTES_END            1066
 #define ID_TIMER_HOURS                  32771
 #define ID_TIMER_MINUTES                32772
 #define ID_TIMER_SECONDS                32773
@@ -207,7 +210,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        150
 #define _APS_NEXT_COMMAND_VALUE         32795
-#define _APS_NEXT_CONTROL_VALUE         1064
+#define _APS_NEXT_CONTROL_VALUE         1066
 #define _APS_NEXT_SYMED_VALUE           111
 #endif
 #endif

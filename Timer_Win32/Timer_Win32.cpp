@@ -36,7 +36,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_CHANGELANG_EN, sChangeLang, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CHANGELANG_TITLE_EN, sChangeLangTitle, MAX_LOADSTRING);
 
-    // Window titles strings ??? - where to paste, need a class?
     // Static text strings
     LoadStringW(hInstance, IDS_NO_INPUT_EN, sNoInput, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_INVALID_INPUT_EN, sInvalidInput, MAX_LOADSTRING);
@@ -45,7 +44,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_TITLE_TIMER_EN, sTitleTimer, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CHANGELANG_EN, sChangeLang, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CHANGELANG_TITLE_EN, sChangeLangTitle, MAX_LOADSTRING);
-    // Window titles strings ??? - where to paste, need a class?
 
     // Static text strings
     LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
@@ -169,86 +167,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-/* Функция main(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)*/
-bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HINSTANCE hInstance) {
-    planStruct temp;
-    int prevLastEvent;
-
-    switch (message)
-    {
-    case WM_CREATE:
-    {
-        temp.planStruct::helpUserInfoStructure(hWnd, hInstance);
-        loadCurrentEventsFromFile();
-        for (int i = 0; i <= lastEvent; i++) {
-            events[i].posY = lastUp;
-            events[i].planStruct::createStructure(hWnd, hInstance, events[i].posY, i);
-            lastUp += structHeight + 10;
-        }
-        break;
-    }
-    case WM_COMMAND:
-    {
-        int wmId = LOWORD(wParam);
-        switch (wmId)
-        {
-        case ID_EVENTS_SAVE:
-        {
-            saveCurrentEventsInFile();
-            break;
-        }
-        case ID_EVENTS_LOAD:
-        {
-            loadCurrentEventsFromFile();
-            lastUp = 60;
-            for (int i = 0; i <= lastEvent; i++) {
-                if (events[i].hEditDays) {
-                    events[i].planStruct::deleteStructure(hWnd, hInstance, i);
-                    events[i].planStruct::createStructure(hWnd, hInstance, lastUp, i);
-
-                    lastUp += structHeight + 10;
-                }
-            }
-            break;
-        }
-        case ID_EVENTS_ADD:
-        {
-            lastEvent += 1;
-            DialogBox(hInst, MAKEINTRESOURCE(IDD_ADD_EVENT), hWnd, Add_event);
-            if (fillAndDrawStructure == true) {
-                events[lastEvent].posY = lastUp;
-                events[lastEvent].planStruct::createStructure(hWnd, hInstance, events[lastEvent].posY, lastEvent);
-                lastUp += structHeight + 10;
-            }
-            fillAndDrawStructure = true;
-            break;
-        }
-        case ID_EVENTS_DELETE:
-        {
-            if (lastEvent >= 0) {
-                lastUp = lastUp - structHeight - 10;
-                events[lastEvent].planStruct::deleteStructure(hWnd, hInstance, lastEvent);
-                lastEvent -= 1;
-            }
-            else {
-                MessageBox(GetActiveWindow(), L"Nothing to delte", L"ERROR", MB_ICONERROR);
-            }
-            break;
-        }
-        default:
-            break;
-        }
-    }
-    case WM_CLEAR:
-
-        break;
-    default:
-        return true;
-    }
-
-    return true;
-}
-
 //  ФУНКЦИЯ: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
 //  ЦЕЛЬ: Обрабатывает сообщения в главном окне.
@@ -261,14 +179,26 @@ bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HI
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HINSTANCE hInstance{};
-    mainReturn = processMainWindow(hWnd, message, wParam, lParam, hInstance);
     switch (message)
     {
+    case WM_CREATE:
+    {
+        temp.planStruct::helpUserInfoStructure(hWnd, hInstance);
+        loadCurrentEventsFromFile();
+        if (lastEvent != 0) {
+            for (int i = 0; i <= lastEvent; i++) {
+                events[i].posY = lastUp;
+                events[i].planStruct::createStructure(hWnd, hInstance, events[i].posY, i);
+                lastUp += structHeight + 10;
+            }
+        }
+        break;
+    }
     case WM_COMMAND:
         {
-            int wmId = LOWORD(wParam);
-            // Разобрать выбор в меню:
-            switch (wmId)
+            int wmenuId = LOWORD(wParam);
+            // Разобрать выбор меню таймеров, секундомеров, выбора языка, разных видов часов и т.д.
+            switch (wmenuId)
             {
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
@@ -300,6 +230,53 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case ID_CLOCK_OLD:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_CLOCK_OLD), hWnd, Clock_old);
                 break;
+
+            // Разобрать выбор меню, связанных с событиями и их обработкой (т.е. главным окном)
+            case ID_EVENTS_SAVE:
+            {
+                saveCurrentEventsInFile();
+                break;
+            }
+            // необходима доработка
+            case ID_EVENTS_LOAD:
+            {
+                // удаление визуальных событий
+                if (lastEvent >= 0) {
+                    for (int i = lastEvent; i >= 0; i--)
+                        events[lastEvent].planStruct::deleteStructure(hWnd, hInstance, lastEvent);
+                }
+                loadCurrentEventsFromFile(); // если событий в файле меньше чем в текущем масиве, то ошибок это не вызывает
+                lastUp = 60; // обнулются координаты
+                for (int i = 0; i <= lastEvent; i++) { // вывод событий на экран пользователя
+                        events[i].planStruct::createStructure(hWnd, hInstance, lastUp, i);
+                        lastUp += structHeight + 10;
+                }
+                break;
+            }
+            case ID_EVENTS_ADD:
+            {
+                lastEvent += 1;
+                DialogBox(hInst, MAKEINTRESOURCE(IDD_ADD_EVENT), hWnd, Add_event); // доработать функцию Add_event
+                if (fillAndDrawStructure == true) {
+                    events[lastEvent].posY = lastUp;
+                    events[lastEvent].planStruct::createStructure(hWnd, hInstance, events[lastEvent].posY, lastEvent);
+                    lastUp += structHeight + 10;
+                }
+                fillAndDrawStructure = true;
+                break;
+            }
+            case ID_EVENTS_DELETE:
+            {
+                if (lastEvent >= 0) {
+                    lastUp = lastUp - structHeight - 10;
+                    events[lastEvent].planStruct::deleteStructure(hWnd, hInstance, lastEvent);
+                    lastEvent -= 1;
+                }
+                else {
+                    MessageBox(GetActiveWindow(), L"Nothing to delte", L"ERROR", MB_ICONERROR);
+                }
+                break;
+            }
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
@@ -507,7 +484,6 @@ INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     {
     case WM_INITDIALOG:
     {
-
         return (INT_PTR)TRUE;
     }
     case WM_COMMAND:
@@ -518,16 +494,67 @@ INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
         }
+        if (LOWORD(wParam) == IDC_CHOOSE_DAY)
+        {
+            DialogBox(hInst, MAKEINTRESOURCE(IDD_CHOOSE_DAY), hDlg, Choose_day);
+            return (INT_PTR)TRUE;
+        }
         if (LOWORD(wParam) == ID_BTN_ADD)
         {
             GetDlgItemTextA(hDlg, IDC_EDIT_DESC, LPSTR(events[lastEvent].strDescribtion), 100000);
-            events[lastEvent].days = GetDlgItemInt(hDlg, IDC_EDIT_DAYS, NULL, FALSE);
             events[lastEvent].hourBegin = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_BEGIN, NULL, FALSE);
             events[lastEvent].minuteBegin = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_BEGIN, NULL, FALSE);
             events[lastEvent].hourEnd = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_END, NULL, FALSE);
             events[lastEvent].minuteEnd = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_END, NULL, FALSE);
             EndDialog(hDlg, LOWORD(wParam));
             fillAndDrawStructure = true;
+            return (INT_PTR)TRUE;
+        }
+        return (INT_PTR)TRUE;
+        break;
+    }
+    case WM_DESTROY:
+        KillTimer(hDlg, 1);
+        break;
+    default:
+        break;
+    }
+    return (INT_PTR)FALSE;
+}
+
+INT_PTR CALLBACK Choose_day(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND CheckBox;
+
+        if (wasOpened == true) {
+            DlgDaysOfWeekWasOpened(hDlg);
+        }
+        return (INT_PTR)TRUE;
+    }
+    case WM_COMMAND:
+    {
+        if (LOWORD(wParam) == IDCANCEL)
+        {
+            add_days = false;
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        if (LOWORD(wParam) == ID_BTN_OK)
+        {
+            int countDays = FillEventsWithDaysOfWeek(hDlg);
+
+            if (countDays == 7) {
+                MessageBox(GetActiveWindow(), L"No days wew choosen", L"ERROR", MB_ICONERROR);
+                add_days = false;
+            }
+            else {
+                EndDialog(hDlg, LOWORD(wParam));
+                wasOpened = true;
+            }
             return (INT_PTR)TRUE;
         }
         return (INT_PTR)TRUE;
@@ -1428,6 +1455,106 @@ void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en
     }
 }
 
+int FillEventsWithDaysOfWeek(HWND hDlg) {
+    int countDays = 0;
+    UINT isChecked;
+    HWND CheckBox;
+    CheckBox = GetDlgItem(hDlg, IDC_ON_MONDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onMonday = true;
+    else {
+        events[lastEvent].onMonday = false;
+        countDays++;
+    }
+
+    CheckBox = GetDlgItem(hDlg, IDC_ON_TUESDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onTuesday = true;
+    else {
+        events[lastEvent].onTuesday = false;
+        countDays++;
+    }
+
+    CheckBox = GetDlgItem(hDlg, IDC_ON_WEDNESDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onWednesday = true;
+    else {
+        events[lastEvent].onWednesday = false;
+        countDays++;
+    }
+
+    CheckBox = GetDlgItem(hDlg, IDC_ON_THURSDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onThursday = true;
+    else {
+        events[lastEvent].onThursday = false;
+        countDays++;
+    }
+
+    CheckBox = GetDlgItem(hDlg, IDC_ON_FRIDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onFriday = true;
+    else {
+        events[lastEvent].onFriday = false;
+        countDays++;
+    }
+    CheckBox = GetDlgItem(hDlg, IDC_ON_SATURDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onSaturday = true;
+    else {
+        events[lastEvent].onSaturday = false;
+        countDays++;
+    }
+    CheckBox = GetDlgItem(hDlg, IDC_ON_SUNDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onSunday = true;
+    else {
+        events[lastEvent].onSunday = false;
+        countDays++;
+    }
+
+    return countDays;
+}
+
+void DlgDaysOfWeekWasOpened(HWND hDlg) {
+    HWND CheckBox{};
+    if (events[lastEvent].onMonday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_MONDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onTuesday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_TUESDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onWednesday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_WEDNESDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onThursday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_THURSDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onFriday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_FRIDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onSaturday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_SATURDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onSunday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_SUNDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+}
+
 /*
 Функция для конвертирования числа в стоку wchar_t. Возвращает указатель на строку.
 Использование:
@@ -1436,7 +1563,7 @@ void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en
 wchar_t *int_to_string(int num) {
     wchar_t strListNumber[256];
     swprintf_s(strListNumber, L"%d", num);
-    wprintf(L"%s\n", strListNumber);
+    // wprintf(L"%s\n", strListNumber);
     wchar_t* resultNumber = strListNumber;
 
     return resultNumber;
@@ -1625,11 +1752,18 @@ void saveCurrentEventsInFile() {
     }
     else {
         fwrite(&lastEvent, sizeof(int), 1, file);
+
         for (int i = 0; i <= lastEvent; i++) {
             int size1 = wcslen(events[i].strDescribtion);
             fwrite(&size1, sizeof(int), 1, file);
             fwrite(events[i].strDescribtion, sizeof(char), size1, file);
-            fwrite(&events[i].days, sizeof(events[i].days), 1, file);
+            fwrite(&events[i].onMonday, sizeof(events[i].onMonday), 1, file);
+            fwrite(&events[i].onTuesday, sizeof(events[i].onTuesday), 1, file);
+            fwrite(&events[i].onWednesday, sizeof(events[i].onWednesday), 1, file);
+            fwrite(&events[i].onThursday, sizeof(events[i].onThursday), 1, file);
+            fwrite(&events[i].onFriday, sizeof(events[i].onFriday), 1, file);
+            fwrite(&events[i].onSaturday, sizeof(events[i].onSaturday), 1, file);
+            fwrite(&events[i].onSunday, sizeof(events[i].onSunday), 1, file);
             fwrite(&events[i].hourBegin, sizeof(events[i].hourBegin), 1, file);
             fwrite(&events[i].minuteBegin, sizeof(events[i].minuteBegin), 1, file);
             fwrite(&events[i].hourEnd, sizeof(events[i].hourEnd), 1, file);
@@ -1653,31 +1787,30 @@ void loadCurrentEventsFromFile() {
     }
     else {
         fread(&lastEvent, sizeof(int), 1, file);
-        /*fread(&size, 4, 1, file);
-        
+
         int temp = 0;
-        books = new Book[size];
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < lastEvent; i++)
         {
             fread(&temp, 4, 1, file);
-            books[i].name = new char[temp + 1];
-            fread(books[i].name, 1, temp, file);
-            books[i].name[temp] = '\0';
-
-            fread(&temp, 4, 1, file);
-            books[i].genre = new char[temp + 1];
-            fread(books[i].genre, 1, temp, file);
-            books[i].genre[temp] = '\0';
-
-            fread(&temp, 4, 1, file);
-            books[i].author = new char[temp + 1];
-            fread(books[i].author, 1, temp, file);
-            books[i].author[temp] = '\0';
-
-            fread(&books[i].dateOfIssue, sizeof(Date), 1, file);
-        }*/
+            fread(events[i].strDescribtion, 1, temp, file);
+            fread(&events[i].onMonday, sizeof(events[i].onMonday), 1, file);
+            fread(&events[i].onTuesday, sizeof(events[i].onTuesday), 1, file);
+            fread(&events[i].onWednesday, sizeof(events[i].onWednesday), 1, file);
+            fread(&events[i].onThursday, sizeof(events[i].onThursday), 1, file);
+            fread(&events[i].onFriday, sizeof(events[i].onFriday), 1, file);
+            fread(&events[i].onSaturday, sizeof(events[i].onSaturday), 1, file);
+            fread(&events[i].onSunday, sizeof(events[i].onSunday), 1, file);
+            fread(&events[i].hourBegin, sizeof(events[i].hourBegin), 1, file);
+            fread(&events[i].minuteBegin, sizeof(events[i].minuteBegin), 1, file);
+            fread(&events[i].hourEnd, sizeof(events[i].hourEnd), 1, file);
+            fread(&events[i].minuteEnd, sizeof(events[i].minuteEnd), 1, file);
+        }
         fclose(file);
     }
+}
+
+void sortEventsByDay() {
+
 }
 
 // func for static/dynamic painting structures
@@ -1782,24 +1915,26 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int las
     left += structWidghtTimeHour + 2;
     events[lastEvent].hEditTimeMinEnd = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
 
-    wchar_t* days = int_to_string(events[lastEvent].days);
+    // wchar_t* days = int_to_string(events[lastEvent].days);
     wchar_t* hourBegin = int_to_string(events[lastEvent].hourBegin);
     wchar_t* minuteBegin = int_to_string(events[lastEvent].minuteBegin);
     wchar_t* hourEnd = int_to_string(events[lastEvent].hourEnd);
     wchar_t* minuteEnd = int_to_string(events[lastEvent].minuteEnd);
 
     SendMessageW(events[lastEvent].hEditDesc, WM_SETFONT, (WPARAM)hf, 0);
-    SetWindowTextA(events[lastEvent].hEditDesc, LPSTR(events[lastEvent].strDescribtion));
+    SetWindowTextW(events[lastEvent].hEditDesc, LPCWSTR(events[lastEvent].strDescribtion));
+    // SetWindowTextA();
+    // SetWindowText();
     SendMessageW(events[lastEvent].hEditDays, WM_SETFONT, (WPARAM)hf, 0);
-    SetWindowTextA(events[lastEvent].hEditDays, LPSTR(days));
+    //SetWindowTextW(events[lastEvent].hEditDays, LPCWSTR(days));
     SendMessageW(events[lastEvent].hEditTimeHourBegin, WM_SETFONT, (WPARAM)hf, 0);
-    SetWindowTextA(events[lastEvent].hEditTimeHourBegin, LPSTR(hourBegin));
+    SetWindowTextW(events[lastEvent].hEditTimeHourBegin, LPWSTR(hourBegin));
     SendMessageW(events[lastEvent].hEditTimeMinBegin, WM_SETFONT, (WPARAM)hf, 0);
-    SetWindowTextA(events[lastEvent].hEditTimeMinBegin, LPSTR(minuteBegin));
+    SetWindowTextW(events[lastEvent].hEditTimeMinBegin, LPWSTR(minuteBegin));
     SendMessageW(events[lastEvent].hEditTimeHourEnd, WM_SETFONT, (WPARAM)hf, 0);
-    SetWindowTextA(events[lastEvent].hEditTimeHourEnd, LPSTR(hourEnd));
+    SetWindowTextW(events[lastEvent].hEditTimeHourEnd, LPWSTR(hourEnd));
     SendMessageW(events[lastEvent].hEditTimeMinEnd, WM_SETFONT, (WPARAM)hf, 0);
-    SetWindowTextA(events[lastEvent].hEditTimeMinEnd, LPSTR(minuteEnd));
+    SetWindowTextW(events[lastEvent].hEditTimeMinEnd, LPWSTR(minuteEnd));
 }
 
 /*
@@ -1992,3 +2127,13 @@ void C(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int width
     DeleteObject(hPen);
     DeleteObject(hBrush);
 }
+
+//                                              :::ISSUES:::
+/*
+*           checkbox - how to use BM_GETCHECK in dialog windows
+*           literation error in main window while writing/reading information from controls
+*           problem with days organization:
+*                   working with drop-out windows/comboboxes -- what's better and how to work with them
+*           writing boolean variables in file
+*           sorting out elements in an events[] array by days of week (monday, tuesday, etc.)
+*/

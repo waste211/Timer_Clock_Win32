@@ -2,6 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by Timer_Win32.rc
 //
+#define ID_BTN_OK                       1
 #define IDC_MYICON                      2
 #define IDD_TIMERWIN32_DIALOG           102
 #define IDS_APP_TITLE                   103
@@ -70,6 +71,7 @@
 #define IDD_ADD_EVENT                   149
 #define IDS_TITLE_ERROR_RU              150
 #define IDS_END_TIMER_EN                151
+#define IDD_CHOOSE_DAY                  151
 #define IDS_END_TIMER_RU                152
 #define IDS_TITLE_TIMER_EN              153
 #define IDS_TITLE_TIMER_RU              154
@@ -171,12 +173,27 @@
 #define IDC_SECOND                      1059
 #define ID_BTN_ADD                      1060
 #define IDC_EDIT_DESC                   1061
-#define IDC_EDIT_DAYS                   1062
 #define IDC_EDIT_HOURS_BEGIN            1063
 #define IDC_EDIT_MINUTES_BEGIN          1064
 #define IDC_EDIT_HOURS_END              1065
-#define IDC_EDIT_MINUTES2               1066
 #define IDC_EDIT_MINUTES_END            1066
+#define IDC_CHOOSE_DAY                  1071
+#define IDOK                            1072
+#define IDC_ON_MONDAY                   1074
+#define IDC_ON_MONDAY2                  1075
+#define IDC_ON_TUESDAY                  1075
+#define IDC_ON_MONDAY3                  1076
+#define IDC_ON_WEDNESDAY                1076
+#define IDC_LIST1                       1076
+#define IDC_ON_MONDAY4                  1077
+#define IDC_ON_THURSDAY                 1077
+#define IDC_COMBO2                      1077
+#define IDC_ON_MONDAY5                  1078
+#define IDC_ON_FRIDAY                   1078
+#define IDC_ON_MONDAY6                  1079
+#define IDC_ON_SATURDAY                 1079
+#define IDC_ON_MONDAY7                  1080
+#define IDC_ON_SUNDAY                   1080
 #define ID_TIMER_HOURS                  32771
 #define ID_TIMER_MINUTES                32772
 #define ID_TIMER_SECONDS                32773
@@ -208,9 +225,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        150
+#define _APS_NEXT_RESOURCE_VALUE        152
 #define _APS_NEXT_COMMAND_VALUE         32795
-#define _APS_NEXT_CONTROL_VALUE         1066
+#define _APS_NEXT_CONTROL_VALUE         1078
 #define _APS_NEXT_SYMED_VALUE           111
 #endif
 #endif

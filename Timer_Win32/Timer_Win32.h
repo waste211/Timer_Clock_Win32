@@ -103,13 +103,19 @@ SYSTEMTIME sys_time;
 
 // structures
 struct planStruct {
-    int posY;
-    WCHAR strDescribtion[100000];
-    int days;
-    int hourBegin;
-    int minuteBegin;
-    int hourEnd;
-    int minuteEnd;
+    int posY{};
+    WCHAR strDescribtion[100000]{};
+    bool onMonday{}; // 0|1
+    bool onTuesday{};
+    bool onWednesday{};
+    bool onThursday{};
+    bool onFriday{};
+    bool onSaturday{};
+    bool onSunday{}; // 0|1
+    int hourBegin{};
+    int minuteBegin{};
+    int hourEnd{};
+    int minuteEnd{};
     HWND hEditDesc{};
     HWND hEditDays{};
     HWND hEditTimeHourBegin{};
@@ -121,12 +127,18 @@ struct planStruct {
     void deleteStructure(HWND hwnd, HINSTANCE hinstance, int element);
 };
 // variables for planStruct
-bool fillAndDrawStructure = true;
 const int beginUp = 60;
 int lastUp = 60;
 int lastEvent = 0;
 // arrays
 planStruct events[100];
+planStruct unsortedTempEvents[100];
+planStruct temp;
+
+// bool variables
+bool fillAndDrawStructure = true;
+bool add_days = true;
+bool wasOpened = false;
 
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -135,6 +147,7 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Language_choosing(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Add_event(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Choose_day(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Timer_default(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Timer_reverse(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Timer_systemdependent(HWND, UINT, WPARAM, LPARAM);
@@ -143,16 +156,17 @@ INT_PTR CALLBACK    Clock_modern(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Clock_old(HWND, UINT, WPARAM, LPARAM);
 
 // funct logic
-bool processMainWindow(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, HINSTANCE hInstance);
-
 void ConvertDayOfWeekToString(HWND hDlg, int nIDDlgItem, int day_of_week, bool language_en, bool language_ru);
 void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en, bool language_ru);
+int FillEventsWithDaysOfWeek(HWND hDlg);
+void DlgDaysOfWeekWasOpened(HWND hDlg);
 
 wchar_t* int_to_string(int num);
 const char* WCHAR_to_char(WCHAR* string);
 void changeMenuElement(HWND hWnd);
 void saveCurrentEventsInFile();
 void loadCurrentEventsFromFile();
+void sortEventsByDay();
 
 // func for static/dynamic painting structures
 void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, int centerY, HDC hdc);

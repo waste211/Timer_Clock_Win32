@@ -15,7 +15,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // hp time
     QueryPerformanceFrequency(&Frequency);
     QueryPerformanceCounter(&StartingTime);
-
     QueryPerformanceCounter(&EndingTime);
     ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
     ElapsedMicroseconds.QuadPart *= 1000000;
@@ -237,25 +236,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 saveCurrentEventsInFile();
                 break;
             }
-            // необходима доработка
             case ID_EVENTS_LOAD:
             {
                 // удаление визуальных событий
                 if (lastEvent >= 0) {
-                    for (int i = lastEvent; i >= 0; i--)
-                        events[lastEvent].planStruct::deleteStructure(hWnd, hInstance, lastEvent);
+                    for (int i = 0; i <= lastEvent; i++)
+                        events[i].planStruct::deleteStructure(hWnd, hInstance, i);
                 }
                 loadCurrentEventsFromFile(); // если событий в файле меньше чем в текущем масиве, то ошибок это не вызывает
                 lastUp = 60; // обнулются координаты
-                for (int i = 0; i <= lastEvent; i++) { // вывод событий на экран пользователя
-                        events[i].planStruct::createStructure(hWnd, hInstance, lastUp, i);
-                        lastUp += structHeight + 10;
+                for (int i = 0; i <= lastEvent && events[0].hEditDesc; i++) { // вывод событий на экран пользователя
+                    events[i].planStruct::createStructure(hWnd, hInstance, lastUp, i);
+                    lastUp += structHeight + 10;
                 }
                 break;
             }
             case ID_EVENTS_ADD:
             {
-                lastEvent += 1;
+                if (lastEvent == 0 && lastEventIncrement == false)
+                    lastEventIncrement = true;
+                else 
+                    lastEvent += 1;
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ADD_EVENT), hWnd, Add_event); // доработать функцию Add_event
                 if (fillAndDrawStructure == true) {
                     events[lastEvent].posY = lastUp;
@@ -273,7 +274,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     lastEvent -= 1;
                 }
                 else {
-                    MessageBox(GetActiveWindow(), L"Nothing to delte", L"ERROR", MB_ICONERROR);
+                    MessageBox(GetActiveWindow(), L"Nothing to delete", L"ERROR", MB_ICONERROR);
                 }
                 break;
             }
@@ -286,7 +287,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Добавьте сюда любой код прорисовки, использующий HDC...
             EndPaint(hWnd, &ps);
         }
         break;
@@ -491,6 +491,7 @@ INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         if (LOWORD(wParam) == IDCANCEL)
         {
             fillAndDrawStructure = false;
+            lastEventIncrement == false;
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
         }
@@ -508,6 +509,7 @@ INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
             events[lastEvent].minuteEnd = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_END, NULL, FALSE);
             EndDialog(hDlg, LOWORD(wParam));
             fillAndDrawStructure = true;
+            lastEventIncrement == true;
             return (INT_PTR)TRUE;
         }
         return (INT_PTR)TRUE;
@@ -1738,9 +1740,75 @@ void changeMenuElement(HWND hWnd) {
     DrawMenuBar(hWnd);
 }
 
+// Функция сортировки событий по дням недели и по времени
+void sortEventsByDay() {
+    GetLocalTime(&sys_time);
+    int currentDay = sys_time.wDayOfWeek;
+
+    int indexMonday = 0;
+    int indexTuesday = 0;
+    int indexWednesday = 0;
+    int indexThursday = 0;
+    int indexFriday = 0;
+    int indexSaturday = 0;
+    int indexSunday = 0;
+    for (int i = 0; i <= lastEvent; i++) {
+        // считываем количесво событий, которые произошли в каждый из дней недели (с дублированием)
+        if (events[i].onMonday) {
+            eventsIndex[0][indexMonday] = i;
+            indexMonday += 1;
+        }
+        if (events[i].onTuesday) {
+            eventsIndex[0][indexTuesday] = i;
+            indexTuesday += 1;
+        }
+        if (events[i].onWednesday) {
+            eventsIndex[0][indexWednesday] = i;
+            indexWednesday += 1;
+        }
+        if (events[i].onThursday) {
+            eventsIndex[0][indexThursday] = i;
+            indexThursday += 1;
+        }
+        if (events[i].onFriday) {
+            eventsIndex[0][indexFriday] = i;
+            indexFriday += 1;
+        }
+        if (events[i].onSaturday) {
+            eventsIndex[0][indexSaturday] = i;
+            indexSaturday += 1;
+        }
+        if (events[i].onSunday) {
+            eventsIndex[0][indexSunday] = i;
+            indexSunday += 1;
+        }
+    }
+
+    int temp = 0;
+    int day = 0;
+    while (day <= 6) { // прогоняем через каждый из дней недели - первый индекс массива eventsIndex
+        for (int j = 0; j <= MAX_EVENTS && (events[j].hEditDesc); j++) { // (events[i].hEditDesc) - фактическая проверка на заполнение элемента события
+            if (events[j].hourBegin == events[j + 1].hourBegin) {
+                if (events[j].minuteBegin > events[j + 1].minuteBegin) {
+                    temp = eventsIndex[day][j];
+                    eventsIndex[day][j] = eventsIndex[day][j + 1];
+                    eventsIndex[day][j + 1] = temp;
+                }
+            }
+            else if (events[j].hourBegin > events[j + 1].hourBegin) {
+                temp = eventsIndex[day][j];
+                eventsIndex[day][j] = eventsIndex[day][j + 1];
+                eventsIndex[day][j + 1] = temp;
+            }
+        }
+        day += 1;
+    }    
+}
+
 /*
 Функция для записи текущих ивентов в файл(которые создал пользователь)
 Функция не принимает значений, использует глобальные переменные
+TODO: Добавление названия файла в будущем
 */
 void saveCurrentEventsInFile() {
     FILE* file;
@@ -1807,10 +1875,6 @@ void loadCurrentEventsFromFile() {
         }
         fclose(file);
     }
-}
-
-void sortEventsByDay() {
-
 }
 
 // func for static/dynamic painting structures
@@ -1941,12 +2005,19 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int las
 Функция для удаления структуры из edit и static.
 */
 void planStruct::deleteStructure(HWND hWnd, HINSTANCE hInstance, int element) {
+    HWND hDeleted{};
     DestroyWindow(events[element].hEditDesc);
+    events[element].hEditDesc = hDeleted;
     DestroyWindow(events[element].hEditDays);
+    events[element].hEditDays = hDeleted;
     DestroyWindow(events[element].hEditTimeHourBegin);
+    events[element].hEditTimeHourBegin = hDeleted;
     DestroyWindow(events[element].hEditTimeMinBegin);
+    events[element].hEditTimeMinBegin = hDeleted;
     DestroyWindow(events[element].hEditTimeHourEnd);
+    events[element].hEditTimeHourEnd = hDeleted;
     DestroyWindow(events[element].hEditTimeMinEnd);
+    events[element].hEditTimeMinEnd = hDeleted;
 }
 
 

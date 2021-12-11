@@ -2,6 +2,7 @@
 
 #define _USE_MATH_DEFINES
 #define MAX_LOADSTRING 100
+#define MAX_EVENTS 1000
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "resource.h"
@@ -105,17 +106,18 @@ SYSTEMTIME sys_time;
 struct planStruct {
     int posY{};
     WCHAR strDescribtion[100000]{};
-    bool onMonday{}; // 0|1
-    bool onTuesday{};
-    bool onWednesday{};
-    bool onThursday{};
-    bool onFriday{};
-    bool onSaturday{};
-    bool onSunday{}; // 0|1
-    int hourBegin{};
-    int minuteBegin{};
-    int hourEnd{};
-    int minuteEnd{};
+    bool onMonday = false; // 0|1
+    bool onTuesday = false;
+    bool onWednesday = false;
+    bool onThursday = false;
+    bool onFriday = false;
+    bool onSaturday = false;
+    bool onSunday = false; // 0|1
+    int hourBegin = -1;
+    int minuteBegin = -1;
+    int hourEnd = -1;
+    int minuteEnd = -1;
+
     HWND hEditDesc{};
     HWND hEditDays{};
     HWND hEditTimeHourBegin{};
@@ -131,14 +133,15 @@ const int beginUp = 60;
 int lastUp = 60;
 int lastEvent = 0;
 // arrays
-planStruct events[100];
-planStruct unsortedTempEvents[100];
+planStruct events[MAX_EVENTS]; // основной массив событий
+int eventsIndex[6][MAX_EVENTS];
 planStruct temp;
 
 // bool variables
 bool fillAndDrawStructure = true;
 bool add_days = true;
 bool wasOpened = false;
+bool lastEventIncrement = false;
 
 // ќтправить объ€влени€ функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);

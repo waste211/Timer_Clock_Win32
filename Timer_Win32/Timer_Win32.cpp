@@ -23,9 +23,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //end hp time
     
     // Инициализация глобальных строк
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_APP_TITLE_EN, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_TIMERWIN32, szWindowClass, MAX_LOADSTRING);
-
+    // Titles
+    LoadStringW(hInstance, IDS_TITLE_ABOUT_EN, sTitleAbout, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_CHOOSE_LANG_EN, sTitleChooseLang, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_ADD_EVENT_EN, sTitleAddEvent, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_CHOOSE_DAY_EN, sTitleChooseDay, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_TIMER_DEFAULT_EN, sTitleTimerDefault, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_TIMER_REVERSE_EN, sTitleTimerReverse, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_TIMER_SD_EN, sTitleTimerSD, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_STOPWATCH_EN, sTitleStopwatch, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_CLOCK_MODERN_EN, sTitleClockModern, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_CLOCK_OLD_EN, sTitleClockOld, MAX_LOADSTRING);
     // MesageBox strings
     LoadStringW(hInstance, IDS_NO_INPUT_EN, sNoInput, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_INVALID_INPUT_EN, sInvalidInput, MAX_LOADSTRING);
@@ -316,6 +326,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
     {
     case WM_INITDIALOG:
     {
+        SetWindowText(hDlg, sTitleChooseLang);
         HWND text{};
         text = GetDlgItem(hDlg, IDC_STATIC);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sChangeLangText);
@@ -335,6 +346,17 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             language_ru = false;
 
             // start
+            // Titles
+            LoadStringW(hInstance, IDS_TITLE_ABOUT_EN, sTitleAbout, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CHOOSE_LANG_EN, sTitleChooseLang, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_ADD_EVENT_EN, sTitleAddEvent, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CHOOSE_DAY_EN, sTitleChooseDay, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_DEFAULT_EN, sTitleTimerDefault, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_REVERSE_EN, sTitleTimerReverse, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_SD_EN, sTitleTimerSD, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_STOPWATCH_EN, sTitleStopwatch, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CLOCK_MODERN_EN, sTitleClockModern, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CLOCK_OLD_EN, sTitleClockOld, MAX_LOADSTRING);
             // MesageBox strings
             LoadStringW(hInstance, IDS_NO_INPUT_EN, sNoInput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_INVALID_INPUT_EN, sInvalidInput, MAX_LOADSTRING);
@@ -412,6 +434,17 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             language_ru = true;
 
             // start
+            // Titles
+            LoadStringW(hInstance, IDS_TITLE_ABOUT_RU, sTitleAbout, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CHOOSE_LANG_RU, sTitleChooseLang, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_ADD_EVENT_RU, sTitleAddEvent, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CHOOSE_DAY_RU, sTitleChooseDay, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_DEFAULT_RU, sTitleTimerDefault, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_REVERSE_RU, sTitleTimerReverse, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_SD_RU, sTitleTimerSD, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_STOPWATCH_RU, sTitleStopwatch, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CLOCK_MODERN_RU, sTitleClockModern, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CLOCK_OLD_RU, sTitleClockOld, MAX_LOADSTRING);
             // MesageBox strings
             LoadStringW(hInstance, IDS_NO_INPUT_RU, sNoInput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_INVALID_INPUT_RU, sInvalidInput, MAX_LOADSTRING);
@@ -502,6 +535,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_INITDIALOG:
+        SetWindowText(hDlg, sTitleAbout);
         return (INT_PTR)TRUE;
 
     case WM_COMMAND:
@@ -522,6 +556,8 @@ INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     {
     case WM_INITDIALOG:
     {
+        SetWindowText(hDlg, sTitleAddEvent);
+
         HWND text{};
         text = GetDlgItem(hDlg, IDC_DESCRIBTION_TEXT);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sDescribtionText);
@@ -591,6 +627,8 @@ INT_PTR CALLBACK Choose_day(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPara
             DlgDaysOfWeekWasOpened(hDlg);
         }
 
+        SetWindowText(hDlg, sTitleChooseDay);
+
         HWND CheckBox{};
         CheckBox = GetDlgItem(hDlg, IDC_ON_MONDAY);
         SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnMonday);
@@ -658,6 +696,8 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
     {
     case WM_INITDIALOG:
     {
+        SetWindowText(hDlg, sTitleTimerDefault);
+
         HWND text{};
         text = GetDlgItem(hDlg, IDC_TEXT_INPUT);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sInput);
@@ -803,6 +843,8 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
     {
     case WM_INITDIALOG:
     {
+        SetWindowText(hDlg, sTitleTimerReverse);
+
         HWND text{};
         text = GetDlgItem(hDlg, IDC_TEXT_INPUT);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sInput);
@@ -962,6 +1004,8 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
     {
     case WM_INITDIALOG:
     {
+        SetWindowText(hDlg, sTitleTimerSD);
+
         HWND text{};
         text = GetDlgItem(hDlg, IDC_TEXT_INPUT);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sInput);
@@ -1143,6 +1187,8 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     {
     case WM_INITDIALOG:
     {
+        SetWindowText(hDlg, sTitleStopwatch);
+
         HWND text{};
         text = GetDlgItem(hDlg, IDC_TEXT_OUTPUT);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sOutput);
@@ -1250,6 +1296,8 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
     {
         SetTimer(hDlg, 5, 300, NULL);
 
+        SetWindowText(hDlg, sTitleClockModern);
+
         HWND text{};
         text = GetDlgItem(hDlg, IDC_TEXT_DAY_OF_WEEK);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sDayOfWeek);
@@ -1347,6 +1395,8 @@ INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     {
     case WM_INITDIALOG:
         SetTimer(hDlg, 6, 1000, NULL);
+        SetWindowText(hDlg, sTitleClockOld);
+
         ConvertDayOfWeekToString(hDlg, IDC_EDIT_CLOCK_O_DAYOFWEEK, sys_time.wDayOfWeek, language_en, language_ru);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_DAY, sys_time.wDay, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_MONTH, sys_time.wMonth, TRUE);

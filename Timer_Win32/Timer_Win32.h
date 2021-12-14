@@ -19,7 +19,18 @@ HINSTANCE hInst;                                // текущий экземпляр
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
 WCHAR szWindowClass[MAX_LOADSTRING];            // Имя класса окна
 // Текст для локализации:
-    // Текст для MessageBox:
+// Titles
+WCHAR sTitleAbout[MAX_LOADSTRING];
+WCHAR sTitleChooseLang[MAX_LOADSTRING];
+WCHAR sTitleAddEvent[MAX_LOADSTRING];
+WCHAR sTitleChooseDay[MAX_LOADSTRING];
+WCHAR sTitleTimerDefault[MAX_LOADSTRING];
+WCHAR sTitleTimerReverse[MAX_LOADSTRING];
+WCHAR sTitleTimerSD[MAX_LOADSTRING];
+WCHAR sTitleStopwatch[MAX_LOADSTRING];
+WCHAR sTitleClockModern[MAX_LOADSTRING];
+WCHAR sTitleClockOld[MAX_LOADSTRING];
+// Текст для MessageBox:
 WCHAR sNoInput[MAX_LOADSTRING];
 WCHAR sInvalidInput[MAX_LOADSTRING];
 WCHAR sTitleError[MAX_LOADSTRING];

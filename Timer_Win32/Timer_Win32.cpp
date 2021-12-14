@@ -36,22 +36,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_CHANGELANG_TITLE_EN, sChangeLangTitle, MAX_LOADSTRING);
 
     // Static text strings
-    LoadStringW(hInstance, IDS_NO_INPUT_EN, sNoInput, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_INVALID_INPUT_EN, sInvalidInput, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_TITLE_ERROR_EN, sTitleError, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_END_TIMER_EN, sEndTimer, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_TITLE_TIMER_EN, sTitleTimer, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_CHANGELANG_EN, sChangeLang, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_CHANGELANG_TITLE_EN, sChangeLangTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_DESCRIBTION_TEXT_EN, sDescribtionText, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_DAY_CHOOSING_EN, sDayChoosing, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_TIME_TEXT_EN, sTimeText, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_HOURS_BEGIN_EN, sHoursBegin, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_MINUTES_BEGIN_EN, sMinutesBegin, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_HOURS_END_EN, sHoursEnd, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDS_MINUTES_END_EN, sMinutesEnd, MAX_LOADSTRING);
-
-    // Static text strings
     LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_INPUT_EN, sInput, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_DAY_OF_WEEK_EN, sDayOfWeek, MAX_LOADSTRING);
@@ -62,12 +46,29 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_MINUTE_EN, sMinute, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_SECOND_EN, sSecond, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CHANGELANG_TEXT_EN, sChangeLangText, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_DESCRIBTION_TEXT_EN, sDescribtionText, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_DAY_CHOOSING_EN, sDayChoosing, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TIME_TEXT_EN, sTimeText, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_HOURS_BEGIN_EN, sHoursBegin, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MINUTES_BEGIN_EN, sMinutesBegin, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_HOURS_END_EN, sHoursEnd, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MINUTES_END_EN, sMinutesEnd, MAX_LOADSTRING);
+    // Check-box text strings
+    LoadStringW(hInstance, IDS_TEXT_ONMONDAY_EN, sOnMonday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONTUESDAY_EN, sOnTuesday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONWEDNESDAY_EN, sOnWednesday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONTHURSDAY_EN, sOnThursday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONFRIDAY_EN, sOnFriday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONSATURDAY_EN, sOnSaturday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONSUNDAY_EN, sOnSunday, MAX_LOADSTRING);
+
     // Btn text strings
     LoadStringW(hInstance, IDS_START_EN, sStart, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_STOP_EN, sStop, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_BTN_CHOOSE_DAY_EN, sChooseDayBtn, MAX_LOADSTRING);
 
     // menu strings
     LoadStringW(hInstance, IDS_MENU_FILE_EN, sMenuFile, MAX_LOADSTRING);
@@ -362,13 +363,21 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_MINUTES_BEGIN_EN, sMinutesBegin, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_HOURS_END_EN, sHoursEnd, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MINUTES_END_EN, sMinutesEnd, MAX_LOADSTRING);
+            // Check-box text strings
+            LoadStringW(hInstance, IDS_TEXT_ONMONDAY_EN, sOnMonday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONTUESDAY_EN, sOnTuesday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONWEDNESDAY_EN, sOnWednesday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONTHURSDAY_EN, sOnThursday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONFRIDAY_EN, sOnFriday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONSATURDAY_EN, sOnSaturday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONSUNDAY_EN, sOnSunday, MAX_LOADSTRING);
             // Btn text strings
             LoadStringW(hInstance, IDS_START_EN, sStart, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_STOP_EN, sStop, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
-
+            LoadStringW(hInstance, IDS_BTN_CHOOSE_DAY_EN, sChooseDayBtn, MAX_LOADSTRING);
             // menu strings
             LoadStringW(hInstance, IDS_MENU_FILE_EN, sMenuFile, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_HELP_EN, sMenuHelp, MAX_LOADSTRING);
@@ -431,13 +440,21 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_MINUTES_BEGIN_RU, sMinutesBegin, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_HOURS_END_RU, sHoursEnd, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MINUTES_END_RU, sMinutesEnd, MAX_LOADSTRING);
+            // Check-box text strings
+            LoadStringW(hInstance, IDS_TEXT_ONMONDAY_RU, sOnMonday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONTUESDAY_RU, sOnTuesday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONWEDNESDAY_RU, sOnWednesday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONTHURSDAY_RU, sOnThursday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONFRIDAY_RU, sOnFriday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONSATURDAY_RU, sOnSaturday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONSUNDAY_RU, sOnSunday, MAX_LOADSTRING);
             // Btn text strings
             LoadStringW(hInstance, IDS_START_RU, sStart, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_STOP_RU, sStop, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_PAUSE_RU, sPause, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CONTINUE_RU, sContinue, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_RESET_RU, sReset, MAX_LOADSTRING);
-
+            LoadStringW(hInstance, IDS_BTN_CHOOSE_DAY_RU, sChooseDayBtn, MAX_LOADSTRING);
             // menu strings
             LoadStringW(hInstance, IDS_MENU_FILE_RU, sMenuFile, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_MENU_HELP_RU, sMenuHelp, MAX_LOADSTRING);
@@ -520,6 +537,10 @@ INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sHoursBegin);
         text = GetDlgItem(hDlg, IDC_ME);
         SendMessageW(text, WM_SETTEXT, 0, (LPARAM)sMinutesEnd);
+
+        HWND btn{};
+        btn = GetDlgItem(hDlg, IDC_CHOOSE_DAY);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sChooseDayBtn);
         return (INT_PTR)TRUE;
     }
     case WM_COMMAND:
@@ -566,11 +587,25 @@ INT_PTR CALLBACK Choose_day(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPara
     {
     case WM_INITDIALOG:
     {
-        HWND CheckBox;
-
         if (wasOpened == true) {
             DlgDaysOfWeekWasOpened(hDlg);
         }
+
+        HWND CheckBox{};
+        CheckBox = GetDlgItem(hDlg, IDC_ON_MONDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnMonday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_TUESDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnTuesday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_WEDNESDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnWednesday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_THURSDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnThursday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_FRIDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnFriday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_SATURDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnSaturday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_SUNDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnSunday);
         return (INT_PTR)TRUE;
     }
     case WM_COMMAND:

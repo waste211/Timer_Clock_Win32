@@ -184,12 +184,12 @@
 #define IDC_ON_TUESDAY                  1075
 #define IDC_ON_MONDAY3                  1076
 #define IDC_ON_WEDNESDAY                1076
-#define IDC_LIST1                       1076
 #define IDC_ON_MONDAY4                  1077
 #define IDC_ON_THURSDAY                 1077
-#define IDC_COMBO2                      1077
 #define IDC_ON_MONDAY5                  1078
 #define IDC_ON_FRIDAY                   1078
+#define IDC_EDIT1                       1078
+#define IDC_DEBUG                       1078
 #define IDC_ON_MONDAY6                  1079
 #define IDC_ON_SATURDAY                 1079
 #define IDC_ON_MONDAY7                  1080
@@ -227,7 +227,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        152
 #define _APS_NEXT_COMMAND_VALUE         32795
-#define _APS_NEXT_CONTROL_VALUE         1078
+#define _APS_NEXT_CONTROL_VALUE         1079
 #define _APS_NEXT_SYMED_VALUE           111
 #endif
 #endif

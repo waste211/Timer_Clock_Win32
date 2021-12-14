@@ -574,12 +574,14 @@ INT_PTR CALLBACK Choose_day(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPara
 // Функция окна "Обычного таймера". Отсчет идет вперед (от 0 до заданного времени)
 INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    int input_hour = 0;
-    int input_minute = 0;
-    int input_second = 0;
-
-    bool continue_timer = true;
-
+    static int second_output = 0;
+    static int minute_output = 0;
+    static int hour_output = 0;
+    static double temp = 0;
+    static int input_hour = 0;
+    static int input_minute = 0;
+    static int input_second = 0;
+    static bool continue_timer = true;
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
@@ -619,8 +621,9 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             input_hour = GetDlgItemInt(hDlg, IDC_EDIT_HOUR_INPUT, NULL, TRUE);
             input_minute = GetDlgItemInt(hDlg, IDC_EDIT_MINUTE_INPUT, NULL, TRUE);
             input_second = GetDlgItemInt(hDlg, IDC_EDIT_SECOND_INPUT, NULL, TRUE);
+            QueryPerformanceCounter(&StartingTime);
+            SetTimer(hDlg, 1, 100, NULL);
 
-            SetTimer(hDlg, 1, 1000, NULL);
             if (input_hour == 0) {
                 if (input_minute == 0) {
                     if (input_second == 0) {
@@ -630,7 +633,7 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
                     }
                 }
             }
-            else if (input_minute > 60 || input_second > 59) {
+            if (input_minute > 60 || input_second > 60 && continue_timer) {
                 KillTimer(hDlg, 1);
                 MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                 continue_timer = false;
@@ -660,7 +663,7 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
         }
         if (LOWORD(wParam) == IDC_CONTINUE)
         {
-            SetTimer(hDlg, 1, 1000, NULL);
+            SetTimer(hDlg, 1, 100, NULL);
         }
             return (INT_PTR)TRUE;
         break;
@@ -670,38 +673,35 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             input_minute = GetDlgItemInt(hDlg, IDC_EDIT_MINUTE_INPUT, NULL, TRUE);
             input_second = GetDlgItemInt(hDlg, IDC_EDIT_SECOND_INPUT, NULL, TRUE);
 
-            int edit_hour = GetDlgItemInt(hDlg, IDC_EDIT_HOUR1, NULL, TRUE);
-            int edit_min = GetDlgItemInt(hDlg, IDC_EDIT_MINUTE, NULL, TRUE);
-            int edit_sec = GetDlgItemInt(hDlg, IDC_EDIT_SECOND, NULL, TRUE);
+            hour_output = GetDlgItemInt(hDlg, IDC_EDIT_HOUR1, NULL, TRUE);
+            minute_output = GetDlgItemInt(hDlg, IDC_EDIT_MINUTE, NULL, TRUE);
+            second_output = GetDlgItemInt(hDlg, IDC_EDIT_SECOND, NULL, TRUE);
 
-            if (edit_hour == input_hour) {
-                if (edit_min == input_minute) {
-                    if (edit_sec == input_second) {
+            QueryPerformanceCounter(&EndingTime);
+            ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+            ElapsedMicroseconds.QuadPart *= 1000000;
+            ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+            msecond_counter = ElapsedMicroseconds.QuadPart;
+            temp = msecond_counter / 1000000;
+
+            second_output = round(temp);
+            minute_output = (second_output / 60) % 60;
+            hour_output = second_output / 3600;
+            second_output = second_output % 60;
+            
+            if (hour_output == input_hour)
+                if (minute_output == input_minute) 
+                    if (second_output == input_second) {
                         KillTimer(hDlg, 1);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, edit_hour, TRUE);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, edit_min, TRUE);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, hour_output, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, minute_output, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_SECOND, second_output, TRUE);
                         MessageBox(GetActiveWindow(), sEndTimer, sTitleTimer, MB_ICONINFORMATION);
                     }
-                }
-            }
-            else {
-                if (edit_sec == 59) {
-                    edit_min += 1;
-                    edit_sec = -1;
-                }
-                if (edit_min == 60) {
-                    edit_hour++;
-                    edit_min = 0;
-                    edit_sec = -1;
-                }
-            }
 
-            edit_sec++;
-
-            SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, edit_hour, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, edit_min, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_SECOND, edit_sec, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, hour_output, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, minute_output, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_SECOND, second_output, TRUE);
             return (INT_PTR)TRUE;
         }
         break;
@@ -717,11 +717,15 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 // Функция окна "Обратного таймера". Отсчет идет от времени, которое задал пользователь, до 0
 INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    int input_hour;
-    int input_minute;
-    int input_second;
-
-    bool continue_timer = true;
+    static int second_output = 0;
+    static int minute_output = 0;
+    static int hour_output = 0;
+    static double temp = 0;
+    static int previous_sec = -1;
+    static int input_hour = 0;
+    static int input_minute = 0;
+    static int input_second = 0;
+    static bool continue_timer = true;
 
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
@@ -762,8 +766,8 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             input_hour = GetDlgItemInt(hDlg, IDC_EDIT_R_HOUR_INPUT, NULL, TRUE);
             input_minute = GetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE_INPUT, NULL, TRUE);
             input_second = GetDlgItemInt(hDlg, IDC_EDIT_R_SECOND_INPUT, NULL, TRUE);
-
-            SetTimer(hDlg, 2, 1000, NULL);
+            QueryPerformanceCounter(&StartingTime);
+            SetTimer(hDlg, 2, 100, NULL);
             if (input_hour == 0) {
                 if (input_minute == 0) {
                     if (input_second == 0) {
@@ -802,46 +806,59 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
         }
         if (LOWORD(wParam) == IDC_R_CONTINUE)
         {
-            SetTimer(hDlg, 2, 1000, NULL);
+            SetTimer(hDlg, 2, 100, NULL);
             return (INT_PTR)TRUE;
         }
         break;
     case WM_TIMER:
         if (LOWORD(wParam) == 2) {
-            int edit_hour = GetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, NULL, TRUE);
-            int edit_min = GetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, NULL, TRUE);
-            int edit_sec = GetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, NULL, TRUE);
+            input_hour = GetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, NULL, TRUE);
+            input_minute = GetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, NULL, TRUE);
+            input_second = GetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, NULL, TRUE);
 
-            if (edit_hour == 0) {
-                if (edit_min == 0) {
-                    if (edit_sec == 0) {
+            QueryPerformanceCounter(&EndingTime);
+            ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+            ElapsedMicroseconds.QuadPart *= 1000000;
+            ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+            msecond_counter = ElapsedMicroseconds.QuadPart;
+            temp = msecond_counter / 1000000;
+
+            second_output = round(temp);
+            second_output = second_output % 60;
+            
+            if (input_hour == 0) {
+                if (input_minute == 0) {
+                    if (input_second == 0) {
                         KillTimer(hDlg, 2);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, edit_hour, TRUE);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, edit_min, TRUE);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, input_hour, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, input_minute, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, input_second, TRUE);
                         MessageBox(GetActiveWindow(), sEndTimer, sTitleTimer, MB_ICONINFORMATION);
                     }
                 }
             }
-            else {
-                if (edit_sec == 0) {
-                    if (edit_min != 0) {
-                        edit_sec = 60;
-                        edit_min--;
-                    } 
+            
+            if (second_output > previous_sec || second_output < previous_sec) {
+                previous_sec = second_output;
+
+                if (input_second == 0) {
+                    if (input_minute != 0) {
+                        input_second = 60;
+                        input_minute -= 1;
+                    }
                     else {
-                        edit_hour--;
-                        edit_sec = 60;
-                        edit_min = 60;
+                        input_hour -= 1;
+                        input_second = 60;
+                        input_minute = 60;
                     }
                 }
+                    
+                input_second -= 1;
             }
 
-            edit_sec--;
-
-            SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, edit_hour, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, edit_min, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, input_hour, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, input_minute, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, input_second, TRUE);
             return (INT_PTR)TRUE;
             }
     case WM_DESTROY:

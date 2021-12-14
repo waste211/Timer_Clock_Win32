@@ -43,6 +43,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_TITLE_TIMER_EN, sTitleTimer, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CHANGELANG_EN, sChangeLang, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CHANGELANG_TITLE_EN, sChangeLangTitle, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_DESCRIBTION_TEXT_EN, sDescribtionText, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_DAY_CHOOSING_EN, sDayChoosing, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TIME_TEXT_EN, sTimeText, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_HOURS_BEGIN_EN, sHoursBegin, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MINUTES_BEGIN_EN, sMinutesBegin, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_HOURS_END_EN, sHoursEnd, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MINUTES_END_EN, sMinutesEnd, MAX_LOADSTRING);
 
     // Static text strings
     LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
@@ -348,6 +355,13 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_MINUTE_EN, sMinute, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SECOND_EN, sSecond, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CHANGELANG_TEXT_EN, sChangeLangText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DESCRIBTION_TEXT_EN, sDescribtionText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DAY_CHOOSING_EN, sDayChoosing, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TIME_TEXT_EN, sTimeText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_HOURS_BEGIN_EN, sHoursBegin, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MINUTES_BEGIN_EN, sMinutesBegin, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_HOURS_END_EN, sHoursEnd, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MINUTES_END_EN, sMinutesEnd, MAX_LOADSTRING);
             // Btn text strings
             LoadStringW(hInstance, IDS_START_EN, sStart, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_STOP_EN, sStop, MAX_LOADSTRING);
@@ -410,6 +424,13 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_MINUTE_RU, sMinute, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SECOND_RU, sSecond, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CHANGELANG_TEXT_RU, sChangeLangText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DESCRIBTION_TEXT_RU, sDescribtionText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DAY_CHOOSING_RU, sDayChoosing, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TIME_TEXT_RU, sTimeText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_HOURS_BEGIN_RU, sHoursBegin, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MINUTES_BEGIN_RU, sMinutesBegin, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_HOURS_END_RU, sHoursEnd, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MINUTES_END_RU, sMinutesEnd, MAX_LOADSTRING);
             // Btn text strings
             LoadStringW(hInstance, IDS_START_RU, sStart, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_STOP_RU, sStop, MAX_LOADSTRING);
@@ -484,6 +505,21 @@ INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     {
     case WM_INITDIALOG:
     {
+        HWND text{};
+        text = GetDlgItem(hDlg, IDC_DESCRIBTION_TEXT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sDescribtionText);
+        text = GetDlgItem(hDlg, IDC_DAY_CHOOSING_TEXT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sDayChoosing);
+        text = GetDlgItem(hDlg, IDC_TIME_TEXT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sTimeText);
+        text = GetDlgItem(hDlg, IDC_HB);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sHoursBegin);
+        text = GetDlgItem(hDlg, IDC_MB);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sMinutesBegin);
+        text = GetDlgItem(hDlg, IDC_HE);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sHoursBegin);
+        text = GetDlgItem(hDlg, IDC_ME);
+        SendMessageW(text, WM_SETTEXT, 0, (LPARAM)sMinutesEnd);
         return (INT_PTR)TRUE;
     }
     case WM_COMMAND:
@@ -509,7 +545,7 @@ INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
             events[lastEvent].minuteEnd = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_END, NULL, FALSE);
             EndDialog(hDlg, LOWORD(wParam));
             fillAndDrawStructure = true;
-            lastEventIncrement == true;
+            lastEventIncrement = true;
             return (INT_PTR)TRUE;
         }
         return (INT_PTR)TRUE;
@@ -1056,6 +1092,17 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
 // Функция окна "Секундомер"
 INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    static int msecond_output = 0;
+    static int second_output = 0;
+    static int minute_output = 0;
+    static int hour_output = 0;
+    static double temp = 0;
+    static double temp2 = 0;
+    static int input_hour = 0;
+    static int input_minute = 0;
+    static int input_second = 0;
+    static bool continue_timer = true;
+
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
@@ -1090,6 +1137,10 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
             SetDlgItemInt(hDlg, IDC_EDIT_SW_MINUTE, 0, TRUE);
             SetDlgItemInt(hDlg, IDC_EDIT_SW_SECOND, 0, TRUE);
             SetDlgItemInt(hDlg, IDC_EDIT_SW_MSECOND, 0, TRUE);
+            input_hour = 0;
+            input_minute = 0;
+            input_second = 0;
+            QueryPerformanceCounter(&StartingTime);
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDC_SW_STOP)
@@ -1117,31 +1168,26 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         break;
     case WM_TIMER:
         if (LOWORD(wParam) == 4) {
-            int edit_hour = GetDlgItemInt(hDlg, IDC_EDIT_SW_HOUR, NULL, TRUE);
-            int edit_min = GetDlgItemInt(hDlg, IDC_EDIT_SW_MINUTE, NULL, TRUE);
-            int edit_sec = GetDlgItemInt(hDlg, IDC_EDIT_SW_SECOND, NULL, TRUE);
-            int edit_msec = GetDlgItemInt(hDlg, IDC_EDIT_SW_MSECOND, NULL, TRUE);
+            int sec = 0;
+            QueryPerformanceCounter(&EndingTime);
+            ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+            ElapsedMicroseconds.QuadPart *= 1000000;
+            ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+            msecond_counter = ElapsedMicroseconds.QuadPart;
+            temp = msecond_counter / 100000;
+            temp2 = msecond_counter / 1000000;
+            msecond_output = round(temp);
+            second_output = round(temp2);
+            minute_output = (second_output / 60) % 60;
+            hour_output = second_output / 3600;
+            second_output %= 60;
+            msecond_output %= 10;
 
-            edit_msec++;
-            if (edit_msec == 100) {
-                edit_sec += 1;
-                edit_msec = 0;
-            }
-            if (edit_sec == 60) {
-                edit_min += 1;
-                edit_sec = 0;
-                edit_msec = 0;
-            }
-            if (edit_min == 60) {
-                edit_hour++;
-                edit_min = 0;
-                edit_sec = 0;
-            }
-
-            SetDlgItemInt(hDlg, IDC_EDIT_SW_MINUTE, edit_min, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_SW_HOUR, edit_hour, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_SW_SECOND, edit_sec, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_SW_MSECOND, edit_msec, TRUE);
+            sec += 1;
+            SetDlgItemInt(hDlg, IDC_EDIT_SW_HOUR, hour_output, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_SW_MINUTE, minute_output, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_SW_SECOND, second_output, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_SW_MSECOND, msecond_output, TRUE);
 
             return (INT_PTR)TRUE;
         }

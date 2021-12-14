@@ -112,6 +112,20 @@
 #define IDS_SUBMENU_EVENT_DELETE_RU     188
 #define IDS_MENU_EVENT_EN               189
 #define IDS_MENU_EVENT_RU               190
+#define IDS_DESCRIBTION_TEXT_EN         191
+#define IDS_DESCRIBTION_TEXT_RU         192
+#define IDS_DAY_CHOOSING_EN             193
+#define IDS_DAY_CHOOSING_RU             194
+#define IDS_TIME_TEXT_EN                195
+#define IDS_TIME_TEXT_RU                196
+#define IDS_HOURS_BEGIN_EN              197
+#define IDS_HOURS_BEGIN_RU              198
+#define IDS_MINUTES_BEGIN_EN            199
+#define IDS_MINUTES_BEGIN_RU            200
+#define IDS_HOURS_END_EN                201
+#define IDS_HOURS_END_RU                202
+#define IDS_MINUTES_END_EN              203
+#define IDS_MINUTES_END_RU              204
 #define IDC_START                       1002
 #define IDC_STOP                        1003
 #define IDC_RESET                       1004
@@ -188,12 +202,17 @@
 #define IDC_ON_THURSDAY                 1077
 #define IDC_ON_MONDAY5                  1078
 #define IDC_ON_FRIDAY                   1078
-#define IDC_EDIT1                       1078
-#define IDC_DEBUG                       1078
 #define IDC_ON_MONDAY6                  1079
 #define IDC_ON_SATURDAY                 1079
+#define IDC_DESCRIBTION_TEXT            1079
 #define IDC_ON_MONDAY7                  1080
 #define IDC_ON_SUNDAY                   1080
+#define IDC_DAY_CHOOSING_TEXT           1080
+#define IDC_TIME_TEXT                   1081
+#define IDC_HB                          1082
+#define IDC_MB                          1083
+#define IDC_HE                          1084
+#define IDC_ME                          1085
 #define ID_TIMER_HOURS                  32771
 #define ID_TIMER_MINUTES                32772
 #define ID_TIMER_SECONDS                32773
@@ -227,7 +246,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        152
 #define _APS_NEXT_COMMAND_VALUE         32795
-#define _APS_NEXT_CONTROL_VALUE         1079
+#define _APS_NEXT_CONTROL_VALUE         1086
 #define _APS_NEXT_SYMED_VALUE           111
 #endif
 #endif

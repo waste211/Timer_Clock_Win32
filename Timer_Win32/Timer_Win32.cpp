@@ -15,7 +15,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // hp time
     QueryPerformanceFrequency(&Frequency);
     QueryPerformanceCounter(&StartingTime);
-
     QueryPerformanceCounter(&EndingTime);
     ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
     ElapsedMicroseconds.QuadPart *= 1000000;
@@ -24,9 +23,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //end hp time
     
     // Инициализация глобальных строк
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_APP_TITLE_EN, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_TIMERWIN32, szWindowClass, MAX_LOADSTRING);
-
+    // Titles
+    LoadStringW(hInstance, IDS_TITLE_ABOUT_EN, sTitleAbout, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_CHOOSE_LANG_EN, sTitleChooseLang, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_ADD_EVENT_EN, sTitleAddEvent, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_CHOOSE_DAY_EN, sTitleChooseDay, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_TIMER_DEFAULT_EN, sTitleTimerDefault, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_TIMER_REVERSE_EN, sTitleTimerReverse, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_TIMER_SD_EN, sTitleTimerSD, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_STOPWATCH_EN, sTitleStopwatch, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_CLOCK_MODERN_EN, sTitleClockModern, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TITLE_CLOCK_OLD_EN, sTitleClockOld, MAX_LOADSTRING);
     // MesageBox strings
     LoadStringW(hInstance, IDS_NO_INPUT_EN, sNoInput, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_INVALID_INPUT_EN, sInvalidInput, MAX_LOADSTRING);
@@ -36,7 +45,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_CHANGELANG_EN, sChangeLang, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CHANGELANG_TITLE_EN, sChangeLangTitle, MAX_LOADSTRING);
 
-    // Window titles strings ??? - where to paste, need a class?
     // Static text strings
     LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_INPUT_EN, sInput, MAX_LOADSTRING);
@@ -48,12 +56,51 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_MINUTE_EN, sMinute, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_SECOND_EN, sSecond, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CHANGELANG_TEXT_EN, sChangeLangText, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_DESCRIBTION_TEXT_EN, sDescribtionText, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_DAY_CHOOSING_EN, sDayChoosing, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TIME_TEXT_EN, sTimeText, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_HOURS_BEGIN_EN, sHoursBegin, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MINUTES_BEGIN_EN, sMinutesBegin, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_HOURS_END_EN, sHoursEnd, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MINUTES_END_EN, sMinutesEnd, MAX_LOADSTRING);
+    // Check-box text strings
+    LoadStringW(hInstance, IDS_TEXT_ONMONDAY_EN, sOnMonday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONTUESDAY_EN, sOnTuesday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONWEDNESDAY_EN, sOnWednesday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONTHURSDAY_EN, sOnThursday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONFRIDAY_EN, sOnFriday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONSATURDAY_EN, sOnSaturday, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_TEXT_ONSUNDAY_EN, sOnSunday, MAX_LOADSTRING);
+
     // Btn text strings
     LoadStringW(hInstance, IDS_START_EN, sStart, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_STOP_EN, sStop, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
     LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_BTN_CHOOSE_DAY_EN, sChooseDayBtn, MAX_LOADSTRING);
+
+    // menu strings
+    LoadStringW(hInstance, IDS_MENU_FILE_EN, sMenuFile, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MENU_HELP_EN, sMenuHelp, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MENU_EVENT_EN, sMenuEvent, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MENU_LANGUAGE_EN, sMenuLanguage, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MENU_TIMER_EN, sMenuTimer, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_MENU_CLOCK_EN, sMenuClock, MAX_LOADSTRING);
+    // submenu strings
+    LoadStringW(hInstance, IDS_SUBMENU_EXIT_EN, sSubmenuExit, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_ABOUT_EN, sSubmenuAbout, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_LANGUAGE_EN, sSubmenuLanguage, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_EVENT_SAVE_EN, sSubmenuEventSave, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_EVENT_LOAD_EN, sSubmenuEventLoad, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_EVENT_ADD_EN, sSubmenuEventAdd, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_EVENT_DELETE_EN, sSubmenuEventDelete, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_TIMER_DEFAULT_EN, sSubmenuTimerDefault, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_TIMER_REVERSE_EN, sSubmenuTimerReverse, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_TIMER_SD_EN, sSubmenuTimerSD, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_STOPWATCH_EN, sSubmenuStopwatch, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_CLOCK_OLD_EN, sSubmenuClockOld, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDS_SUBMENU_CLOCK_MODERN_EN, sSubmenuClockModern, MAX_LOADSTRING);
 
     MyRegisterClass(hInstance);
 
@@ -122,12 +169,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Сохранить маркер экземпляра в глобальной переменной
 
-   HWND hWnd{};
    /* uncomment, in case you will want to ask user for changing language when the program runs */
    // DialogBox(hInst, MAKEINTRESOURCE(IDD_CHANGE_LANGUAGE), hWnd, Language_choosing);
-   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-
+   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   changeMenuElement(hWnd);
    if (!hWnd)
    {
        return FALSE;
@@ -139,7 +184,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-//
 //  ФУНКЦИЯ: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
 //  ЦЕЛЬ: Обрабатывает сообщения в главном окне.
@@ -151,25 +195,40 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    HINSTANCE hInstance{};
     switch (message)
     {
+    case WM_CREATE:
+    {
+        temp.planStruct::helpUserInfoStructure(hWnd, hInstance);
+        loadCurrentEventsFromFile();
+        if (lastEvent != 0) {
+            for (int i = 0; i <= lastEvent; i++) {
+                events[i].posY = lastUp;
+                events[i].planStruct::createStructure(hWnd, hInstance, events[i].posY, i);
+                lastUp += structHeight + 10;
+            }
+        }
+        break;
+    }
     case WM_COMMAND:
         {
-            int wmId = LOWORD(wParam);
-            // Разобрать выбор в меню:
-            switch (wmId)
+            int wmenuId = LOWORD(wParam);
+            // Разобрать выбор меню таймеров, секундомеров, выбора языка, разных видов часов и т.д.
+            switch (wmenuId)
             {
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                // to make a movable and sel-extended window
-                CreateDialog(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
             case IDM_EXIT:
                 DestroyWindow(hWnd);
                 break;
             case ID_LANGUAGE:
+            {
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_CHANGE_LANGUAGE), hWnd, Language_choosing);
+                changeMenuElement(hWnd);
                 break;
+            }
             case ID_TIMER_DEFAULT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_DEFAULT_TIMER), hWnd, Timer_default);
                 break;
@@ -188,6 +247,55 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case ID_CLOCK_OLD:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_CLOCK_OLD), hWnd, Clock_old);
                 break;
+
+            // Разобрать выбор меню, связанных с событиями и их обработкой (т.е. главным окном)
+            case ID_EVENTS_SAVE:
+            {
+                saveCurrentEventsInFile();
+                break;
+            }
+            case ID_EVENTS_LOAD:
+            {
+                // удаление визуальных событий
+                if (lastEvent >= 0) {
+                    for (int i = 0; i <= lastEvent; i++)
+                        events[i].planStruct::deleteStructure(hWnd, hInstance, i);
+                }
+                loadCurrentEventsFromFile(); // если событий в файле меньше чем в текущем масиве, то ошибок это не вызывает
+                lastUp = 60; // обнулются координаты
+                for (int i = 0; i <= lastEvent && events[0].hEditDesc; i++) { // вывод событий на экран пользователя
+                    events[i].planStruct::createStructure(hWnd, hInstance, lastUp, i);
+                    lastUp += structHeight + 10;
+                }
+                break;
+            }
+            case ID_EVENTS_ADD:
+            {
+                if (lastEvent == 0 && lastEventIncrement == false)
+                    lastEventIncrement = true;
+                else 
+                    lastEvent += 1;
+                DialogBox(hInst, MAKEINTRESOURCE(IDD_ADD_EVENT), hWnd, Add_event); // доработать функцию Add_event
+                if (fillAndDrawStructure == true) {
+                    events[lastEvent].posY = lastUp;
+                    events[lastEvent].planStruct::createStructure(hWnd, hInstance, events[lastEvent].posY, lastEvent);
+                    lastUp += structHeight + 10;
+                }
+                fillAndDrawStructure = true;
+                break;
+            }
+            case ID_EVENTS_DELETE:
+            {
+                if (lastEvent >= 0) {
+                    lastUp = lastUp - structHeight - 10;
+                    events[lastEvent].planStruct::deleteStructure(hWnd, hInstance, lastEvent);
+                    lastEvent -= 1;
+                }
+                else {
+                    MessageBox(GetActiveWindow(), L"Nothing to delete", L"ERROR", MB_ICONERROR);
+                }
+                break;
+            }
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
@@ -197,7 +305,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Добавьте сюда любой код прорисовки, использующий HDC...
             EndPaint(hWnd, &ps);
         }
         break;
@@ -219,6 +326,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
     {
     case WM_INITDIALOG:
     {
+        SetWindowText(hDlg, sTitleChooseLang);
         HWND text{};
         text = GetDlgItem(hDlg, IDC_STATIC);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sChangeLangText);
@@ -233,10 +341,22 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             return (INT_PTR)TRUE;
             break;
         case IDC_CHOICE_EN:
+        {
             language_en = true;
             language_ru = false;
 
             // start
+            // Titles
+            LoadStringW(hInstance, IDS_TITLE_ABOUT_EN, sTitleAbout, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CHOOSE_LANG_EN, sTitleChooseLang, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_ADD_EVENT_EN, sTitleAddEvent, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CHOOSE_DAY_EN, sTitleChooseDay, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_DEFAULT_EN, sTitleTimerDefault, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_REVERSE_EN, sTitleTimerReverse, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_SD_EN, sTitleTimerSD, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_STOPWATCH_EN, sTitleStopwatch, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CLOCK_MODERN_EN, sTitleClockModern, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CLOCK_OLD_EN, sTitleClockOld, MAX_LOADSTRING);
             // MesageBox strings
             LoadStringW(hInstance, IDS_NO_INPUT_EN, sNoInput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_INVALID_INPUT_EN, sInvalidInput, MAX_LOADSTRING);
@@ -246,7 +366,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_CHANGELANG_EN, sChangeLang, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CHANGELANG_TITLE_EN, sChangeLangTitle, MAX_LOADSTRING);
             // Window titles strings ??? - where to paste, need a class?
-            
+
             // Static text strings
             LoadStringW(hInstance, IDS_OUTPUT_EN, sOutput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_INPUT_EN, sInput, MAX_LOADSTRING);
@@ -258,24 +378,73 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_MINUTE_EN, sMinute, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SECOND_EN, sSecond, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CHANGELANG_TEXT_EN, sChangeLangText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DESCRIBTION_TEXT_EN, sDescribtionText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DAY_CHOOSING_EN, sDayChoosing, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TIME_TEXT_EN, sTimeText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_HOURS_BEGIN_EN, sHoursBegin, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MINUTES_BEGIN_EN, sMinutesBegin, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_HOURS_END_EN, sHoursEnd, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MINUTES_END_EN, sMinutesEnd, MAX_LOADSTRING);
+            // Check-box text strings
+            LoadStringW(hInstance, IDS_TEXT_ONMONDAY_EN, sOnMonday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONTUESDAY_EN, sOnTuesday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONWEDNESDAY_EN, sOnWednesday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONTHURSDAY_EN, sOnThursday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONFRIDAY_EN, sOnFriday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONSATURDAY_EN, sOnSaturday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONSUNDAY_EN, sOnSunday, MAX_LOADSTRING);
             // Btn text strings
             LoadStringW(hInstance, IDS_START_EN, sStart, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_STOP_EN, sStop, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_PAUSE_EN, sPause, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CONTINUE_EN, sContinue, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_RESET_EN, sReset, MAX_LOADSTRING);
-
+            LoadStringW(hInstance, IDS_BTN_CHOOSE_DAY_EN, sChooseDayBtn, MAX_LOADSTRING);
+            // menu strings
+            LoadStringW(hInstance, IDS_MENU_FILE_EN, sMenuFile, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_HELP_EN, sMenuHelp, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_EVENT_EN, sMenuEvent, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_LANGUAGE_EN, sMenuLanguage, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_TIMER_EN, sMenuTimer, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_CLOCK_EN, sMenuClock, MAX_LOADSTRING);
+            // submenu strings
+            LoadStringW(hInstance, IDS_SUBMENU_EXIT_EN, sSubmenuExit, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_ABOUT_EN, sSubmenuAbout, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_LANGUAGE_EN, sSubmenuLanguage, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_SAVE_EN, sSubmenuEventSave, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_LOAD_EN, sSubmenuEventLoad, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_ADD_EN, sSubmenuEventAdd, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_DELETE_EN, sSubmenuEventDelete, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_DEFAULT_EN, sSubmenuTimerDefault, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_REVERSE_EN, sSubmenuTimerReverse, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_SD_EN, sSubmenuTimerSD, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_STOPWATCH_EN, sSubmenuStopwatch, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_CLOCK_OLD_EN, sSubmenuClockOld, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_CLOCK_MODERN_EN, sSubmenuClockModern, MAX_LOADSTRING);
             //end
             // Раскомментировать, чтобы появился MessageBox о смене языка
             // MessageBox(hDlg, (LPCWSTR)L"Language succesfully changed! Thanks for using our application!", (LPCWSTR)L"Application \"Timer\"", MB_ICONINFORMATION);
             EndDialog(hDlg, LOWORD(wParam));
+        }
             return (INT_PTR)TRUE;
             break;
         case IDC_CHOICE_RU:
+        {
             language_en = false;
             language_ru = true;
 
             // start
+            // Titles
+            LoadStringW(hInstance, IDS_TITLE_ABOUT_RU, sTitleAbout, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CHOOSE_LANG_RU, sTitleChooseLang, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_ADD_EVENT_RU, sTitleAddEvent, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CHOOSE_DAY_RU, sTitleChooseDay, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_DEFAULT_RU, sTitleTimerDefault, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_REVERSE_RU, sTitleTimerReverse, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_TIMER_SD_RU, sTitleTimerSD, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_STOPWATCH_RU, sTitleStopwatch, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CLOCK_MODERN_RU, sTitleClockModern, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TITLE_CLOCK_OLD_RU, sTitleClockOld, MAX_LOADSTRING);
             // MesageBox strings
             LoadStringW(hInstance, IDS_NO_INPUT_RU, sNoInput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_INVALID_INPUT_RU, sInvalidInput, MAX_LOADSTRING);
@@ -285,7 +454,7 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_CHANGELANG_RU, sChangeLang, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CHANGELANG_TITLE_RU, sChangeLangTitle, MAX_LOADSTRING);
             // Window titles strings ??? - where to paste, need a class?
-            
+
             // Static text strings
             LoadStringW(hInstance, IDS_OUTPUT_RU, sOutput, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_INPUT_RU, sInput, MAX_LOADSTRING);
@@ -297,17 +466,55 @@ INT_PTR CALLBACK Language_choosing(HWND hDlg, UINT message, WPARAM wParam, LPARA
             LoadStringW(hInstance, IDS_MINUTE_RU, sMinute, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_SECOND_RU, sSecond, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CHANGELANG_TEXT_RU, sChangeLangText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DESCRIBTION_TEXT_RU, sDescribtionText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_DAY_CHOOSING_RU, sDayChoosing, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TIME_TEXT_RU, sTimeText, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_HOURS_BEGIN_RU, sHoursBegin, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MINUTES_BEGIN_RU, sMinutesBegin, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_HOURS_END_RU, sHoursEnd, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MINUTES_END_RU, sMinutesEnd, MAX_LOADSTRING);
+            // Check-box text strings
+            LoadStringW(hInstance, IDS_TEXT_ONMONDAY_RU, sOnMonday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONTUESDAY_RU, sOnTuesday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONWEDNESDAY_RU, sOnWednesday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONTHURSDAY_RU, sOnThursday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONFRIDAY_RU, sOnFriday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONSATURDAY_RU, sOnSaturday, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_TEXT_ONSUNDAY_RU, sOnSunday, MAX_LOADSTRING);
             // Btn text strings
             LoadStringW(hInstance, IDS_START_RU, sStart, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_STOP_RU, sStop, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_PAUSE_RU, sPause, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_CONTINUE_RU, sContinue, MAX_LOADSTRING);
             LoadStringW(hInstance, IDS_RESET_RU, sReset, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_BTN_CHOOSE_DAY_RU, sChooseDayBtn, MAX_LOADSTRING);
+            // menu strings
+            LoadStringW(hInstance, IDS_MENU_FILE_RU, sMenuFile, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_HELP_RU, sMenuHelp, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_EVENT_RU, sMenuEvent, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_LANGUAGE_RU, sMenuLanguage, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_TIMER_RU, sMenuTimer, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_MENU_CLOCK_RU, sMenuClock, MAX_LOADSTRING);
+            // submenu strings
+            LoadStringW(hInstance, IDS_SUBMENU_EXIT_RU, sSubmenuExit, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_ABOUT_RU, sSubmenuAbout, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_LANGUAGE_RU, sSubmenuLanguage, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_SAVE_RU, sSubmenuEventSave, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_LOAD_RU, sSubmenuEventLoad, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_ADD_RU, sSubmenuEventAdd, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_EVENT_DELETE_RU, sSubmenuEventDelete, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_DEFAULT_RU, sSubmenuTimerDefault, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_REVERSE_RU, sSubmenuTimerReverse, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_TIMER_SD_RU, sSubmenuTimerSD, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_STOPWATCH_RU, sSubmenuStopwatch, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_CLOCK_OLD_RU, sSubmenuClockOld, MAX_LOADSTRING);
+            LoadStringW(hInstance, IDS_SUBMENU_CLOCK_MODERN_RU, sSubmenuClockModern, MAX_LOADSTRING);
 
-            //end
+            // end
             // Раскомментировать, чтобы появился MessageBox о смене языка
             // MessageBox(hDlg, (LPCWSTR)L"Язык успешно изменен! Спасибо, что пользуетесь нашим приложением!", (LPCWSTR)L"Приложение \"Таймер\"", MB_ICONINFORMATION);
             EndDialog(hDlg, LOWORD(wParam));
+        }
             return (INT_PTR)TRUE;
             break;
         default:
@@ -328,6 +535,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_INITDIALOG:
+        SetWindowText(hDlg, sTitleAbout);
         return (INT_PTR)TRUE;
 
     case WM_COMMAND:
@@ -341,20 +549,155 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
-// Функция окна "Обычного таймера". Отсчет идет вперед (от 0 до заданного времени)
-INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    int input_hour = 0;
-    int input_minute = 0;
-    int input_second = 0;
-
-    bool continue_timer = true;
-
+// Функция окна "Добавление события";
+INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
     case WM_INITDIALOG:
     {
+        SetWindowText(hDlg, sTitleAddEvent);
+
+        HWND text{};
+        text = GetDlgItem(hDlg, IDC_DESCRIBTION_TEXT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sDescribtionText);
+        text = GetDlgItem(hDlg, IDC_DAY_CHOOSING_TEXT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sDayChoosing);
+        text = GetDlgItem(hDlg, IDC_TIME_TEXT);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sTimeText);
+        text = GetDlgItem(hDlg, IDC_HB);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sHoursBegin);
+        text = GetDlgItem(hDlg, IDC_MB);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sMinutesBegin);
+        text = GetDlgItem(hDlg, IDC_HE);
+        SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sHoursBegin);
+        text = GetDlgItem(hDlg, IDC_ME);
+        SendMessageW(text, WM_SETTEXT, 0, (LPARAM)sMinutesEnd);
+
+        HWND btn{};
+        btn = GetDlgItem(hDlg, IDC_CHOOSE_DAY);
+        SendMessage(btn, WM_SETTEXT, 0, (LPARAM)sChooseDayBtn);
+        return (INT_PTR)TRUE;
+    }
+    case WM_COMMAND:
+    {
+        if (LOWORD(wParam) == IDCANCEL)
+        {
+            fillAndDrawStructure = false;
+            lastEventIncrement == false;
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        if (LOWORD(wParam) == IDC_CHOOSE_DAY)
+        {
+            DialogBox(hInst, MAKEINTRESOURCE(IDD_CHOOSE_DAY), hDlg, Choose_day);
+            return (INT_PTR)TRUE;
+        }
+        if (LOWORD(wParam) == ID_BTN_ADD)
+        {
+            GetDlgItemTextA(hDlg, IDC_EDIT_DESC, LPSTR(events[lastEvent].strDescribtion), 100000);
+            events[lastEvent].hourBegin = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_BEGIN, NULL, FALSE);
+            events[lastEvent].minuteBegin = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_BEGIN, NULL, FALSE);
+            events[lastEvent].hourEnd = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_END, NULL, FALSE);
+            events[lastEvent].minuteEnd = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_END, NULL, FALSE);
+            EndDialog(hDlg, LOWORD(wParam));
+            fillAndDrawStructure = true;
+            lastEventIncrement = true;
+            return (INT_PTR)TRUE;
+        }
+        return (INT_PTR)TRUE;
+        break;
+    }
+    case WM_DESTROY:
+        KillTimer(hDlg, 1);
+        break;
+    default:
+        break;
+    }
+    return (INT_PTR)FALSE;
+}
+
+INT_PTR CALLBACK Choose_day(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        if (wasOpened == true) {
+            DlgDaysOfWeekWasOpened(hDlg);
+        }
+
+        SetWindowText(hDlg, sTitleChooseDay);
+
+        HWND CheckBox{};
+        CheckBox = GetDlgItem(hDlg, IDC_ON_MONDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnMonday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_TUESDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnTuesday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_WEDNESDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnWednesday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_THURSDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnThursday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_FRIDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnFriday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_SATURDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnSaturday);
+        CheckBox = GetDlgItem(hDlg, IDC_ON_SUNDAY);
+        SendMessage(CheckBox, WM_SETTEXT, 0, (LPARAM)sOnSunday);
+        return (INT_PTR)TRUE;
+    }
+    case WM_COMMAND:
+    {
+        if (LOWORD(wParam) == IDCANCEL)
+        {
+            add_days = false;
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        if (LOWORD(wParam) == ID_BTN_OK)
+        {
+            int countDays = FillEventsWithDaysOfWeek(hDlg);
+
+            if (countDays == 7) {
+                MessageBox(GetActiveWindow(), L"No days wew choosen", L"ERROR", MB_ICONERROR);
+                add_days = false;
+            }
+            else {
+                EndDialog(hDlg, LOWORD(wParam));
+                wasOpened = true;
+            }
+            return (INT_PTR)TRUE;
+        }
+        return (INT_PTR)TRUE;
+        break;
+    }
+    case WM_DESTROY:
+        KillTimer(hDlg, 1);
+        break;
+    default:
+        break;
+    }
+    return (INT_PTR)FALSE;
+}
+
+// Функция окна "Обычного таймера". Отсчет идет вперед (от 0 до заданного времени)
+INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    static int second_output = 0;
+    static int minute_output = 0;
+    static int hour_output = 0;
+    static double temp = 0;
+    static int input_hour = 0;
+    static int input_minute = 0;
+    static int input_second = 0;
+    static bool continue_timer = true;
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        SetWindowText(hDlg, sTitleTimerDefault);
+
         HWND text{};
         text = GetDlgItem(hDlg, IDC_TEXT_INPUT);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sInput);
@@ -389,8 +732,9 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             input_hour = GetDlgItemInt(hDlg, IDC_EDIT_HOUR_INPUT, NULL, TRUE);
             input_minute = GetDlgItemInt(hDlg, IDC_EDIT_MINUTE_INPUT, NULL, TRUE);
             input_second = GetDlgItemInt(hDlg, IDC_EDIT_SECOND_INPUT, NULL, TRUE);
+            QueryPerformanceCounter(&StartingTime);
+            SetTimer(hDlg, 1, 100, NULL);
 
-            SetTimer(hDlg, 1, 1000, NULL);
             if (input_hour == 0) {
                 if (input_minute == 0) {
                     if (input_second == 0) {
@@ -400,7 +744,7 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
                     }
                 }
             }
-            else if (input_minute > 60 || input_second > 59) {
+            if (input_minute > 60 || input_second > 60 && continue_timer) {
                 KillTimer(hDlg, 1);
                 MessageBox(GetActiveWindow(), sNoInput, sTitleError, MB_ICONERROR);
                 continue_timer = false;
@@ -430,7 +774,7 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
         }
         if (LOWORD(wParam) == IDC_CONTINUE)
         {
-            SetTimer(hDlg, 1, 1000, NULL);
+            SetTimer(hDlg, 1, 100, NULL);
         }
             return (INT_PTR)TRUE;
         break;
@@ -440,38 +784,35 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             input_minute = GetDlgItemInt(hDlg, IDC_EDIT_MINUTE_INPUT, NULL, TRUE);
             input_second = GetDlgItemInt(hDlg, IDC_EDIT_SECOND_INPUT, NULL, TRUE);
 
-            int edit_hour = GetDlgItemInt(hDlg, IDC_EDIT_HOUR1, NULL, TRUE);
-            int edit_min = GetDlgItemInt(hDlg, IDC_EDIT_MINUTE, NULL, TRUE);
-            int edit_sec = GetDlgItemInt(hDlg, IDC_EDIT_SECOND, NULL, TRUE);
+            hour_output = GetDlgItemInt(hDlg, IDC_EDIT_HOUR1, NULL, TRUE);
+            minute_output = GetDlgItemInt(hDlg, IDC_EDIT_MINUTE, NULL, TRUE);
+            second_output = GetDlgItemInt(hDlg, IDC_EDIT_SECOND, NULL, TRUE);
 
-            if (edit_hour == input_hour) {
-                if (edit_min == input_minute) {
-                    if (edit_sec == input_second) {
+            QueryPerformanceCounter(&EndingTime);
+            ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+            ElapsedMicroseconds.QuadPart *= 1000000;
+            ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+            msecond_counter = ElapsedMicroseconds.QuadPart;
+            temp = msecond_counter / 1000000;
+
+            second_output = round(temp);
+            minute_output = (second_output / 60) % 60;
+            hour_output = second_output / 3600;
+            second_output = second_output % 60;
+            
+            if (hour_output == input_hour)
+                if (minute_output == input_minute) 
+                    if (second_output == input_second) {
                         KillTimer(hDlg, 1);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, edit_hour, TRUE);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, edit_min, TRUE);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, hour_output, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, minute_output, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_SECOND, second_output, TRUE);
                         MessageBox(GetActiveWindow(), sEndTimer, sTitleTimer, MB_ICONINFORMATION);
                     }
-                }
-            }
-            else {
-                if (edit_sec == 59) {
-                    edit_min += 1;
-                    edit_sec = -1;
-                }
-                if (edit_min == 60) {
-                    edit_hour++;
-                    edit_min = 0;
-                    edit_sec = -1;
-                }
-            }
 
-            edit_sec++;
-
-            SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, edit_hour, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, edit_min, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_SECOND, edit_sec, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_HOUR1, hour_output, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_MINUTE, minute_output, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_SECOND, second_output, TRUE);
             return (INT_PTR)TRUE;
         }
         break;
@@ -487,17 +828,23 @@ INT_PTR CALLBACK Timer_default(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 // Функция окна "Обратного таймера". Отсчет идет от времени, которое задал пользователь, до 0
 INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    int input_hour;
-    int input_minute;
-    int input_second;
-
-    bool continue_timer = true;
+    static int second_output = 0;
+    static int minute_output = 0;
+    static int hour_output = 0;
+    static double temp = 0;
+    static int previous_sec = -1;
+    static int input_hour = 0;
+    static int input_minute = 0;
+    static int input_second = 0;
+    static bool continue_timer = true;
 
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
     case WM_INITDIALOG:
     {
+        SetWindowText(hDlg, sTitleTimerReverse);
+
         HWND text{};
         text = GetDlgItem(hDlg, IDC_TEXT_INPUT);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sInput);
@@ -532,8 +879,8 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             input_hour = GetDlgItemInt(hDlg, IDC_EDIT_R_HOUR_INPUT, NULL, TRUE);
             input_minute = GetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE_INPUT, NULL, TRUE);
             input_second = GetDlgItemInt(hDlg, IDC_EDIT_R_SECOND_INPUT, NULL, TRUE);
-
-            SetTimer(hDlg, 2, 1000, NULL);
+            QueryPerformanceCounter(&StartingTime);
+            SetTimer(hDlg, 2, 100, NULL);
             if (input_hour == 0) {
                 if (input_minute == 0) {
                     if (input_second == 0) {
@@ -572,46 +919,59 @@ INT_PTR CALLBACK Timer_reverse(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
         }
         if (LOWORD(wParam) == IDC_R_CONTINUE)
         {
-            SetTimer(hDlg, 2, 1000, NULL);
+            SetTimer(hDlg, 2, 100, NULL);
             return (INT_PTR)TRUE;
         }
         break;
     case WM_TIMER:
         if (LOWORD(wParam) == 2) {
-            int edit_hour = GetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, NULL, TRUE);
-            int edit_min = GetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, NULL, TRUE);
-            int edit_sec = GetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, NULL, TRUE);
+            input_hour = GetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, NULL, TRUE);
+            input_minute = GetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, NULL, TRUE);
+            input_second = GetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, NULL, TRUE);
 
-            if (edit_hour == 0) {
-                if (edit_min == 0) {
-                    if (edit_sec == 0) {
+            QueryPerformanceCounter(&EndingTime);
+            ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+            ElapsedMicroseconds.QuadPart *= 1000000;
+            ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+            msecond_counter = ElapsedMicroseconds.QuadPart;
+            temp = msecond_counter / 1000000;
+
+            second_output = round(temp);
+            second_output = second_output % 60;
+            
+            if (input_hour == 0) {
+                if (input_minute == 0) {
+                    if (input_second == 0) {
                         KillTimer(hDlg, 2);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, edit_hour, TRUE);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, edit_min, TRUE);
-                        SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, input_hour, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, input_minute, TRUE);
+                        SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, input_second, TRUE);
                         MessageBox(GetActiveWindow(), sEndTimer, sTitleTimer, MB_ICONINFORMATION);
                     }
                 }
             }
-            else {
-                if (edit_sec == 0) {
-                    if (edit_min != 0) {
-                        edit_sec = 60;
-                        edit_min--;
-                    } 
+            
+            if (second_output > previous_sec || second_output < previous_sec) {
+                previous_sec = second_output;
+
+                if (input_second == 0) {
+                    if (input_minute != 0) {
+                        input_second = 60;
+                        input_minute -= 1;
+                    }
                     else {
-                        edit_hour--;
-                        edit_sec = 60;
-                        edit_min = 60;
+                        input_hour -= 1;
+                        input_second = 60;
+                        input_minute = 60;
                     }
                 }
+                    
+                input_second -= 1;
             }
 
-            edit_sec--;
-
-            SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, edit_hour, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, edit_min, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, edit_sec, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_R_HOUR1, input_hour, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_R_MINUTE, input_minute, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_R_SECOND, input_second, TRUE);
             return (INT_PTR)TRUE;
             }
     case WM_DESTROY:
@@ -633,7 +993,6 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
     int input_minute = 0;
     int input_second = 0;
 
-    SYSTEMTIME sys_time;
     int sys_hour = 0;
     int sys_minute = 0;
     int sys_second = 0;
@@ -645,6 +1004,8 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
     {
     case WM_INITDIALOG:
     {
+        SetWindowText(hDlg, sTitleTimerSD);
+
         HWND text{};
         text = GetDlgItem(hDlg, IDC_TEXT_INPUT);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sInput);
@@ -810,11 +1171,24 @@ INT_PTR CALLBACK Timer_systemdependent(HWND hDlg, UINT message, WPARAM wParam, L
 // Функция окна "Секундомер"
 INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    static int msecond_output = 0;
+    static int second_output = 0;
+    static int minute_output = 0;
+    static int hour_output = 0;
+    static double temp = 0;
+    static double temp2 = 0;
+    static int input_hour = 0;
+    static int input_minute = 0;
+    static int input_second = 0;
+    static bool continue_timer = true;
+
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
     case WM_INITDIALOG:
     {
+        SetWindowText(hDlg, sTitleStopwatch);
+
         HWND text{};
         text = GetDlgItem(hDlg, IDC_TEXT_OUTPUT);
         SendMessageW(text, WM_SETTEXT, NULL, (LPARAM)sOutput);
@@ -844,6 +1218,10 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
             SetDlgItemInt(hDlg, IDC_EDIT_SW_MINUTE, 0, TRUE);
             SetDlgItemInt(hDlg, IDC_EDIT_SW_SECOND, 0, TRUE);
             SetDlgItemInt(hDlg, IDC_EDIT_SW_MSECOND, 0, TRUE);
+            input_hour = 0;
+            input_minute = 0;
+            input_second = 0;
+            QueryPerformanceCounter(&StartingTime);
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDC_SW_STOP)
@@ -871,31 +1249,26 @@ INT_PTR CALLBACK Stopwatch(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         break;
     case WM_TIMER:
         if (LOWORD(wParam) == 4) {
-            int edit_hour = GetDlgItemInt(hDlg, IDC_EDIT_SW_HOUR, NULL, TRUE);
-            int edit_min = GetDlgItemInt(hDlg, IDC_EDIT_SW_MINUTE, NULL, TRUE);
-            int edit_sec = GetDlgItemInt(hDlg, IDC_EDIT_SW_SECOND, NULL, TRUE);
-            int edit_msec = GetDlgItemInt(hDlg, IDC_EDIT_SW_MSECOND, NULL, TRUE);
+            int sec = 0;
+            QueryPerformanceCounter(&EndingTime);
+            ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+            ElapsedMicroseconds.QuadPart *= 1000000;
+            ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+            msecond_counter = ElapsedMicroseconds.QuadPart;
+            temp = msecond_counter / 100000;
+            temp2 = msecond_counter / 1000000;
+            msecond_output = round(temp);
+            second_output = round(temp2);
+            minute_output = (second_output / 60) % 60;
+            hour_output = second_output / 3600;
+            second_output %= 60;
+            msecond_output %= 10;
 
-            edit_msec++;
-            if (edit_msec == 100) {
-                edit_sec += 1;
-                edit_msec = 0;
-            }
-            if (edit_sec == 60) {
-                edit_min += 1;
-                edit_sec = 0;
-                edit_msec = 0;
-            }
-            if (edit_min == 60) {
-                edit_hour++;
-                edit_min = 0;
-                edit_sec = 0;
-            }
-
-            SetDlgItemInt(hDlg, IDC_EDIT_SW_MINUTE, edit_min, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_SW_HOUR, edit_hour, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_SW_SECOND, edit_sec, TRUE);
-            SetDlgItemInt(hDlg, IDC_EDIT_SW_MSECOND, edit_msec, TRUE);
+            sec += 1;
+            SetDlgItemInt(hDlg, IDC_EDIT_SW_HOUR, hour_output, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_SW_MINUTE, minute_output, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_SW_SECOND, second_output, TRUE);
+            SetDlgItemInt(hDlg, IDC_EDIT_SW_MSECOND, msecond_output, TRUE);
 
             return (INT_PTR)TRUE;
         }
@@ -916,14 +1289,14 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
     int hour, minute, second;
     int day_of_week, day, month, year;
 
-    SYSTEMTIME sys_time;
-
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
     case WM_INITDIALOG:
     {
         SetTimer(hDlg, 5, 300, NULL);
+
+        SetWindowText(hDlg, sTitleClockModern);
 
         HWND text{};
         text = GetDlgItem(hDlg, IDC_TEXT_DAY_OF_WEEK);
@@ -998,7 +1371,6 @@ INT_PTR CALLBACK Clock_modern(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 // Функция окна "Старые часы". Имеет представление времени с помощью циферблата
 INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    SYSTEMTIME sys_time;
     GetLocalTime(&sys_time);
 
     RECT winCord;
@@ -1023,6 +1395,8 @@ INT_PTR CALLBACK Clock_old(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     {
     case WM_INITDIALOG:
         SetTimer(hDlg, 6, 1000, NULL);
+        SetWindowText(hDlg, sTitleClockOld);
+
         ConvertDayOfWeekToString(hDlg, IDC_EDIT_CLOCK_O_DAYOFWEEK, sys_time.wDayOfWeek, language_en, language_ru);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_DAY, sys_time.wDay, TRUE);
         SetDlgItemInt(hDlg, IDC_EDIT_CLOCK_O_MONTH, sys_time.wMonth, TRUE);
@@ -1231,6 +1605,426 @@ void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en
     }
 }
 
+int FillEventsWithDaysOfWeek(HWND hDlg) {
+    int countDays = 0;
+    UINT isChecked;
+    HWND CheckBox;
+    CheckBox = GetDlgItem(hDlg, IDC_ON_MONDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onMonday = true;
+    else {
+        events[lastEvent].onMonday = false;
+        countDays++;
+    }
+
+    CheckBox = GetDlgItem(hDlg, IDC_ON_TUESDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onTuesday = true;
+    else {
+        events[lastEvent].onTuesday = false;
+        countDays++;
+    }
+
+    CheckBox = GetDlgItem(hDlg, IDC_ON_WEDNESDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onWednesday = true;
+    else {
+        events[lastEvent].onWednesday = false;
+        countDays++;
+    }
+
+    CheckBox = GetDlgItem(hDlg, IDC_ON_THURSDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onThursday = true;
+    else {
+        events[lastEvent].onThursday = false;
+        countDays++;
+    }
+
+    CheckBox = GetDlgItem(hDlg, IDC_ON_FRIDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onFriday = true;
+    else {
+        events[lastEvent].onFriday = false;
+        countDays++;
+    }
+    CheckBox = GetDlgItem(hDlg, IDC_ON_SATURDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onSaturday = true;
+    else {
+        events[lastEvent].onSaturday = false;
+        countDays++;
+    }
+    CheckBox = GetDlgItem(hDlg, IDC_ON_SUNDAY);
+    isChecked = SendMessage(CheckBox, BM_GETCHECK, NULL, NULL);
+    if (isChecked == BST_CHECKED)
+        events[lastEvent].onSunday = true;
+    else {
+        events[lastEvent].onSunday = false;
+        countDays++;
+    }
+
+    return countDays;
+}
+
+void DlgDaysOfWeekWasOpened(HWND hDlg) {
+    HWND CheckBox{};
+    if (events[lastEvent].onMonday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_MONDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onTuesday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_TUESDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onWednesday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_WEDNESDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onThursday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_THURSDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onFriday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_FRIDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onSaturday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_SATURDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+    if (events[lastEvent].onSunday) {
+        CheckBox = GetDlgItem(hDlg, IDC_ON_SUNDAY);
+        SendMessage(CheckBox, BM_SETCHECK, 1, NULL);
+    }
+}
+
+/*
+Функция для конвертирования числа в стоку wchar_t. Возвращает указатель на строку.
+Использование:
+    int num                 Число, которое необходимо конвертировать
+*/
+wchar_t *int_to_string(int num) {
+    wchar_t strListNumber[256];
+    swprintf_s(strListNumber, L"%d", num);
+    // wprintf(L"%s\n", strListNumber);
+    wchar_t* resultNumber = strListNumber;
+
+    return resultNumber;
+}
+
+/*
+Функция для конвертирования WCHAR* в строку const char*. Возвращает указатель на строку. 
+Использование:
+    WCHAR* string                 Строка, которую необходимо конвертировать
+*/
+// !!! ISN'T CURRENTLY IN USE !!!
+const char* WCHAR_to_char(WCHAR* string) {
+    _bstr_t bstrStr(string);
+    const char* resultStr = bstrStr;
+
+    return resultStr;
+}
+
+void changeMenuElement(HWND hWnd) {
+    HMENU hmenu = GetMenu(hWnd);
+    LPMENUITEMINFO LPmii = new MENUITEMINFO;
+    UINT size_of_string = 10000;
+    LPWSTR ItemText;
+    // CHANGING MAIN MENU:
+    // menu "File"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, 0, TRUE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sMenuFile);
+    LPmii->fMask = MIIM_STRING;
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, 0, TRUE, LPmii);
+    // menu "Help"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, 1, TRUE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sMenuHelp);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, 1, TRUE, LPmii);
+    // menu "Language"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, 2, TRUE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sMenuEvent);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, 2, TRUE, LPmii);
+    // menu "Timer"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, 3, TRUE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sMenuTimer);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, 3, TRUE, LPmii);
+    // menu "Clock"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, 4, TRUE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sMenuClock);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, 4, TRUE, LPmii);
+
+    // CHANGING SUBMENUES
+    // sumbenu "Edit"
+    // LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, IDM_EXIT, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuExit);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, IDM_EXIT, FALSE, LPmii);
+    // submenu "About"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, IDM_ABOUT, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuAbout);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, IDM_ABOUT, FALSE, LPmii);
+    // submenu "Choose Language"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_LANGUAGE, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuLanguage);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_LANGUAGE, FALSE, LPmii);
+    // submenu "Save current events"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_EVENTS_SAVE, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuEventSave);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_EVENTS_SAVE, FALSE, LPmii);
+    // submenu "Load events from save"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_EVENTS_LOAD, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuEventLoad);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_EVENTS_LOAD, FALSE, LPmii);
+    // submenu "Add new event" 
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_EVENTS_ADD, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuEventAdd);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_EVENTS_ADD, FALSE, LPmii);
+    // submenu "Delete event"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_EVENTS_DELETE, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuEventDelete);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_EVENTS_DELETE, FALSE, LPmii);
+    // submenu "Default timer"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_TIMER_DEFAULT, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuTimerDefault);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_TIMER_DEFAULT, FALSE, LPmii);
+    // submenu "Reverse timer"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_TIMER_REVERSETIMER, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuTimerReverse);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_TIMER_REVERSETIMER, FALSE, LPmii);
+    // submenu "System-dependent timer"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_TIMER_SYSTEM, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuTimerSD);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_TIMER_SYSTEM, FALSE, LPmii);
+    // submenu "Stopwatch timer"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_TIMER_STOPWATCH, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuStopwatch);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_TIMER_STOPWATCH, FALSE, LPmii);
+    // submenu "Clock modern"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_CLOCK_MODERN, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuClockModern);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_CLOCK_MODERN, FALSE, LPmii);
+    // submenu "Clock old"
+    LPmii->cbSize = sizeof(*LPmii);
+    GetMenuItemInfo(hmenu, ID_CLOCK_OLD, FALSE, LPmii);
+    ItemText = new wchar_t[size_of_string];
+    wcscpy_s(ItemText, size_of_string, sSubmenuClockOld);
+    LPmii->dwTypeData = ItemText;
+    LPmii->cch = size_of_string;
+    SetMenuItemInfo(hmenu, ID_CLOCK_OLD, FALSE, LPmii);
+    DrawMenuBar(hWnd);
+}
+
+// Функция сортировки событий по дням недели и по времени
+void sortEventsByDay() {
+    GetLocalTime(&sys_time);
+    int currentDay = sys_time.wDayOfWeek;
+
+    int indexMonday = 0;
+    int indexTuesday = 0;
+    int indexWednesday = 0;
+    int indexThursday = 0;
+    int indexFriday = 0;
+    int indexSaturday = 0;
+    int indexSunday = 0;
+    for (int i = 0; i <= lastEvent; i++) {
+        // считываем количесво событий, которые произошли в каждый из дней недели (с дублированием)
+        if (events[i].onMonday) {
+            eventsIndex[0][indexMonday] = i;
+            indexMonday += 1;
+        }
+        if (events[i].onTuesday) {
+            eventsIndex[0][indexTuesday] = i;
+            indexTuesday += 1;
+        }
+        if (events[i].onWednesday) {
+            eventsIndex[0][indexWednesday] = i;
+            indexWednesday += 1;
+        }
+        if (events[i].onThursday) {
+            eventsIndex[0][indexThursday] = i;
+            indexThursday += 1;
+        }
+        if (events[i].onFriday) {
+            eventsIndex[0][indexFriday] = i;
+            indexFriday += 1;
+        }
+        if (events[i].onSaturday) {
+            eventsIndex[0][indexSaturday] = i;
+            indexSaturday += 1;
+        }
+        if (events[i].onSunday) {
+            eventsIndex[0][indexSunday] = i;
+            indexSunday += 1;
+        }
+    }
+
+    int temp = 0;
+    int day = 0;
+    while (day <= 6) { // прогоняем через каждый из дней недели - первый индекс массива eventsIndex
+        for (int j = 0; j <= MAX_EVENTS && (events[j].hEditDesc); j++) { // (events[i].hEditDesc) - фактическая проверка на заполнение элемента события
+            if (events[j].hourBegin == events[j + 1].hourBegin) {
+                if (events[j].minuteBegin > events[j + 1].minuteBegin) {
+                    temp = eventsIndex[day][j];
+                    eventsIndex[day][j] = eventsIndex[day][j + 1];
+                    eventsIndex[day][j + 1] = temp;
+                }
+            }
+            else if (events[j].hourBegin > events[j + 1].hourBegin) {
+                temp = eventsIndex[day][j];
+                eventsIndex[day][j] = eventsIndex[day][j + 1];
+                eventsIndex[day][j + 1] = temp;
+            }
+        }
+        day += 1;
+    }    
+}
+
+/*
+Функция для записи текущих ивентов в файл(которые создал пользователь)
+Функция не принимает значений, использует глобальные переменные
+TODO: Добавление названия файла в будущем
+*/
+void saveCurrentEventsInFile() {
+    FILE* file;
+    errno_t err;
+    err = fopen_s(&file, "currentLayoutEvents.bin", "wb");
+    if (file == NULL)
+    {
+        MessageBox(GetActiveWindow(), L"Save file does not exist", L"ERROR", MB_ICONERROR);
+    }
+    else {
+        fwrite(&lastEvent, sizeof(int), 1, file);
+
+        for (int i = 0; i <= lastEvent; i++) {
+            int size1 = wcslen(events[i].strDescribtion);
+            fwrite(&size1, sizeof(int), 1, file);
+            fwrite(events[i].strDescribtion, sizeof(char), size1, file);
+            fwrite(&events[i].onMonday, sizeof(events[i].onMonday), 1, file);
+            fwrite(&events[i].onTuesday, sizeof(events[i].onTuesday), 1, file);
+            fwrite(&events[i].onWednesday, sizeof(events[i].onWednesday), 1, file);
+            fwrite(&events[i].onThursday, sizeof(events[i].onThursday), 1, file);
+            fwrite(&events[i].onFriday, sizeof(events[i].onFriday), 1, file);
+            fwrite(&events[i].onSaturday, sizeof(events[i].onSaturday), 1, file);
+            fwrite(&events[i].onSunday, sizeof(events[i].onSunday), 1, file);
+            fwrite(&events[i].hourBegin, sizeof(events[i].hourBegin), 1, file);
+            fwrite(&events[i].minuteBegin, sizeof(events[i].minuteBegin), 1, file);
+            fwrite(&events[i].hourEnd, sizeof(events[i].hourEnd), 1, file);
+            fwrite(&events[i].minuteEnd, sizeof(events[i].minuteEnd), 1, file);
+        }
+       fclose(file);
+    }
+}
+
+/*
+Функция для записи текущих ивентов в массив структур "events" (чтобы впоследствии передать в окно пользователю)
+Функция не принимает значений, использует глобальные переменные
+*/
+void loadCurrentEventsFromFile() {
+    FILE* file;
+    errno_t err;
+    err = fopen_s(&file, "currentLayoutEvents.bin", "rb");
+    if (file == NULL)
+    {
+        MessageBox(GetActiveWindow(), L"Save file does not exist", L"ERROR", MB_ICONERROR);
+    }
+    else {
+        fread(&lastEvent, sizeof(int), 1, file);
+
+        int temp = 0;
+        for (int i = 0; i < lastEvent; i++)
+        {
+            fread(&temp, 4, 1, file);
+            fread(events[i].strDescribtion, 1, temp, file);
+            fread(&events[i].onMonday, sizeof(events[i].onMonday), 1, file);
+            fread(&events[i].onTuesday, sizeof(events[i].onTuesday), 1, file);
+            fread(&events[i].onWednesday, sizeof(events[i].onWednesday), 1, file);
+            fread(&events[i].onThursday, sizeof(events[i].onThursday), 1, file);
+            fread(&events[i].onFriday, sizeof(events[i].onFriday), 1, file);
+            fread(&events[i].onSaturday, sizeof(events[i].onSaturday), 1, file);
+            fread(&events[i].onSunday, sizeof(events[i].onSunday), 1, file);
+            fread(&events[i].hourBegin, sizeof(events[i].hourBegin), 1, file);
+            fread(&events[i].minuteBegin, sizeof(events[i].minuteBegin), 1, file);
+            fread(&events[i].hourEnd, sizeof(events[i].hourEnd), 1, file);
+            fread(&events[i].minuteEnd, sizeof(events[i].minuteEnd), 1, file);
+        }
+        fclose(file);
+    }
+}
+
 // func for static/dynamic painting structures
 /*
 Функция для рисования структуры ЧАСЫ.
@@ -1272,6 +2066,108 @@ void CreateStructureWatch(int left, int right, int up, int bottom, int centerX, 
     // g - угол в градусах Mat - matematicheskij, pr - programnij
 
 }
+
+/*
+Функция для создания структуры из edit и static, которые будут использоваться в качетсве подсказки пользователю.
+*/
+void planStruct::helpUserInfoStructure(HWND hWnd, HINSTANCE hInstance) {
+    int up = 5;
+    int left = 5;
+    HFONT hf = CreateFont(-16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_ROMAN, TEXT("Times New Roman"));
+
+    HWND hTextDesc{};
+    HWND hTextDays{};
+    HWND hTextTimeHourBegin{};
+    HWND hTextTimeMinBegin{};
+    HWND hTextTimeHourEnd{};
+    HWND hTextTimeMinEnd{};
+
+    hTextDesc = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_CHILD | WS_VISIBLE, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtDesc + 30;
+    hTextDays = CreateWindowW(L"STATIC", NULL, WS_GROUP | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtDayOfWeek + 30;
+    hTextTimeHourBegin = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, helpHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 2;
+    hTextTimeMinBegin = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, helpHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 15;
+    hTextTimeHourEnd = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, helpHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 2;
+    hTextTimeMinEnd = CreateWindowW(L"STATIC", NULL, WS_TABSTOP | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, helpHeight, hWnd, NULL, hInstance, NULL);
+
+    SendMessageW(hTextDesc, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextDesc, "Event describtion");
+    SendMessageW(hTextDays, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextDays, "Days");
+    SendMessageW(hTextTimeHourBegin, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextTimeHourBegin, "Start hour");
+    SendMessageW(hTextTimeMinBegin, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextTimeMinBegin, "Start min");
+    SendMessageW(hTextTimeHourEnd, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextTimeHourEnd, "End hour");
+    SendMessageW(hTextTimeMinEnd, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextA(hTextTimeMinEnd, "End min");
+}
+
+/*
+Функция для создания структуры из edit и static, которые будут заполняться пользователем.
+*/
+void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int lastEvent) {
+    HFONT hf = CreateFont(-16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_ROMAN, TEXT("Times New Roman"));
+    int left = 5;
+
+    events[lastEvent].hEditDesc = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL, left, up, structWidghtDesc, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtDesc + 30;
+    events[lastEvent].hEditDays = CreateWindowW(L"EDIT", NULL, WS_GROUP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtDayOfWeek, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtDayOfWeek + 30;
+    events[lastEvent].hEditTimeHourBegin = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeHour, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 2;
+    events[lastEvent].hEditTimeMinBegin = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 15;
+    events[lastEvent].hEditTimeHourEnd = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+    left += structWidghtTimeHour + 2;
+    events[lastEvent].hEditTimeMinEnd = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
+
+    // wchar_t* days = int_to_string(events[lastEvent].days);
+    wchar_t* hourBegin = int_to_string(events[lastEvent].hourBegin);
+    wchar_t* minuteBegin = int_to_string(events[lastEvent].minuteBegin);
+    wchar_t* hourEnd = int_to_string(events[lastEvent].hourEnd);
+    wchar_t* minuteEnd = int_to_string(events[lastEvent].minuteEnd);
+
+    SendMessageW(events[lastEvent].hEditDesc, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextW(events[lastEvent].hEditDesc, LPCWSTR(events[lastEvent].strDescribtion));
+    // SetWindowTextA();
+    // SetWindowText();
+    SendMessageW(events[lastEvent].hEditDays, WM_SETFONT, (WPARAM)hf, 0);
+    //SetWindowTextW(events[lastEvent].hEditDays, LPCWSTR(days));
+    SendMessageW(events[lastEvent].hEditTimeHourBegin, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextW(events[lastEvent].hEditTimeHourBegin, LPWSTR(hourBegin));
+    SendMessageW(events[lastEvent].hEditTimeMinBegin, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextW(events[lastEvent].hEditTimeMinBegin, LPWSTR(minuteBegin));
+    SendMessageW(events[lastEvent].hEditTimeHourEnd, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextW(events[lastEvent].hEditTimeHourEnd, LPWSTR(hourEnd));
+    SendMessageW(events[lastEvent].hEditTimeMinEnd, WM_SETFONT, (WPARAM)hf, 0);
+    SetWindowTextW(events[lastEvent].hEditTimeMinEnd, LPWSTR(minuteEnd));
+}
+
+/*
+Функция для удаления структуры из edit и static.
+*/
+void planStruct::deleteStructure(HWND hWnd, HINSTANCE hInstance, int element) {
+    HWND hDeleted{};
+    DestroyWindow(events[element].hEditDesc);
+    events[element].hEditDesc = hDeleted;
+    DestroyWindow(events[element].hEditDays);
+    events[element].hEditDays = hDeleted;
+    DestroyWindow(events[element].hEditTimeHourBegin);
+    events[element].hEditTimeHourBegin = hDeleted;
+    DestroyWindow(events[element].hEditTimeMinBegin);
+    events[element].hEditTimeMinBegin = hDeleted;
+    DestroyWindow(events[element].hEditTimeHourEnd);
+    events[element].hEditTimeHourEnd = hDeleted;
+    DestroyWindow(events[element].hEditTimeMinEnd);
+    events[element].hEditTimeMinEnd = hDeleted;
+}
+
 
 /*
 Функция для рисования часовой стрелки в структуре часы.
@@ -1450,3 +2346,13 @@ void C(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int width
     DeleteObject(hPen);
     DeleteObject(hBrush);
 }
+
+//                                              :::ISSUES:::
+/*
+*           checkbox - how to use BM_GETCHECK in dialog windows
+*           literation error in main window while writing/reading information from controls
+*           problem with days organization:
+*                   working with drop-out windows/comboboxes -- what's better and how to work with them
+*           writing boolean variables in file
+*           sorting out elements in an events[] array by days of week (monday, tuesday, etc.)
+*/

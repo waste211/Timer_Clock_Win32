@@ -145,7 +145,6 @@
     <ClInclude Include="Timer_Win32.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Func.cpp" />
     <ClCompile Include="Timer_Win32.cpp" />
   </ItemGroup>
   <ItemGroup>

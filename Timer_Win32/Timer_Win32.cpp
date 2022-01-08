@@ -2139,8 +2139,8 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int las
     // SetWindowText();
     SendMessageW(events[lastEvent].hEditDays, WM_SETFONT, (WPARAM)hf, 0);
     //SetWindowTextW(events[lastEvent].hEditDays, LPCWSTR(days));
-    SendMessageW(events[lastEvent].hEditTimeHourBegin, WM_SETFONT, (WPARAM)hf, 0);
-    SetWindowTextW(events[lastEvent].hEditTimeHourBegin, LPWSTR(hourBegin));
+    SendMessageW(events[lastEvent].hEditTimeHourBegin, WM_SETFONT, (WPARAM)hf, 0); // меняется шрифт для EDIT
+    SetWindowTextW(events[lastEvent].hEditTimeHourBegin, LPWSTR(hourBegin)); // EDIT заполняется информацией
     SendMessageW(events[lastEvent].hEditTimeMinBegin, WM_SETFONT, (WPARAM)hf, 0);
     SetWindowTextW(events[lastEvent].hEditTimeMinBegin, LPWSTR(minuteBegin));
     SendMessageW(events[lastEvent].hEditTimeHourEnd, WM_SETFONT, (WPARAM)hf, 0);

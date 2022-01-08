@@ -595,7 +595,7 @@ INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         }
         if (LOWORD(wParam) == ID_BTN_ADD)
         {
-            GetDlgItemTextA(hDlg, IDC_EDIT_DESC, LPSTR(events[lastEvent].strDescribtion), 100000);
+            GetDlgItemTextW(hDlg, IDC_EDIT_DESC, LPWSTR(events[lastEvent].strDescribtion), 100000);
             events[lastEvent].hourBegin = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_BEGIN, NULL, FALSE);
             events[lastEvent].minuteBegin = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_BEGIN, NULL, FALSE);
             events[lastEvent].hourEnd = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_END, NULL, FALSE);
@@ -1709,14 +1709,11 @@ void DlgDaysOfWeekWasOpened(HWND hDlg) {
 Функция для конвертирования числа в стоку wchar_t. Возвращает указатель на строку.
 Использование:
     int num                 Число, которое необходимо конвертировать
+Возвращает размер полученной строки
 */
-wchar_t *int_to_string(int num) {
-    wchar_t strListNumber[256];
-    swprintf_s(strListNumber, L"%d", num);
-    // wprintf(L"%s\n", strListNumber);
-    wchar_t* resultNumber = strListNumber;
-
-    return resultNumber;
+int int_to_string(int num, wchar_t* result) {
+    int amountChar = swprintf_s(result, 15, L"%d\n", num);
+    return amountChar;
 }
 
 /*
@@ -2128,15 +2125,17 @@ void planStruct::createStructure(HWND hWnd, HINSTANCE hInstance, int up, int las
     events[lastEvent].hEditTimeMinEnd = CreateWindowW(L"EDIT", NULL, WS_TABSTOP | WS_BORDER | WS_CHILD | WS_VISIBLE, left, up, structWidghtTimeMin, structHeight, hWnd, NULL, hInstance, NULL);
 
     // wchar_t* days = int_to_string(events[lastEvent].days);
-    wchar_t* hourBegin = int_to_string(events[lastEvent].hourBegin);
-    wchar_t* minuteBegin = int_to_string(events[lastEvent].minuteBegin);
-    wchar_t* hourEnd = int_to_string(events[lastEvent].hourEnd);
-    wchar_t* minuteEnd = int_to_string(events[lastEvent].minuteEnd);
+    wchar_t hourBegin[256];
+    wchar_t minuteBegin[256];
+    wchar_t hourEnd[256];
+    wchar_t minuteEnd[256];
+    int hourBeginSize = int_to_string(events[lastEvent].hourBegin, hourBegin);
+    int minuteBeginSize = int_to_string(events[lastEvent].minuteBegin, minuteBegin);
+    int hourEdnSize = int_to_string(events[lastEvent].hourEnd, hourEnd);
+    int minuteEndSize = int_to_string(events[lastEvent].minuteEnd, minuteEnd);
 
     SendMessageW(events[lastEvent].hEditDesc, WM_SETFONT, (WPARAM)hf, 0);
     SetWindowTextW(events[lastEvent].hEditDesc, LPCWSTR(events[lastEvent].strDescribtion));
-    // SetWindowTextA();
-    // SetWindowText();
     SendMessageW(events[lastEvent].hEditDays, WM_SETFONT, (WPARAM)hf, 0);
     //SetWindowTextW(events[lastEvent].hEditDays, LPCWSTR(days));
     SendMessageW(events[lastEvent].hEditTimeHourBegin, WM_SETFONT, (WPARAM)hf, 0); // меняется шрифт для EDIT

@@ -191,7 +191,7 @@ void ConvertMonthToString(HWND hDlg, int nIDDlgItem, int month, bool language_en
 int FillEventsWithDaysOfWeek(HWND hDlg);
 void DlgDaysOfWeekWasOpened(HWND hDlg);
 
-wchar_t* int_to_string(int num);
+int int_to_string(int num, wchar_t* result);
 const char* WCHAR_to_char(WCHAR* string);
 void changeMenuElement(HWND hWnd);
 void saveCurrentEventsInFile();

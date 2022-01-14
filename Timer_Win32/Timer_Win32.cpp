@@ -595,14 +595,43 @@ INT_PTR CALLBACK Add_event(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
         }
         if (LOWORD(wParam) == ID_BTN_ADD)
         {
-            GetDlgItemTextW(hDlg, IDC_EDIT_DESC, LPWSTR(events[lastEvent].strDescribtion), 100000);
-            events[lastEvent].hourBegin = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_BEGIN, NULL, FALSE);
-            events[lastEvent].minuteBegin = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_BEGIN, NULL, FALSE);
-            events[lastEvent].hourEnd = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_END, NULL, FALSE);
-            events[lastEvent].minuteEnd = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_END, NULL, FALSE);
-            EndDialog(hDlg, LOWORD(wParam));
-            fillAndDrawStructure = true;
-            lastEventIncrement = true;
+            boolean writeEvent = true;
+
+            wchar_t tempNum[256];
+            char strTemp[200000]{};
+            GetDlgItemTextW(hDlg, IDC_EDIT_DESC, LPWSTR(strTemp), 100000);
+            int sizeOfDescription = strlen(strTemp);
+
+            int tempHourBegin = int_to_string(GetDlgItemInt(hDlg, IDC_EDIT_HOURS_BEGIN, NULL, FALSE), tempNum);
+            int tempMinuteBegin = int_to_string(GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_BEGIN, NULL, FALSE), tempNum);
+            int tempHourEnd = int_to_string(GetDlgItemInt(hDlg, IDC_EDIT_HOURS_END, NULL, FALSE), tempNum);
+            int tempMinuteEnd = int_to_string(GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_END, NULL, FALSE), tempNum);
+            
+            if (sizeOfDescription == 0)
+                writeEvent = false;
+            else if (tempHourBegin - 2 == 0)
+                writeEvent = false;
+            else if (tempMinuteBegin - 2 == 0)
+                writeEvent = false;
+            else if (tempHourEnd - 2 == 0)
+                writeEvent = false;
+            else if (tempMinuteEnd - 2 == 0)
+                writeEvent = false;
+
+            if (writeEvent) {
+                GetDlgItemTextW(hDlg, IDC_EDIT_DESC, LPWSTR(events[lastEvent].strDescribtion), 100000);
+                events[lastEvent].hourBegin = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_BEGIN, NULL, FALSE);
+                events[lastEvent].minuteBegin = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_BEGIN, NULL, FALSE);
+                events[lastEvent].hourEnd = GetDlgItemInt(hDlg, IDC_EDIT_HOURS_END, NULL, FALSE);
+                events[lastEvent].minuteEnd = GetDlgItemInt(hDlg, IDC_EDIT_MINUTES_END, NULL, FALSE);
+
+                EndDialog(hDlg, LOWORD(wParam));
+                fillAndDrawStructure = true;
+                lastEventIncrement = true;
+            }
+            else
+                MessageBox(GetActiveWindow(), L"An error, caused by invalid input. Check, if your description/time input is correct.", L"Input error", MB_ICONERROR);
+
             return (INT_PTR)TRUE;
         }
         return (INT_PTR)TRUE;
@@ -1709,6 +1738,7 @@ void DlgDaysOfWeekWasOpened(HWND hDlg) {
 Функция для конвертирования числа в стоку wchar_t. Возвращает указатель на строку.
 Использование:
     int num                 Число, которое необходимо конвертировать
+    wchar_t* result         Указатель на результирующую строку
 Возвращает размер полученной строки
 */
 int int_to_string(int num, wchar_t* result) {

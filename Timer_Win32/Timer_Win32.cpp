@@ -202,7 +202,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         temp.planStruct::helpUserInfoStructure(hWnd, hInstance);
         loadCurrentEventsFromFile();
-        if (lastEvent != 0) {
+        if (lastEvent >= 0 && events[0].hEditDays) {
             for (int i = 0; i <= lastEvent; i++) {
                 events[i].posY = lastUp;
                 events[i].planStruct::createStructure(hWnd, hInstance, events[i].posY, i);
@@ -1986,7 +1986,7 @@ void sortEventsByDay() {
 TODO: Добавление названия файла в будущем
 */
 void saveCurrentEventsInFile() {
-    FILE* file;
+    /*FILE* file;
     errno_t err;
     err = fopen_s(&file, "currentLayoutEvents.bin", "wb");
     if (file == NULL)
@@ -1995,7 +1995,7 @@ void saveCurrentEventsInFile() {
     }
     else {
         fwrite(&lastEvent, sizeof(int), 1, file);
-
+        
         for (int i = 0; i <= lastEvent; i++) {
             int size1 = wcslen(events[i].strDescribtion);
             fwrite(&size1, sizeof(int), 1, file);
@@ -2012,8 +2012,11 @@ void saveCurrentEventsInFile() {
             fwrite(&events[i].hourEnd, sizeof(events[i].hourEnd), 1, file);
             fwrite(&events[i].minuteEnd, sizeof(events[i].minuteEnd), 1, file);
         }
+        
        fclose(file);
-    }
+    }*/
+
+   
 }
 
 /*
@@ -2021,6 +2024,7 @@ void saveCurrentEventsInFile() {
 Функция не принимает значений, использует глобальные переменные
 */
 void loadCurrentEventsFromFile() {
+    /*
     FILE* file;
     errno_t err;
     err = fopen_s(&file, "currentLayoutEvents.bin", "rb");
@@ -2050,6 +2054,9 @@ void loadCurrentEventsFromFile() {
         }
         fclose(file);
     }
+    */
+
+
 }
 
 // func for static/dynamic painting structures
@@ -2375,13 +2382,3 @@ void C(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int width
     DeleteObject(hPen);
     DeleteObject(hBrush);
 }
-
-//                                              :::ISSUES:::
-/*
-*           checkbox - how to use BM_GETCHECK in dialog windows
-*           literation error in main window while writing/reading information from controls
-*           problem with days organization:
-*                   working with drop-out windows/comboboxes -- what's better and how to work with them
-*           writing boolean variables in file
-*           sorting out elements in an events[] array by days of week (monday, tuesday, etc.)
-*/
